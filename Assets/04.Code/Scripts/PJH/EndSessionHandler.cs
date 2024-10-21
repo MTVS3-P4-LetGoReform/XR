@@ -8,6 +8,7 @@ public class EndSessionHandler : MonoBehaviour
 {
     public Button endButton;
 
+    private const string PublicSession = "FusionTest 1";
     private void Start()
     {
         endButton.onClick.AddListener(EndSession);
@@ -15,8 +16,8 @@ public class EndSessionHandler : MonoBehaviour
 
     private async void EndSession()
     {
-        await NetworkManager.Instance.ShutdownRunner();
-        await NetworkManager.Instance.JoinPublicSession();
-        SceneManager.LoadScene(0);
+        await RunnerManager.Instance.ShutdownRunner();
+        await RunnerManager.Instance.JoinPublicSession();
+        SceneManager.LoadScene(PublicSession);
     }
 }

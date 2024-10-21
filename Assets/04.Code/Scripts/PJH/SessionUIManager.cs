@@ -7,6 +7,7 @@ using Fusion;
 public class SessionUIManager : MonoBehaviour
 {
     public static SessionUIManager Instance { get; private set; }
+    
     public Canvas createRoomCanvas;
     public Button createRoomButton;
     public TMP_InputField sessionNameInput;
@@ -35,6 +36,43 @@ public class SessionUIManager : MonoBehaviour
         backButton.onClick.AddListener(ToggleCreateRoomCanvas);
     }
 
+    // 세션 목록 UI 업데이트
+    public void UpdateSessionList(List<SessionInfo> sessionList)
+    {
+        foreach (Transform child in sessionListParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var session in sessionList)
+        {
+            string url = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
+            
+            GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
+            TMP_Text sessionText = sessionButton.GetComponentInChildren<TMP_Text>();
+            sessionText.text = $"{session.Name} ({session.PlayerCount}/{session.MaxPlayers})";
+            
+            Button button = sessionButton.GetComponent<Button>();
+            button.onClick.AddListener(() => OnJoinSession(session));
+        }
+    }
+
+    private void ToggleCreateRoomCanvas()
+    {
+        createRoomCanvas.enabled = !createRoomCanvas.enabled;
+    }
+    
+    private string GetImage(SessionInfo session)
+    {
+        string prompt = "";
+        if (session.Properties.TryGetValue("Prompt", out var sessionDescription))
+        {
+            prompt = sessionDescription;
+        }
+        Debug.Log("결괏값: " + prompt);
+        return prompt;
+    }
+
     private async void CreateSession()
     {
         string sessionName = sessionNameInput.text;
@@ -56,38 +94,14 @@ public class SessionUIManager : MonoBehaviour
             Scene = sceneInfo,
             SessionProperties = new Dictionary<string, SessionProperty>
             {
-                { "description", sessionIntroductionInput.text }
+                { "Prompt", sessionIntroductionInput.text }
             }
         };
 
-        await NetworkManager.Instance.ShutdownRunner();
-        await NetworkManager.Instance.RunnerStart(startArgs);
+        await RunnerManager.Instance.ShutdownRunner();
+        await RunnerManager.Instance.RunnerStart(startArgs);
     }
-
-    private void ToggleCreateRoomCanvas()
-    {
-        createRoomCanvas.enabled = !createRoomCanvas.enabled;
-    }
-
-    // 세션 목록 UI 업데이트
-    public void UpdateSessionList(List<SessionInfo> sessionList)
-    {
-        foreach (Transform child in sessionListParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        foreach (var session in sessionList)
-        {
-            GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
-            TMP_Text sessionText = sessionButton.GetComponentInChildren<TMP_Text>();
-            sessionText.text = $"{session.Name} ({session.PlayerCount}/{session.MaxPlayers})";
-
-            Button button = sessionButton.GetComponent<Button>();
-            button.onClick.AddListener(() => OnJoinSession(session));
-        }
-    }
-
+    
     private async void OnJoinSession(SessionInfo session)
     {
         Debug.Log($"Joining session: {session.Name}");
@@ -98,7 +112,7 @@ public class SessionUIManager : MonoBehaviour
             SessionName = session.Name
         };
 
-        await NetworkManager.Instance.ShutdownRunner();
-        await NetworkManager.Instance.RunnerStart(startArgs);
+        await RunnerManager.Instance.ShutdownRunner();
+        await RunnerManager.Instance.RunnerStart(startArgs);
     }
 }

@@ -21,13 +21,13 @@ public class LobbyTriggerHandler : MonoBehaviour
         sessionCanvas.enabled = !sessionCanvas.enabled;
         if (sessionCanvas.enabled)
         {
-            await NetworkManager.Instance.ShutdownRunner();
-            await NetworkManager.Instance.JoinLobby();
+            await RunnerManager.Instance.ShutdownRunner();
+            await RunnerManager.Instance.JoinLobby();
         }
         else
         {
-            await NetworkManager.Instance.ShutdownRunner();
-            await NetworkManager.Instance.JoinPublicSession();
+            await RunnerManager.Instance.ShutdownRunner();
+            await RunnerManager.Instance.JoinPublicSession();
         }
     }
 }
