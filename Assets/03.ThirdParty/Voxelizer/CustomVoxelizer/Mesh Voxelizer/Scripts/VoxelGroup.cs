@@ -7,6 +7,7 @@ namespace MVoxelizer
     [ExecuteInEditMode]
     public class VoxelGroup : MonoBehaviour
     {
+        /* voxel화된 메쉬와 다양한 설정(비율, 스케일, 회전 UV 타입 등)을 저장하고 관리하는 역할*/
         public Mesh voxelMesh = null;
         public Material[] voxelMaterials;
         public Material centerMaterial;
@@ -29,30 +30,41 @@ namespace MVoxelizer
             if (m_mesh == null) RebuildVoxels();
         }
 
+        /* 복셀들이 실제로 화면에 렌더링 가능한 상태로 만듦. */
         public void RebuildVoxels()
         {
+            // voxelMesh가 null인 경우 메서드 종료. 즉, Voxel메쉬가 없는 경우 작업X
             if (voxelMesh == null) return;
+            // 복셀의 기본 데이터를 업데이트. 메쉬나 다른 복셀관련 정보를 갱신.
             UpdateVoxel();
+            // 원본 메쉬에서 UV 좌표를 가져오는 경우
             if (uvType == MeshVoxelizer.UVConversion.SourceMesh)
             {
+                // voxel 배열을 순회하면서 각 voxel이 null 인지 확인.
                 for (int i = 0; i < voxels.Length; ++i)
                 {
+                    // null이면 새로운 복셀 생성.
                     if (voxels[i] == null) { CreateVoxel(i); }
+                    // 각 복셀에 UV좌표와 메쉬 데이터를 업데이트
                     voxels[i].UpdateVoxel(m_mesh, uvs[i]);
                 }
             }
-            else
+            else // uvType이 다른 경우
             {
                 for (int i = 0; i < voxels.Length; ++i)
                 {
+                    // voxels 배열을 동일하게 순회하면서 null인 복셀을 생성.
                     if (voxels[i] == null) { CreateVoxel(i); }
+                    // 각 복셀의 MeshFilter 컴포넌트를 가져와 그 안에 있는 sharedMesh를 m_mesh 설정. 메쉬데이터 설정
                     voxels[i].GetComponent<MeshFilter>().sharedMesh = m_mesh;
                 }
             }
+            // centerVoxels 배열이 null이 아닌 경우 배열을 순회하면서 각 중앙 voxel처리.
             if (centerVoxels != null)
             {
                 for (int i = 0; i < centerVoxels.Length; ++i)
                 {
+                    // null이면 중앙 복셀을 생성.
                     if (centerVoxels[i] == null) { CreateCenterVoxel(i); }
                     centerVoxels[i].GetComponent<MeshRenderer>().sharedMaterial = centerMaterial;
                 }

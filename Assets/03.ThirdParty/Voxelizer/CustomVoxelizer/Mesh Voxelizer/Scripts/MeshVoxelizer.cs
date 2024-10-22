@@ -83,6 +83,7 @@ namespace MVoxelizer
             return go;
         }
 
+        
         public virtual GameObject VoxelizeMesh()
         {
             if (sourceGameObject == null) return null;
@@ -90,46 +91,50 @@ namespace MVoxelizer
             GameObject result = null;
             Clear();
 
+            // 복셀화에 필요한 준비 작업 진행.
             if (!Initialization()) { Clear(); return null; };
             if (!AnalyzeMesh()) { Clear(); return null; };
             if (!ProcessVoxelData()) { Clear(); return null; };
 
             //separate voxels
+            // generationType이 SeperateVoxels일 경우 각 복셀 개별 오브젝트로 생성
             if (generationType == GenerationType.SeparateVoxels)
             {
                 List<Vector3> centerVoxels = new List<Vector3>();
+                // FillCenterSpace 로 리스트 채움.
                 if (!FillCenterSpace(centerVoxels)) { Clear(); return null; };
+                // 복셀 오브젝트 생성
                 result = GenerateVoxels(centerVoxels);
             }
 
-            //single mesh
-            else
-            {
-                if (!CullFaces()) { Clear(); return null; };
-                m_result = new MVResult();
-                m_result.voxelMesh = voxelMesh;
-                m_result.grid = m_grid;
-                m_result.Init(m_source.mesh.subMeshCount);
-                if (optimization && !modifyVoxel)
-                {
-                    m_opt = new MVOptimization();
-                    m_opt.voxelMesh = voxelMesh;
-                    m_opt.grid = m_grid;
-                    m_opt.result = m_result;
-                    if (!DoOptimization()) { Clear(); return null; };
-                    if (!GenerateMeshVerticesOpt()) { Clear(); return null; };
-                    if (!GenerateMeshUVsOpt()) { Clear(); return null; };
-                    if (!GenerateMeshMaterialsOpt()) { Clear(); return null; };
-                }
-                else
-                {
-                    m_result.voxelizedMaterials = m_source.materials;
-                    if (!GenerateMeshVertices()) { Clear(); return null; };
-                    if (!GenerateMeshUVs()) { Clear(); return null; };
-                    if (!GenerateMeshBoneWeights()) { Clear(); return null; };
-                }
-                result = GenerateResult();
-            }
+            // //single mesh
+            // else
+            // {
+            //     if (!CullFaces()) { Clear(); return null; };
+            //     m_result = new MVResult();
+            //     m_result.voxelMesh = voxelMesh;
+            //     m_result.grid = m_grid;
+            //     m_result.Init(m_source.mesh.subMeshCount);
+            //     if (optimization && !modifyVoxel)
+            //     {
+            //         m_opt = new MVOptimization();
+            //         m_opt.voxelMesh = voxelMesh;
+            //         m_opt.grid = m_grid;
+            //         m_opt.result = m_result;
+            //         if (!DoOptimization()) { Clear(); return null; };
+            //         if (!GenerateMeshVerticesOpt()) { Clear(); return null; };
+            //         if (!GenerateMeshUVsOpt()) { Clear(); return null; };
+            //         if (!GenerateMeshMaterialsOpt()) { Clear(); return null; };
+            //     }
+            //     else
+            //     {
+            //         m_result.voxelizedMaterials = m_source.materials;
+            //         if (!GenerateMeshVertices()) { Clear(); return null; };
+            //         if (!GenerateMeshUVs()) { Clear(); return null; };
+            //         if (!GenerateMeshBoneWeights()) { Clear(); return null; };
+            //     }
+            //     result = GenerateResult();
+            // }
 
             Clear();
             return result;
@@ -423,11 +428,16 @@ namespace MVoxelizer
 
         protected virtual GameObject GenerateVoxels(List<Vector3> centerVoxels)
         {
+            // 생성 과정 중단할지 확인
             if (CancelProgress("Generating voxels... ", 0)) { return null; }
+            // 현재 진행중인 복셀 개수
             int counter = 0;
+            // 총 복셀 개수 나타냄.
             int total = voxelDict.Count;
+            // 진행 상태 업데이트할 간격 : 전체 복셀 개수 5% 마다 한번씩 상태 확인.
             int rem = Mathf.CeilToInt(total * 0.05f);
 
+            // 새로운 게임 오브젝트 생성 후 VoxelGroup 이라는 컴포넌트 추가
             VoxelGroup voxelGroup = new GameObject(sourceGameObject.name + " Voxels").AddComponent<VoxelGroup>();
             voxelGroup.voxelMesh = voxelMesh;
             voxelGroup.ratio = modifyVoxel ? m_grid.unitVoxelRatio.x / voxelScale.x : m_grid.unitVoxelRatio.x;
@@ -435,6 +445,7 @@ namespace MVoxelizer
             voxelGroup.voxelRotation = modifyVoxel ? voxelRotation : Vector3.zero;
             voxelGroup.uvType = uvConversion;
             voxelGroup.voxelMaterials = m_source.materials;
+            // voxelDict 만큼 크기 배열을 할당하여 voxel들의 정보를 저장할 공간을 마련.
             voxelGroup.voxels = new Voxel[voxelDict.Count];
             voxelGroup.voxelPosition = new Vector3[voxelDict.Count];
             voxelGroup.submesh = new int[voxelDict.Count];
@@ -442,29 +453,40 @@ namespace MVoxelizer
             {
                 voxelGroup.uvs = new Vector2[voxelDict.Count];
             }
+            // fillCenter 옵션이 켜져 있으면
             if (fillCenter)
             {
+                // 중앙 voxel 머티리얼과 위치 정보 설정.
                 voxelGroup.centerMaterial = centerMaterial;
+                // 리스트를 배열로 변경
                 voxelGroup.centerVoxelPosition = centerVoxels.ToArray();
+                // 각 중앙 복셀에 대한 게임 오브젝트 배열도 초기화.
                 voxelGroup.centerVoxels = new GameObject[centerVoxels.Count];
             }
 
             int temp = 0;
+            // voxelDict에 저장된 각 voxel에 대해 반복문 실행
             foreach (MVVoxel voxel in voxelDict.Values)
             {
+                // 진행 상태를 5%마다 확인해서 중단할지 결정.
                 if (counter % rem == 0 && CancelProgress("Generating voxels... ", (float)counter / total)) { return null; }
                 else counter++;
-
+                // 각 voxel의 중심 위치와 서브 메쉬 정보를 voxelGroup에 저장.
                 voxelGroup.voxelPosition[temp] = voxel.centerPos;
                 voxelGroup.submesh[temp] = voxel.subMesh;
+                // uv 타입이 SourceMesh이면 각 복셀의 UV 좌표도 계산하여 저장.
                 if (uvConversion == UVConversion.SourceMesh) voxelGroup.uvs[temp] = m_source.GetUVCoord(voxel);
                 ++temp;
             }
 
+            // 복셀 그룹 재구성
             voxelGroup.RebuildVoxels();
+            // 생성된 voxelGroup의 부모 오브젝트를 원래 soruceGameobject의 부모로 설정.
             voxelGroup.transform.parent = sourceGameObject.transform.parent;
             voxelGroup.transform.SetSiblingIndex(sourceGameObject.transform.GetSiblingIndex() + 1);
+            // 위치, 스케일, 회전을 원래 오브젝트와 동일하게 맞춤.
             voxelGroup.transform.localPosition = sourceGameObject.transform.localPosition;
+            // 스케일 적용 여부는 applyScaling 옵션에 따라 달라지며 꺼져 있으면 원래 스케일을 그대로 사용.
             if (!applyScaling) voxelGroup.transform.localScale = sourceGameObject.transform.localScale;
             voxelGroup.transform.localRotation = sourceGameObject.transform.localRotation;
 
