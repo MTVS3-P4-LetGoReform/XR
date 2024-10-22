@@ -11,8 +11,8 @@ public class RunnerManager : MonoBehaviour
    public static RunnerManager Instance { get; private set; }
    
    public NetworkRunner networkRunnerPrefab;
-   private const string PublicSession = "FusionTest 1";
    
+   private const string PublicSession = "FusionTest 1";
    private NetworkRunner _runner;
 
    private void Awake()

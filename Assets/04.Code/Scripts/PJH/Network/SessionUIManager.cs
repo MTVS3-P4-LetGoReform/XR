@@ -46,11 +46,15 @@ public class SessionUIManager : MonoBehaviour
 
         foreach (var session in sessionList)
         {
+            if (session.Name == "공용 세션")
+            {
+                return;
+            }
             string url = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
             
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
             TMP_Text sessionText = sessionButton.GetComponentInChildren<TMP_Text>();
-            sessionText.text = $"{session.Name} ({session.PlayerCount}/{session.MaxPlayers})";
+            sessionText.text = $"{session.Name} <br>{session.PlayerCount}/{session.MaxPlayers}";
             
             Button button = sessionButton.GetComponent<Button>();
             button.onClick.AddListener(() => OnJoinSession(session));
@@ -68,6 +72,10 @@ public class SessionUIManager : MonoBehaviour
         if (session.Properties.TryGetValue("Prompt", out var sessionDescription))
         {
             prompt = sessionDescription;
+        }
+        else
+        {
+            Debug.LogError("이미지를 불러오지 못했습니다.");
         }
         Debug.Log("결괏값: " + prompt);
         return prompt;
