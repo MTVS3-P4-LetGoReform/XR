@@ -53,7 +53,7 @@ public class TestBlockCreateRayCastController : MonoBehaviour
             
             if (Input.GetMouseButtonDown(1))
             {
-                if (Hit.collider.name == "OneBlock(Clone)" || Hit.collider.name == "PhysicsOneBlock(Clone)")
+                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     Destroy(Hit.collider.gameObject);
 
@@ -80,6 +80,7 @@ public class TestBlockCreateRayCastController : MonoBehaviour
     {
         noBlockText.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
+        noBlockText.gameObject.SetActive(false);
     }
     
 }
