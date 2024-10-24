@@ -6,9 +6,6 @@ using UnityEngine.UI;
 public class TestBlockShot : MonoBehaviour
 {
     public GameObject ShotBlock;
-
-    public int[] throwPower = {1,2,3,4,5,6,7,8,9,10};
-
     public TMP_Text blockCountText;
     public Transform blockShotPoint;
     public Slider chargeGauge;
@@ -32,7 +29,6 @@ public class TestBlockShot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         ThrowBlock();
     }
 
@@ -41,7 +37,6 @@ public class TestBlockShot : MonoBehaviour
         if (Input.GetKey(KeyCode.F))
         {
             isKeyPressed = true;
-            
         }
 
         if (isKeyPressed)
