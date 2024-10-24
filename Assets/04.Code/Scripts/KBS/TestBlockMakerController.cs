@@ -25,10 +25,15 @@ public class TestBlockMakerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetBlockFromMaker();
+    }
+    
+    private void GetBlockFromMaker()
+    {
         if (Vector3.Distance(transform.position, player.transform.position) < 5)
         {
             pressText.gameObject.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 if (blockMakeGauge.value >= 20)
                 {
@@ -43,8 +48,7 @@ public class TestBlockMakerController : MonoBehaviour
         {
             pressText.gameObject.SetActive(false);
         }
-        
-        
+
     }
 
    IEnumerator BlockChargeSystem()
