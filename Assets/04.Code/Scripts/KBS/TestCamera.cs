@@ -1,26 +1,28 @@
 using UnityEngine;
 
-public class TestFirstPersonCamera : MonoBehaviour
+public class TestCamera : MonoBehaviour
 {
     public Transform TpcameraPoint;
     public Transform FpCameraPoint;
 
     public float rotSpeed = 200f;
 
+    private bool togglePov = false;
     private float mx = 0f;
     private float my = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = TpcameraPoint.transform.position;
+       // transform.position = TpcameraPoint.transform.position;
         CameraRotate();
         ChangeCamPosition();
+        
     }
 
     private void CameraRotate()
@@ -36,9 +38,19 @@ public class TestFirstPersonCamera : MonoBehaviour
 
     private void ChangeCamPosition()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            transform.position = FpCameraPoint.transform.position;
+             togglePov = true;
+             if (togglePov)
+             {
+                 transform.position = FpCameraPoint.transform.position;
+             }
+
+             togglePov = !togglePov; 
         }
+        else
+        {
+             transform.position = TpcameraPoint.transform.position;
+        } 
     }
 }

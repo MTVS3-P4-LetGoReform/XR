@@ -19,9 +19,6 @@ public class TestBlockShot : MonoBehaviour
     void Start()
     {
         Debug.Log(SharedBlockData.BlockNumber);
-        
-        Cursor.lockState = CursorLockMode.Locked;
-
         animator = GetComponentInChildren<Animator>();
 
     }
