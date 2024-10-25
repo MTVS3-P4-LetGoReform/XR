@@ -10,6 +10,7 @@ public class TestBlockShot : MonoBehaviour
     public Transform blockShotPoint;
     public Slider chargeGauge;
     public int increaseSpeed = 2;
+    public Canvas throwCanvas;
     private float currentGauge = 0f;
     private Animator animator;
     private bool isKeyPressed = false;
@@ -34,6 +35,7 @@ public class TestBlockShot : MonoBehaviour
         if (Input.GetKey(KeyCode.F))
         {
             isKeyPressed = true;
+            throwCanvas.gameObject.SetActive(true);
         }
 
         if (isKeyPressed)
@@ -51,6 +53,7 @@ public class TestBlockShot : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.F))
         {
             isKeyPressed = false;
+            throwCanvas.gameObject.SetActive(false);
             currentGauge = chargeGauge.value;
             chargeGauge.value = chargeGauge.minValue;
             if (SharedBlockData.BlockNumber > 0)
