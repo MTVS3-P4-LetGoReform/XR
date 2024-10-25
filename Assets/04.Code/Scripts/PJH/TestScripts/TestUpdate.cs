@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Firebase.Database;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class TestUpdate : MonoBehaviour
@@ -8,8 +9,10 @@ public class TestUpdate : MonoBehaviour
     void Start() 
     {
         // Get the root reference location of the database.
-        mDatabase = FirebaseDatabase.DefaultInstance.RootReference;
-        WriteNewScore("updatetest",6);
+        /*mDatabase = FirebaseDatabase.DefaultInstance.RootReference;
+        WriteNewScore("updatetest",6);*/
+        EstateObject estateObject = new EstateObject();
+        estateObject.ApplyToTransform(transform);
     }
     
     private void WriteNewScore(string userId, int score) {

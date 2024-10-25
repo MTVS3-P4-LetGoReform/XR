@@ -5,7 +5,7 @@ using UnityEngine;
 
 using static FirebaseDatabaseAPI;
 
-public class Test : MonoBehaviour
+public class DBTest : MonoBehaviour
 {
     /*private void Start()
     {
