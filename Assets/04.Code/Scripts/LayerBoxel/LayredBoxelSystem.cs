@@ -17,13 +17,31 @@ public class LayeredBoxelSystem : MonoBehaviour
     
 
     
-    
+    public void DoLayering()
+    {
+        boxelizedObject = parentObject.transform.GetChild(0).gameObject;
+        voxelList = new Dictionary<float, List<GameObject>>();
+        Vector3 pos;
+        foreach (Transform child in boxelizedObject.transform)
+        {
+            pos = new Vector3(Mathf.Floor(child.position.x), Mathf.Floor(child.position.y),
+                Mathf.Floor(child.position.z));
+            pos += Vector3.one * 0.5f;
+            child.position = pos;
+            AddVoxel(child.position.y, child.gameObject);
+        }
+    }
     public void LayeringBtn()
     {
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
         voxelList = new Dictionary<float, List<GameObject>>();
+        //Vector3 pos;
         foreach (Transform child in boxelizedObject.transform)
         {
+            // pos = new Vector3(Mathf.Floor(child.position.x), Mathf.Floor(child.position.y),
+            //     Mathf.Floor(child.position.z));
+            // pos += Vector3.one * 0.5f;
+            // child.position = pos;
             AddVoxel(child.position.y, child.gameObject);
         }
 

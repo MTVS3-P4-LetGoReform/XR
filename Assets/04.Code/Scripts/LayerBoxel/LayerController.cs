@@ -11,13 +11,49 @@ public class LayerController:MonoBehaviour
     public Material guideMat;
     private List<float> keys;
     private int curIndex = -1;
-    private List<GameObject> curFloorObjects;
+    public List<GameObject> curFloorObjects;
     private List<GameObject> curGuideObjects;
     private OutlineRenderer outlineRenderer;
-    public void Start()
+    public void Awake()
     {
         outlineRenderer = new OutlineRenderer();
         curGuideObjects = new List<GameObject>();
+    }
+
+    public void AdvanceFloor()
+    {
+        
+        keys = layeredBoxelSystem.GetKeys();
+        curIndex++;
+        if (curIndex < keys.Count)
+        {
+            if (curIndex == 0)
+            {
+                layeredBoxelSystem.DeactivateAll();
+            }
+
+            if (curGuideObjects.Count != 0)
+            {
+                foreach (GameObject obj in curGuideObjects)
+                {
+                    DestroyImmediate(obj);
+                }
+
+                curGuideObjects.Clear();
+            }
+
+            curFloorObjects = layeredBoxelSystem.GetFloorObjects(keys[curIndex]);
+            //FIXME : 중복으로 계속 생기는 문제 해결
+            GameObject guideObject = new GameObject("Gudieline");
+
+            MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
+            foreach (GameObject voxel in curFloorObjects)
+            {
+                DrawGuide(voxel, guideObject);
+            }
+
+            guideObject.SetActive(false);
+        }
     }
     public void AdvanceFloorBtn()
     {

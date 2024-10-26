@@ -13,10 +13,12 @@ public class TestBlockCreateRayCastController : MonoBehaviour
     public TMP_Text noBlockText;
     public LayerMask BFLayerMask;
     private RaycastHit Hit;
+
+    private ModelPlacementChecker _modelPlacementChecker;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
     }
 
     private void Awake()
@@ -56,10 +58,18 @@ public class TestBlockCreateRayCastController : MonoBehaviour
             {
                 if ( SharedBlockData.BlockNumber > 0)
                 {
-                    Instantiate(BlockPrefab, pos, Quaternion.identity);
+                    if (_modelPlacementChecker.CheckValidation(pos))
+                    {
+                        Debug.Log("TestBlockCreateRayCastController : Valid Place!");
+                        Instantiate(BlockPrefab, pos, Quaternion.identity);
 
-                    SharedBlockData.BlockNumber -= 1;
-                    blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                        SharedBlockData.BlockNumber -= 1;
+                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                    }
+                    else
+                    {
+                        Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
+                    }
                 }
                 else
                 {
