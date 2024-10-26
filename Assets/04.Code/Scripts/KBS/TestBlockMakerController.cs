@@ -9,7 +9,7 @@ public class TestBlockMakerController : MonoBehaviour
     private TestMoveController tMoveCon;
 
     private Transform player;
-
+    private float blockChargeSpeed = 1f;
     public TMP_Text pressText;
     public TMP_Text blockCountText;
     public Slider blockMakeGauge;
@@ -55,8 +55,8 @@ public class TestBlockMakerController : MonoBehaviour
     {
         while (blockMakeGauge.value < blockMakeGauge.maxValue)
         {
-            blockMakeGauge.value += 1; // 슬라이더 값을 1씩 증가
-            yield return new WaitForSeconds(1f); // 1초 대기
+            blockMakeGauge.value += blockChargeSpeed * Time.deltaTime; // 슬라이더 값을 deltaTime에 맞게 증가
+            yield return null; // 1초 대기
         }
     }
 
