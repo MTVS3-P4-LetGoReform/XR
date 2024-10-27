@@ -9,17 +9,17 @@ public class LobbyTriggerHandler : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        /*if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
+        if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
         {
             _canInteract = false;
             ToggleSessionCanvas();
             _canInteract = true;
-        }*/
+        }
     }
 
     private void Update()
     {
-        if (_canInteract && Input.GetKeyDown(KeyCode.E))
+        if (_canInteract && Input.GetKeyDown(KeyCode.Escape))
         {
             _canInteract = false;
             ToggleSessionCanvas();
