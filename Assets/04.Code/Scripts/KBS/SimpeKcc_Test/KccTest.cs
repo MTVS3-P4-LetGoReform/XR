@@ -39,6 +39,7 @@ public class KccTest : NetworkBehaviour
         
         PlayerMove();
         PlayerRotate();
+        PlayerJump();
     }
 
     private void PlayerMove()
