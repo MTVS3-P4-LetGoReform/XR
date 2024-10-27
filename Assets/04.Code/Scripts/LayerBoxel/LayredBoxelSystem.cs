@@ -1,10 +1,8 @@
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.InputSystem.Switch;
-using UnityEngine.UI;
+
 
 public class LayeredBoxelSystem : MonoBehaviour
 {
