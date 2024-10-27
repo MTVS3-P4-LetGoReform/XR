@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class TestBlockCreateRayCastController : MonoBehaviour
@@ -10,18 +11,26 @@ public class TestBlockCreateRayCastController : MonoBehaviour
     public GameObject BlockOutline;
     public TMP_Text blockCountText;
     public TMP_Text noBlockText;
+    public LayerMask BFLayerMask;
     private RaycastHit Hit;
+
+    private ModelPlacementChecker _modelPlacementChecker;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
+    }
+
+    private void Awake()
+    {
+        BFLayerMask = LayerMask.GetMask("Block", "Floor");
     }
 
     // Update is called once per frame
     void Update()
     {
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-        if (Physics.Raycast(ray, out Hit))
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
         {
             Vector3 pos = Hit.point;
 
@@ -34,15 +43,33 @@ public class TestBlockCreateRayCastController : MonoBehaviour
 
             BlockOutline.transform.position = pos;
 
+            if (Input.GetKey(KeyCode.F))
+            {
+                BlockOutline.gameObject.SetActive(false);
+            }
+
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                BlockOutline.gameObject.SetActive(true);
+            }
+
             
             if (Input.GetMouseButtonDown(0))
             {
                 if ( SharedBlockData.BlockNumber > 0)
                 {
-                    Instantiate(BlockPrefab, pos, Quaternion.identity);
+                    if (_modelPlacementChecker.CheckValidation(pos))
+                    {
+                        Debug.Log("TestBlockCreateRayCastController : Valid Place!");
+                        Instantiate(BlockPrefab, pos, Quaternion.identity);
 
-                    SharedBlockData.BlockNumber -= 1;
-                    blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                        SharedBlockData.BlockNumber -= 1;
+                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                    }
+                    else
+                    {
+                        Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
+                    }
                 }
                 else
                 {

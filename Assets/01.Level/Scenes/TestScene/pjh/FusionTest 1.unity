@@ -463,6 +463,7 @@ GameObject:
   - component: {fileID: 896191160}
   - component: {fileID: 896191163}
   - component: {fileID: 896191164}
+  - component: {fileID: 896191165}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -604,6 +605,21 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &896191165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896191159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74a2b375dad4193489bc742716218c24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TpcameraPoint: {fileID: 0}
+  FpCameraPoint: {fileID: 0}
+  rotSpeed: 200
 --- !u!1 &1122939311
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,7 +764,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122939311}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 891777de3b85a7d4a962cc09df281942, type: 3}
   m_Name: 
@@ -761,6 +777,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2796372256017109519, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796372256017109519, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796372256017109519, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796372256017109519, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796372256017109519, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2796372256017109519, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6751042983030737509, guid: e24ec3a8198b79f409c36da91e75e835, type: 3}
       propertyPath: m_Name
       value: Session Canvas
