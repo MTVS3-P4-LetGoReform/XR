@@ -78,7 +78,7 @@ public class C_MeshVoxelizerWindow : MonoBehaviour
         if (c_meshVoxelizer != null) return;
 
         //c_meshVoxelizer = new C_MeshVoxelizerEditor();
-        c_meshVoxelizer.centerMaterial = C_MVHelper.GetDefaultVoxelMaterial();
+        //c_meshVoxelizer.centerMaterial = C_MVHelper.GetDefaultVoxelMaterial();
         c_meshVoxelizer.voxelMesh = C_MVHelper.GetDefaultVoxelMesh();
     }
     // voxelize함수 호출 및 타겟 모델 설정

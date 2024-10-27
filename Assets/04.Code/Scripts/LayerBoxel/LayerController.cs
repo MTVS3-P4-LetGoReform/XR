@@ -4,8 +4,8 @@ using UnityEngine;
 public class LayerController:MonoBehaviour
 {
     
-    public LayeredBoxelSystem layeredBoxelSystem; //인스펙터 연결
-    public ModelScaling ModelScaling;
+    private LayeredBoxelSystem layeredBoxelSystem; //인스펙터 연결
+    private ModelScaling ModelScaling;
     public GameObject parentGuideObject;
 
     public Material guideMat;
@@ -18,6 +18,8 @@ public class LayerController:MonoBehaviour
     {
         outlineRenderer = new OutlineRenderer();
         curGuideObjects = new List<GameObject>();
+        layeredBoxelSystem = FindObjectOfType<LayeredBoxelSystem>();
+        ModelScaling = FindObjectOfType<ModelScaling>();
     }
 
     public void AdvanceFloor()
