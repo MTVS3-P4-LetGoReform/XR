@@ -7,6 +7,7 @@ public class LayerController:MonoBehaviour
     private LayeredBoxelSystem layeredBoxelSystem; //인스펙터 연결
     private ModelScaling ModelScaling;
     public GameObject parentGuideObject;
+    private ModelFloorChecker _modelFloorChecker;
 
     public Material guideMat;
     private List<float> keys;
@@ -20,11 +21,12 @@ public class LayerController:MonoBehaviour
         curGuideObjects = new List<GameObject>();
         layeredBoxelSystem = FindObjectOfType<LayeredBoxelSystem>();
         ModelScaling = FindObjectOfType<ModelScaling>();
+        _modelFloorChecker = FindObjectOfType<ModelFloorChecker>();
     }
 
     public void AdvanceFloor()
     {
-        
+        Debug.Log("LayerController : AdvanceFloor()");
         keys = layeredBoxelSystem.GetKeys();
         curIndex++;
         if (curIndex < keys.Count)
@@ -34,11 +36,11 @@ public class LayerController:MonoBehaviour
                 layeredBoxelSystem.DeactivateAll();
             }
 
-            if (curGuideObjects.Count != 0)
+            else
             {
                 foreach (GameObject obj in curGuideObjects)
                 {
-                    DestroyImmediate(obj);
+                    Destroy(obj);
                 }
 
                 curGuideObjects.Clear();
@@ -49,10 +51,16 @@ public class LayerController:MonoBehaviour
             GameObject guideObject = new GameObject("Gudieline");
 
             MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
+            _modelFloorChecker.cnt = 0;
+            _modelFloorChecker.ResetVoxelPos();
             foreach (GameObject voxel in curFloorObjects)
             {
+                
                 DrawGuide(voxel, guideObject);
+                _modelFloorChecker.AddVoxelPos(voxel.transform.position);
             }
+
+            _modelFloorChecker.maxCnt = curFloorObjects.Count;
 
             guideObject.SetActive(false);
         }
@@ -65,8 +73,7 @@ public class LayerController:MonoBehaviour
         {
             layeredBoxelSystem.DeactivateAll();
         }
-
-        if (curGuideObjects.Count != 0)
+        else
         {
             foreach (GameObject obj in curGuideObjects)
             {

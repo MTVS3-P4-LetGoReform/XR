@@ -7,21 +7,23 @@ public class ModelFloorChecker : MonoBehaviour
 {
     // 한 층의 오브젝트 리스트
     public List<Vector3> voxelPos;
-    private int maxCnt = 0;
-    private int cnt = 0;
+    public int maxCnt = 1;
+    public int cnt = 0;
     private bool isComplete = true;
-
+    private LayerController _layerController;
     public void Awake()
     {
+        voxelPos = new List<Vector3>();
+        _layerController = FindObjectOfType<LayerController>();
     }
 
     public void Start()
     {
-        voxelPos = new List<Vector3>();
+        
         
     }
 
-    public void RestVoxelPos()
+    public void ResetVoxelPos()
     {
         voxelPos.Clear();
         maxCnt = 0;
@@ -29,20 +31,30 @@ public class ModelFloorChecker : MonoBehaviour
     public void AddVoxelPos(Vector3 pos)
     {
         voxelPos.Add(pos);
-        maxCnt++;
+        //maxCnt++;
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("");
+        Debug.Log("TriggerEnter");
         if (other.CompareTag("Block"))
         {
+            Debug.Log("ModelFloorChecker : Block Place Trigger");
             cnt++;
         }
 
-        if (cnt < maxCnt)
+        if (cnt >= maxCnt)
         {
-            
+            Debug.Log("ModelFloorChecker : AdvanceFloor");
+            _layerController.AdvanceFloor();
+            //ResetVoxelPos();
+            //cnt = 0;
+
+            // foreach (GameObject obj in _layerController.curFloorObjects)
+            // {
+            //     AddVoxelPos(obj.transform.position);
+            // }
+            // maxCnt = voxelPos.Count;
         }
     }
 }
