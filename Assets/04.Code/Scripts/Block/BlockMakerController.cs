@@ -11,10 +11,8 @@ public class BlockMakerController : MonoBehaviour
    // private Transform player;
     private float blockChargeSpeed = 1f;
     public TMP_Text pressText;
-    //public TMP_Text blockCountText;
     public Slider blockMakeGauge;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         tMoveCon = GetComponent<TestMoveController>();
@@ -22,8 +20,7 @@ public class BlockMakerController : MonoBehaviour
         
         blockMakeGauge.maxValue = 20;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         //GetBlockFromMaker();
