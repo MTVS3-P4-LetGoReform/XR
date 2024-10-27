@@ -40,7 +40,7 @@ public class BlockMakerController : MonoBehaviour
                 {
                     blockMakeGauge.value = 0f;
                     SharedBlockData.BlockNumber = 20;
-                    //SharedBlockData.blockCountText.text = ($"{SharedBlockData.BlockNumber}");
+                    Debug.Log(SharedBlockData.BlockNumber);
                     StartCoroutine(BlockChargeSystem());
                 }
             }

@@ -34,6 +34,7 @@ public class BlockCreateRaycastController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        blockCountText.text = $"{SharedBlockData.BlockNumber}";
         Ray ray = new Ray(camera.transform.position, camera.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
         {
