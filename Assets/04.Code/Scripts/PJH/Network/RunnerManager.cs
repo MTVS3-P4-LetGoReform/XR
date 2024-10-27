@@ -11,8 +11,8 @@ public class RunnerManager : MonoBehaviour
    public static RunnerManager Instance { get; private set; }
    
    public NetworkRunner networkRunnerPrefab;
+   public NetworkObject playerPrefab;
    
-   private const string PublicSession = "FusionTest 1";
    private NetworkRunner _runner;
 
    private void Awake()
@@ -30,13 +30,10 @@ public class RunnerManager : MonoBehaviour
 
    private async void Start()
    {
-      if (SceneManager.GetActiveScene().name == PublicSession)
-      {
-         await JoinPublicSession();
-      }
+      await JoinPublicSession(); 
    }
 
-   public async UniTask RunnerStart(StartGameArgs args)
+   public async UniTask RunnerStart(StartGameArgs args,int sceneIndex = -1)
    {
       if (_runner == null)
       {
@@ -47,6 +44,14 @@ public class RunnerManager : MonoBehaviour
       if (result.Ok)
       {
          Debug.Log($"세션이름: '{args.SessionName}'이 만들어졌습니다.");
+
+         if (sceneIndex >= 0)
+         {
+            var loadSceneTask = SceneManager.LoadSceneAsync(sceneIndex);  // 씬 로딩
+            await loadSceneTask;
+         }
+         
+         await _runner.SpawnAsync(playerPrefab);
       }
       else
       {
@@ -83,10 +88,13 @@ public class RunnerManager : MonoBehaviour
 
    public async UniTask JoinPublicSession()
    {
+      var sceneInfo = new NetworkSceneInfo();
+      sceneInfo.AddSceneRef(SceneRef.FromIndex(1)); // MainScene
       var startArgs = new StartGameArgs
       {
          GameMode = GameMode.Shared,
-         SessionName = "공용 세션",
+         //Scene = sceneInfo,
+         SessionName = "공용 세션"
       };
             
       await ShutdownRunner();

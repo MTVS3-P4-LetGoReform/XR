@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using UnityEngine;
 
@@ -8,7 +9,17 @@ public class LobbyTriggerHandler : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
+        /*if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
+        {
+            _canInteract = false;
+            ToggleSessionCanvas();
+            _canInteract = true;
+        }*/
+    }
+
+    private void Update()
+    {
+        if (_canInteract && Input.GetKeyDown(KeyCode.E))
         {
             _canInteract = false;
             ToggleSessionCanvas();
@@ -21,13 +32,16 @@ public class LobbyTriggerHandler : MonoBehaviour
         sessionCanvas.enabled = !sessionCanvas.enabled;
         if (sessionCanvas.enabled)
         {
+            Cursor.lockState = CursorLockMode.None;
             await RunnerManager.Instance.ShutdownRunner();
             await RunnerManager.Instance.JoinLobby();
+           
         }
         else
         {
             await RunnerManager.Instance.ShutdownRunner();
             await RunnerManager.Instance.JoinPublicSession();
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

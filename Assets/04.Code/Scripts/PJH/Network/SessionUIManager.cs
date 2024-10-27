@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Fusion;
 
 public class SessionUIManager : MonoBehaviour
@@ -107,7 +108,7 @@ public class SessionUIManager : MonoBehaviour
         };
 
         await RunnerManager.Instance.ShutdownRunner();
-        await RunnerManager.Instance.RunnerStart(startArgs);
+        await RunnerManager.Instance.RunnerStart(startArgs,3);
     }
     
     private async void OnJoinSession(SessionInfo session)
