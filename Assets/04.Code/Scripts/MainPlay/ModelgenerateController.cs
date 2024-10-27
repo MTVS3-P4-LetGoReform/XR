@@ -23,7 +23,7 @@ public class ModelgenerateController : MonoBehaviour
         _cMeshVoxelizerWindow.Voxelize();
         Debug.Log("Layering");
         _layeredBoxelSystem.DoLayering();
-        //Debug.Log("AdvanceFloor");
-        //_layerController.AdvanceFloor();
+        Debug.Log("AdvanceFloor");
+        _layerController.AdvanceFloor();
     }
 }
