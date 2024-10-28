@@ -35,84 +35,87 @@ public class BlockCreateRaycastController : MonoBehaviour
     void Update()
     {
         blockCountText.text = $"{SharedBlockData.BlockNumber}";
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
+        if (KccCameraTest.togglePov)
         {
-            Vector3 pos = Hit.point;
-
-            pos = new Vector3(
-                Mathf.Floor(pos.x),
-                Mathf.Floor(pos.y),
-                Mathf.Floor(pos.z));
-
-            pos += Vector3.one * 0.5f;
-
-            NewBlockOutLine.transform.position = pos;
-
-            if (Input.GetKey(KeyCode.F))
+            Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
             {
-                NewBlockOutLine.gameObject.SetActive(false);
-            }
+                Vector3 pos = Hit.point;
 
-            if (Input.GetKeyUp(KeyCode.F))
-            {
-                NewBlockOutLine.gameObject.SetActive(true);
-            }
+                pos = new Vector3(
+                    Mathf.Floor(pos.x),
+                    Mathf.Floor(pos.y),
+                    Mathf.Floor(pos.z));
 
-            
-            if (Input.GetMouseButtonDown(0))
-            {
-                if ( SharedBlockData.BlockNumber > 0)
+                pos += Vector3.one * 0.5f;
+
+                NewBlockOutLine.transform.position = pos;
+
+                if (Input.GetKey(KeyCode.F))
                 {
-                    if (_modelPlacementChecker.CheckValidation(pos))
-                    {
-                        Debug.Log("TestBlockCreateRayCastController : Valid Place!");
-                        Instantiate(BlockPrefab, pos, Quaternion.identity);
+                    NewBlockOutLine.gameObject.SetActive(false);
+                }
 
-                        SharedBlockData.BlockNumber -= 1;
-                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                if (Input.GetKeyUp(KeyCode.F))
+                {
+                    NewBlockOutLine.gameObject.SetActive(true);
+                }
+
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (SharedBlockData.BlockNumber > 0)
+                    {
+                        if (_modelPlacementChecker.CheckValidation(pos))
+                        {
+                            Debug.Log("TestBlockCreateRayCastController : Valid Place!");
+                            Instantiate(BlockPrefab, pos, Quaternion.identity);
+
+                            SharedBlockData.BlockNumber -= 1;
+                            blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                        }
+                        else
+                        {
+                            Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
+                        }
                     }
                     else
                     {
-                        Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
+                        Debug.Log("No Block!!");
+                        StartCoroutine(NoBlockTextSet());
                     }
                 }
-                else
+
+                if (Input.GetMouseButtonDown(1))
                 {
-                    Debug.Log("No Block!!");
-                    StartCoroutine(NoBlockTextSet());
+                    if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                    {
+                        Destroy(Hit.collider.gameObject);
+
+
+                        SharedBlockData.BlockNumber += 1;
+                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                    }
                 }
             }
-            
-            if (Input.GetMouseButtonDown(1))
+
+            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, PBLayerMask))
             {
-                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                if (Input.GetMouseButtonDown(1))
                 {
-                    Destroy(Hit.collider.gameObject);
+                    if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                    {
+                        Destroy(Hit.collider.gameObject);
 
 
-                    SharedBlockData.BlockNumber += 1;
-                    blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                        SharedBlockData.BlockNumber += 1;
+                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                    }
                 }
             }
+
+
         }
-
-        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, PBLayerMask))
-        {
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
-                {
-                    Destroy(Hit.collider.gameObject);
-
-
-                    SharedBlockData.BlockNumber += 1;
-                    blockCountText.text = $"{SharedBlockData.BlockNumber}";
-                }
-            }
-        }
-        
-        
     }
 
     private void OnDrawGizmos()
