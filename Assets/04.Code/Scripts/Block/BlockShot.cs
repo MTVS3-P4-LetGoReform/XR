@@ -13,9 +13,7 @@ public class BlockShot : MonoBehaviour
     private float currentGauge = 0f;
     private Animator animator;
     private bool isKeyPressed = false;
-
-   
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     void Start()
     {
         Debug.Log(SharedBlockData.BlockNumber);
@@ -23,8 +21,7 @@ public class BlockShot : MonoBehaviour
         camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
 
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         ThrowBlock();
@@ -80,8 +77,6 @@ public class BlockShot : MonoBehaviour
                     Debug.Log("No Block!!");
                 }
             }
-
-
         }
     }
 }

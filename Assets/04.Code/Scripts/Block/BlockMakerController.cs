@@ -34,33 +34,7 @@ public class BlockMakerController : MonoBehaviour
             GetBlockFromMaker();
         }
     }
-
- /*   private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            pressText.gameObject.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (blockMakeGauge.value >= 20)
-                {
-                    blockMakeGauge.value = 0f;
-                    SharedBlockData.BlockNumber = 20;
-                    Debug.Log(SharedBlockData.BlockNumber);
-                    StartCoroutine(BlockChargeSystem());
-                }
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            pressText.gameObject.SetActive(false);
-        }
-    } */
-
+    
     private void GetBlockFromMaker()
     {
         
