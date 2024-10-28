@@ -2,7 +2,7 @@
 using Fusion;
 using UnityEngine;
 
-public class KccCameraTest : MonoBehaviour
+public class KccCameraTest : NetworkBehaviour
 {
     public Transform TpCameraPoint;
     public Transform FpCameraPoint;
@@ -18,6 +18,10 @@ public class KccCameraTest : MonoBehaviour
     
     void Start()
     {
+        if (!HasStateAuthority)
+        {
+            Destroy(gameObject);
+        }
         Cursor.lockState = CursorLockMode.Locked;
     }
 

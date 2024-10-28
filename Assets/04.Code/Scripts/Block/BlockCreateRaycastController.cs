@@ -1,8 +1,9 @@
 using System.Collections;
+using Fusion;
 using TMPro;
 using UnityEngine;
 
-public class BlockCreateRaycastController : MonoBehaviour
+public class BlockCreateRaycastController : NetworkBehaviour
 {
     public GameObject BlockPrefab;
     public GameObject BlockOutline;
@@ -65,37 +66,17 @@ public class BlockCreateRaycastController : MonoBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (blockData.BlockNumber > 0)
+                    if (HasStateAuthority)
                     {
-                        if (_modelPlacementChecker.CheckValidation(pos))
-                        {
-                            Debug.Log("TestBlockCreateRayCastController : Valid Place!");
-                            Instantiate(BlockPrefab, pos, Quaternion.identity);
-
-                            blockData.BlockNumber -= 1;
-                            blockCountText.text = $"{blockData.BlockNumber}";
-                        }
-                        else
-                        {
-                            Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("No Block!!");
-                        StartCoroutine(NoBlockTextSet());
+                        CreateBlockRpc(pos);
                     }
                 }
 
                 if (Input.GetMouseButtonDown(1))
                 {
-                    if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                    if (HasStateAuthority)
                     {
-                        Destroy(Hit.collider.gameObject);
-
-
-                        blockData.BlockNumber += 1;
-                        blockCountText.text = $"{blockData.BlockNumber}";
+                        DeleteBlcokRpc();
                     }
                 }
             }
@@ -104,14 +85,7 @@ public class BlockCreateRaycastController : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(1))
                 {
-                    if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
-                    {
-                        Destroy(Hit.collider.gameObject);
-
-
-                        blockData.BlockNumber += 1;
-                        blockCountText.text = $"{blockData.BlockNumber}";
-                    }
+                    DeleteBlcokRpc();
                 }
             }
 
@@ -119,6 +93,43 @@ public class BlockCreateRaycastController : MonoBehaviour
         }
     }
 
+    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    private void CreateBlockRpc(Vector3 pos)
+    {
+        if (blockData.BlockNumber > 0)
+        {
+            if (_modelPlacementChecker.CheckValidation(pos))
+            {
+                Debug.Log("TestBlockCreateRayCastController : Valid Place!");
+                Instantiate(BlockPrefab, pos, Quaternion.identity);
+
+                blockData.BlockNumber -= 1;
+                blockCountText.text = $"{blockData.BlockNumber}";
+            }
+            else
+            {
+                Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
+            }
+        }
+        else
+        {
+            Debug.Log("No Block!!");
+            StartCoroutine(NoBlockTextSet());
+        }
+    }
+    
+    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    private void DeleteBlcokRpc()
+    {
+        if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+        {
+            Destroy(Hit.collider.gameObject);
+            
+            blockData.BlockNumber += 1;
+            blockCountText.text = $"{blockData.BlockNumber}";
+        }
+    }
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;

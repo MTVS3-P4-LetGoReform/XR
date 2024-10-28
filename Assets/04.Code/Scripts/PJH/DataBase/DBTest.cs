@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using TMPro;
 using UnityEngine;
 
@@ -7,6 +6,10 @@ using static FirebaseDatabaseAPI;
 
 public class DBTest : MonoBehaviour
 {
+    public TMP_Text userName;
+    public TMP_Text friendCount;
+    public TMP_Text estateName;
+
     /*private void Start()
     {
         User newUser = new User
@@ -50,10 +53,10 @@ public class DBTest : MonoBehaviour
                     }
                 };
 
-                // 데이터 저장 경로 설정
+                // 데이터 저장 경로 
                 string path = $"users/{newUser.userId}";
 
-                // 데이터 생성 호출
+                // 데이터 생성 
                 CreateData(path, newUser,
                     onSuccess: () => Debug.Log("사용자 데이터 생성 완료"),
                     onFailure: (exception) => Debug.LogError("데이터 생성 실패: " + exception.Message)
@@ -70,8 +73,7 @@ public class DBTest : MonoBehaviour
         InitializeFirebase(onInitialized: () =>
             {
                 Debug.Log("Firebase 초기화 완료!");
-
-                // 읽어올 사용자 ID
+                
                 var userId = "user123";
                 var path = $"users/{userId}";
                 
@@ -106,7 +108,7 @@ public class DBTest : MonoBehaviour
     {
         InitializeFirebase(onInitialized: () =>
             {
-                Debug.Log("Firebase 초기화 완료!");
+                Debug.Log("Firebase 초기화");
 
                 string userId = "user123";
                 string basePath = $"users/{userId}";
@@ -149,9 +151,6 @@ public class DBTest : MonoBehaviour
 
     private string userId = "user123";
     private string path;
-    public TMP_Text userName;
-    public TMP_Text friendCount;
-    public TMP_Text estateName;
     
     public void ListenForDataChanges()
     {
