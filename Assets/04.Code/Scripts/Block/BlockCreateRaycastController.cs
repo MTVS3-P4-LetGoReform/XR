@@ -14,12 +14,14 @@ public class BlockCreateRaycastController : MonoBehaviour
     [SerializeField]
     private Camera camera;
     private RaycastHit Hit;
+    private GameObject BasicBlockParent;
 
     private ModelPlacementChecker _modelPlacementChecker;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
+        BasicBlockParent = GameObject.Find("BasicBlockParent");
         camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
     }
@@ -67,7 +69,7 @@ public class BlockCreateRaycastController : MonoBehaviour
                     if (_modelPlacementChecker.CheckValidation(pos))
                     {
                         Debug.Log("TestBlockCreateRayCastController : Valid Place!");
-                        Instantiate(BlockPrefab, pos, Quaternion.identity);
+                        Instantiate(BlockPrefab, pos, Quaternion.identity, BasicBlockParent.transform);
 
                         SharedBlockData.BlockNumber -= 1;
                         blockCountText.text = $"{SharedBlockData.BlockNumber}";

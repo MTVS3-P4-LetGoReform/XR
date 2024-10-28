@@ -99,7 +99,7 @@ public class LayerController:MonoBehaviour
     {
         Mesh outlineMesh = outlineRenderer.CreateOutlineMesh(voxel.GetComponent<MeshFilter>().mesh);
         outlineRenderer.DrawOutline(outlineMesh, guideObject, guideMat);
-        //float scale = ModelScaling.scalingScale;
+        //float scale = ModelScaling.scaling6Scale;
         //guideObject.transform.localScale = new Vector3(scale, scale, scale);
         curGuideObjects.Add(Instantiate(guideObject, voxel.transform.position, Quaternion.identity, parentGuideObject.transform));
     }
