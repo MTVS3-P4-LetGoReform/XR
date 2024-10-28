@@ -19,7 +19,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     private GameObject BasicBlockParent;
 
     private ModelPlacementChecker _modelPlacementChecker;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
@@ -32,10 +32,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
     {
         BFLayerMask = LayerMask.GetMask("Block", "Floor");
         PBLayerMask = LayerMask.GetMask("PhysicsBlock");
-        //BlockOutline = GameObject.FindWithTag("BlockOutLine");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!HasStateAuthority)

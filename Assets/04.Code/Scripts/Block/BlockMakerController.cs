@@ -11,7 +11,6 @@ public class BlockMakerController : MonoBehaviour
 {
     private TestMoveController tMoveCon;
 
-   // private Transform player;
     private float blockChargeSpeed = 1f;
     public Transform playerTransform;
     public TMP_Text pressText;
@@ -29,7 +28,6 @@ public class BlockMakerController : MonoBehaviour
         }
         
         tMoveCon = GetComponent<TestMoveController>();
-       // player = GameObject.Find("PlayerCamera").transform;
         
         blockMakeGauge.maxValue = 20;
         
