@@ -1,7 +1,8 @@
+using Fusion;
 using Unity.Collections;
 using UnityEngine;
 
-public class BlockDataManager : MonoBehaviour
+public class BlockDataManager : NetworkBehaviour
 {
     public BlockData blockData;
 

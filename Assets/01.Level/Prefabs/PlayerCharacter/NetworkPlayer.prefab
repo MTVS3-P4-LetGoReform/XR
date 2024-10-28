@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 8781014556913385243}
   - component: {fileID: 7596400408363899965}
   - component: {fileID: 6493811960196803425}
+  - component: {fileID: 8497099668357783304}
   m_Layer: 0
   m_Name: CraftSystem_Player
   m_TagString: Untagged
@@ -97,7 +98,6 @@ MonoBehaviour:
     m_Bits: 256
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
   camera: {fileID: 2919851698672860053}
-  BasicBlockParent: {fileID: 0}
 --- !u!114 &6493811960196803425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +117,21 @@ MonoBehaviour:
   increaseSpeed: 5
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
   blockDataList: []
+--- !u!114 &8497099668357783304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2639259421042397015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf50c4df0680b24797f31f6bd7b2905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
+  physicsBlock: {fileID: 6617484009809533024, guid: 1f5f6be9225d5c84698300033a58004d, type: 3}
+  basicBlock: {fileID: 6617484009809533024, guid: 699ebc244e5330d4aaac3dbd4730380c, type: 3}
 --- !u!1 &3315967527196929146
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,6 +709,7 @@ MonoBehaviour:
   - {fileID: 1197933593454579680}
   - {fileID: 7596400408363899965}
   - {fileID: 6493811960196803425}
+  - {fileID: 8497099668357783304}
   - {fileID: 2029049658038209404}
   - {fileID: 1157512553770840163}
 --- !u!114 &65694557482261686

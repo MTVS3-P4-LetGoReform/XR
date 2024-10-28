@@ -33,7 +33,11 @@ public class BlockShot : NetworkBehaviour
 
     private void ThrowBlock()
     {
-       
+        if (!HasStateAuthority)
+        {
+            return;
+        }
+
         if (KccCameraTest.togglePov)
         {
             if (Input.GetKey(KeyCode.F))
@@ -60,40 +64,35 @@ public class BlockShot : NetworkBehaviour
                 chargeGauge.gameObject.SetActive(false);
                 currentGauge = chargeGauge.value;
                 chargeGauge.value = chargeGauge.minValue;
-
-                if (HasStateAuthority)
+                
+                if (blockData.BlockNumber > 0)
                 {
+                    blockData.BlockNumber -= 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
                     ThrowRpc();
+                }
+                else
+                {
+                    Debug.Log("No Block!!");
                 }
             }
         }
     }
 
-    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void ThrowRpc()
     {
-        
-        if (blockData.BlockNumber > 0)
-        {
-            GameObject block = 
-                Instantiate(blockData.PhysicsBlockPrefab, blockShotPoint.transform.position, Quaternion.identity);
-            
-            Debug.Log(block.transform.position);
-            Rigidbody rB = block.GetComponent<Rigidbody>();
+        GameObject block =
+            Instantiate(blockData.PhysicsBlockPrefab, blockShotPoint.transform.position, Quaternion.identity);
 
-            Vector3 throwDirection = (camera.transform.forward * 20) + (Vector3.up * 10);
+        Debug.Log(block.transform.position);
+        Rigidbody rB = block.GetComponent<Rigidbody>();
 
-            rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse);
-            Debug.Log(currentGauge);
+        Vector3 throwDirection = (camera.transform.forward * 20f) + (Vector3.up * 10f);
 
-            blockData.BlockNumber -= 1;
-            blockCountText.text = $"{blockData.BlockNumber}";
+        rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse);
+        Debug.Log(currentGauge);
 
-            animator.SetTrigger("IsThrowing");
-        }
-        else
-        {
-            Debug.Log("No Block!!");
-        }
+        animator.SetTrigger("IsThrowing");
     }
 }

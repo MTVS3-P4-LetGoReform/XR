@@ -38,6 +38,11 @@ public class BlockCreateRaycastController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!HasStateAuthority)
+        {
+            return;
+        }
+        
         blockCountText.text = $"{blockData.BlockNumber}";
         if (KccCameraTest.togglePov)
         {
@@ -68,18 +73,24 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (HasStateAuthority)
+                    if (blockData.BlockNumber > 0)
                     {
                         CreateBlockRpc(pos);
+                        blockData.BlockNumber -= 1;
+                        blockCountText.text = $"{blockData.BlockNumber}";
+                    }
+                    else
+                    {
+                        Debug.Log("No Block!!");
+                        StartCoroutine(NoBlockTextSet());
                     }
                 }
 
                 if (Input.GetMouseButtonDown(1))
                 {
-                    if (HasStateAuthority)
-                    {
-                        DeleteBlcokRpc();
-                    }
+                    DeleteBlcokRpc();
+                    blockData.BlockNumber += 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
                 }
             }
 
@@ -88,47 +99,33 @@ public class BlockCreateRaycastController : NetworkBehaviour
                 if (Input.GetMouseButtonDown(1))
                 {
                     DeleteBlcokRpc();
+                    blockData.BlockNumber += 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
                 }
             }
-
-
         }
     }
 
-    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
     {
-        if (blockData.BlockNumber > 0)
+        if (_modelPlacementChecker.CheckValidation(pos))
         {
-            if (_modelPlacementChecker.CheckValidation(pos))
-            {
-                Debug.Log("TestBlockCreateRayCastController : Valid Place!");
-                Instantiate(blockData.BasicBlockPrefab, pos, Quaternion.identity);
-
-                blockData.BlockNumber -= 1;
-                blockCountText.text = $"{blockData.BlockNumber}";
-            }
-            else
-            {
-                Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
-            }
+            Debug.Log("TestBlockCreateRayCastController : Valid Place!");
+            Instantiate(blockData.BasicBlockPrefab, pos, Quaternion.identity);
         }
         else
         {
-            Debug.Log("No Block!!");
-            StartCoroutine(NoBlockTextSet());
+            Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
         }
     }
-    
+
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void DeleteBlcokRpc()
     {
         if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
         {
             Destroy(Hit.collider.gameObject);
-            
-            blockData.BlockNumber += 1;
-            blockCountText.text = $"{blockData.BlockNumber}";
         }
     }
     
