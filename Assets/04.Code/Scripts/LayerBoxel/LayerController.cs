@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class LayerController:MonoBehaviour
 {
     
@@ -15,6 +15,9 @@ public class LayerController:MonoBehaviour
     public List<GameObject> curFloorObjects;
     private List<GameObject> curGuideObjects;
     private OutlineRenderer outlineRenderer;
+
+    public GameObject pedestal;
+    
     public void Awake()
     {
         outlineRenderer = new OutlineRenderer();
@@ -53,6 +56,7 @@ public class LayerController:MonoBehaviour
             MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
             _modelFloorChecker.cnt = 0;
             _modelFloorChecker.ResetVoxelPos();
+            int index = 0;
             foreach (GameObject voxel in curFloorObjects)
             {
                 
@@ -63,8 +67,13 @@ public class LayerController:MonoBehaviour
             _modelFloorChecker.maxCnt = curFloorObjects.Count;
 
             guideObject.SetActive(false);
+            Vector3 pPos = pedestal.transform.position;
+            MoveToTarget(pedestal, new Vector3(pPos.x, pPos.y+1f, pPos.z), 1f);
+            // Vector3 pPos = pedestal.transform.position;
+            // pedestal.transform.position = new Vector3(pPos.x, pPos.y + 1f, pPos.z);
         }
     }
+    
     public void AdvanceFloorBtn()
     {
         keys = layeredBoxelSystem.GetKeys();
@@ -98,8 +107,13 @@ public class LayerController:MonoBehaviour
     {
         Mesh outlineMesh = outlineRenderer.CreateOutlineMesh(voxel.GetComponent<MeshFilter>().mesh);
         outlineRenderer.DrawOutline(outlineMesh, guideObject, guideMat);
-        float scale = ModelScaling.scalingScale;
-        guideObject.transform.localScale = new Vector3(scale, scale, scale);
+        //float scale = ModelScaling.scaling6Scale;
+        //guideObject.transform.localScale = new Vector3(scale, scale, scale);
         curGuideObjects.Add(Instantiate(guideObject, voxel.transform.position, Quaternion.identity, parentGuideObject.transform));
+    }
+
+    public void MoveToTarget(GameObject target, Vector3 targetPos, float duration)
+    {
+        target.transform.DOMove(targetPos, duration).SetEase(Ease.InOutSine);
     }
 }
