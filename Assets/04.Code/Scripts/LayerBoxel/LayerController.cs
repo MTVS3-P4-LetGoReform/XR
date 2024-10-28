@@ -53,6 +53,7 @@ public class LayerController:MonoBehaviour
             MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
             _modelFloorChecker.cnt = 0;
             _modelFloorChecker.ResetVoxelPos();
+            int index = 0;
             foreach (GameObject voxel in curFloorObjects)
             {
                 
@@ -98,8 +99,8 @@ public class LayerController:MonoBehaviour
     {
         Mesh outlineMesh = outlineRenderer.CreateOutlineMesh(voxel.GetComponent<MeshFilter>().mesh);
         outlineRenderer.DrawOutline(outlineMesh, guideObject, guideMat);
-        float scale = ModelScaling.scalingScale;
-        guideObject.transform.localScale = new Vector3(scale, scale, scale);
+        //float scale = ModelScaling.scalingScale;
+        //guideObject.transform.localScale = new Vector3(scale, scale, scale);
         curGuideObjects.Add(Instantiate(guideObject, voxel.transform.position, Quaternion.identity, parentGuideObject.transform));
     }
 }
