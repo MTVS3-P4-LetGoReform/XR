@@ -10,6 +10,7 @@ public class BlockMakerController : MonoBehaviour
 
    // private Transform player;
     private float blockChargeSpeed = 1f;
+    public Transform playerTransform;
     public TMP_Text pressText;
     public Slider blockMakeGauge;
     
@@ -19,14 +20,22 @@ public class BlockMakerController : MonoBehaviour
        // player = GameObject.Find("PlayerCamera").transform;
         
         blockMakeGauge.maxValue = 20;
+        StartCoroutine(FindPlayer());
     }
     
-    void Update()
+    void LateUpdate()
     {
-        //GetBlockFromMaker();
+        if (playerTransform == null)
+        {
+            return;
+        }
+        else
+        {
+            GetBlockFromMaker();
+        }
     }
 
-    private void OnTriggerStay(Collider other)
+ /*   private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
@@ -50,11 +59,12 @@ public class BlockMakerController : MonoBehaviour
         {
             pressText.gameObject.SetActive(false);
         }
-    }
+    } */
 
-   /* private void GetBlockFromMaker()
+    private void GetBlockFromMaker()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) < 5)
+        
+        if (Vector3.Distance(transform.position, playerTransform.transform.position) < 5)
         {
             pressText.gameObject.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E))
@@ -63,7 +73,6 @@ public class BlockMakerController : MonoBehaviour
                 {
                     blockMakeGauge.value = 0f;
                     SharedBlockData.BlockNumber = 20;
-                    blockCountText.text = ($"{SharedBlockData.BlockNumber}");
                     StartCoroutine(BlockChargeSystem());
                 }
             }
@@ -73,7 +82,7 @@ public class BlockMakerController : MonoBehaviour
             pressText.gameObject.SetActive(false);
         }
 
-    } */
+    } 
 
     IEnumerator BlockChargeSystem()
     {
@@ -84,8 +93,21 @@ public class BlockMakerController : MonoBehaviour
         }
     }
 
-    private void BlockMakeGaugeController()
+    private IEnumerator FindPlayer()
     {
+        GameObject playerObject = null;
+
+        while (playerObject == null)
+        {
+            playerObject = GameObject.FindWithTag("Player");
+
+            if (playerObject == null)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        playerTransform = playerObject.transform;
         
     }
 }
