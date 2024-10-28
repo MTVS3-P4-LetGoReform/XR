@@ -21,14 +21,14 @@ public class KccTest : NetworkBehaviour
     {
         networkCC = GetComponent<NetworkCharacterController>();
         animator = GetComponentInChildren<Animator>();
-        camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+        
     }
 
     public override void Spawned()
     {
         if (HasStateAuthority)
         {
-            
+            camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         }
     } 
 
