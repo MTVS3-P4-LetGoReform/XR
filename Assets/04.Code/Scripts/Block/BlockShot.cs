@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fusion;
 using TMPro;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class BlockShot : NetworkBehaviour
     public Slider chargeGauge;
     public int increaseSpeed = 2;
     public BlockData blockData;
+    public List<BlockData> blockDataList;
     private Camera camera;
     private float currentGauge = 0f;
     private Animator animator;
@@ -31,6 +33,7 @@ public class BlockShot : NetworkBehaviour
 
     private void ThrowBlock()
     {
+       
         if (KccCameraTest.togglePov)
         {
             if (Input.GetKey(KeyCode.F))
@@ -69,9 +72,12 @@ public class BlockShot : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void ThrowRpc()
     {
+        
         if (blockData.BlockNumber > 0)
         {
-            GameObject block = Instantiate(ShotBlock, blockShotPoint.transform.position, Quaternion.identity);
+            GameObject block = 
+                Instantiate(blockData.PhysicsBlockPrefab, blockShotPoint.transform.position, Quaternion.identity);
+            
             Debug.Log(block.transform.position);
             Rigidbody rB = block.GetComponent<Rigidbody>();
 

@@ -69,12 +69,12 @@ public class RunnerManager : MonoBehaviour
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
       
-      if (SceneManager.GetActiveScene().name == "Proto_PlayScene PJH")
+     /* if (SceneManager.GetActiveScene().name == "Proto_PlayScene PJH")
       {
          var makerOp = _runner.SpawnAsync(blockMakerPrefab,new Vector3(7.3f,0,-6.971f),quaternion.identity);
          UniTask.WaitUntil(() => makerOp.Status == NetworkSpawnStatus.Spawned);
-      }
-   }
+      } */
+   } 
    
    public async UniTask ShutdownRunner()
    {

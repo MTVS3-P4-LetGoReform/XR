@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Fusion;
 using TMPro;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BlockMakerController : NetworkBehaviour
+public class BlockMakerController : MonoBehaviour
 {
     private TestMoveController tMoveCon;
 
@@ -15,14 +17,10 @@ public class BlockMakerController : NetworkBehaviour
     public TMP_Text pressText;
     public Slider blockMakeGauge;
     public BlockData blockData;
+    public List<BlockData> blockDataList;
     
     void Start()
     {
-        if (!HasStateAuthority)
-        {
-            Destroy(gameObject);
-        }
-        
         GameObject textObject = GameObject.Find("Press_E_Text");
         if (textObject != null)
         {
@@ -34,6 +32,8 @@ public class BlockMakerController : NetworkBehaviour
        // player = GameObject.Find("PlayerCamera").transform;
         
         blockMakeGauge.maxValue = 20;
+        
+        
         StartCoroutine(FindPlayer());
     }
     

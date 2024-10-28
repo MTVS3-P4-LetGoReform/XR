@@ -103,7 +103,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
             if (_modelPlacementChecker.CheckValidation(pos))
             {
                 Debug.Log("TestBlockCreateRayCastController : Valid Place!");
-                Instantiate(BlockPrefab, pos, Quaternion.identity);
+                Instantiate(blockData.BasicBlockPrefab, pos, Quaternion.identity);
 
                 blockData.BlockNumber -= 1;
                 blockCountText.text = $"{blockData.BlockNumber}";

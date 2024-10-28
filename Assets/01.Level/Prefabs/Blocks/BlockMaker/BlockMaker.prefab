@@ -390,7 +390,6 @@ GameObject:
   - component: {fileID: 6943466235661733832}
   - component: {fileID: 5424063927790341739}
   - component: {fileID: 8223894503367897132}
-  - component: {fileID: 666640629107303093}
   - component: {fileID: 2567428698269638129}
   m_Layer: 0
   m_Name: BlockMaker
@@ -505,27 +504,7 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   pressText: {fileID: 0}
   blockMakeGauge: {fileID: 7394132997851431421}
---- !u!65 &666640629107303093
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7527632114032171069}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.1769967, y: 0.5255104, z: 1.98}
-  m_Center: {x: -0.076783, y: 0.2627552, z: 0.0000006109476}
+  blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
 --- !u!114 &2567428698269638129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,5 +521,4 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 8223894503367897132}
+  NetworkedBehaviours: []
