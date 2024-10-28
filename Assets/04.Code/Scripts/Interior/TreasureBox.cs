@@ -1,16 +1,18 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class TreasureBox : MonoBehaviour
 {
     public Transform playerTransform;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public TMP_Text pressEText;
+    
     void Start()
     {
         StartCoroutine(FindPlayer());
     }
 
-    // Update is called once per frame
+    
     void LateUpdate()
     {
         if (playerTransform == null)
@@ -25,7 +27,14 @@ public class TreasureBox : MonoBehaviour
 
     private void GetTreasureResult()
     {
-        
+        if (Vector3.Distance(transform.position, playerTransform.position) < 5f)
+        {
+            pressEText.gameObject.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                
+            }
+        }
         
         
     }

@@ -11,6 +11,7 @@ public class BlockCreateRaycastController : MonoBehaviour
     public TMP_Text blockCountText;
     public LayerMask BFLayerMask;
     public LayerMask PBLayerMask;
+    public BlockData blockData;
     [SerializeField]
     private Camera camera;
     private RaycastHit Hit;
@@ -34,7 +35,7 @@ public class BlockCreateRaycastController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+        blockCountText.text = $"{blockData.BlockNumber}";
         if (KccCameraTest.togglePov)
         {
             Ray ray = new Ray(camera.transform.position, camera.transform.forward);
@@ -64,15 +65,15 @@ public class BlockCreateRaycastController : MonoBehaviour
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (SharedBlockData.BlockNumber > 0)
+                    if (blockData.BlockNumber > 0)
                     {
                         if (_modelPlacementChecker.CheckValidation(pos))
                         {
                             Debug.Log("TestBlockCreateRayCastController : Valid Place!");
                             Instantiate(BlockPrefab, pos, Quaternion.identity);
 
-                            SharedBlockData.BlockNumber -= 1;
-                            blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                            blockData.BlockNumber -= 1;
+                            blockCountText.text = $"{blockData.BlockNumber}";
                         }
                         else
                         {
@@ -93,8 +94,8 @@ public class BlockCreateRaycastController : MonoBehaviour
                         Destroy(Hit.collider.gameObject);
 
 
-                        SharedBlockData.BlockNumber += 1;
-                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                        blockData.BlockNumber += 1;
+                        blockCountText.text = $"{blockData.BlockNumber}";
                     }
                 }
             }
@@ -108,8 +109,8 @@ public class BlockCreateRaycastController : MonoBehaviour
                         Destroy(Hit.collider.gameObject);
 
 
-                        SharedBlockData.BlockNumber += 1;
-                        blockCountText.text = $"{SharedBlockData.BlockNumber}";
+                        blockData.BlockNumber += 1;
+                        blockCountText.text = $"{blockData.BlockNumber}";
                     }
                 }
             }
