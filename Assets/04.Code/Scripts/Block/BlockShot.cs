@@ -10,6 +10,7 @@ public class BlockShot : NetworkBehaviour
     public Transform blockShotPoint;
     public Slider chargeGauge;
     public int increaseSpeed = 2;
+    public BlockData blockData;
     private Camera camera;
     private float currentGauge = 0f;
     private Animator animator;
@@ -17,7 +18,7 @@ public class BlockShot : NetworkBehaviour
     
     void Start()
     {
-        Debug.Log(SharedBlockData.BlockNumber);
+        Debug.Log(blockData.BlockNumber);
         animator = GetComponentInChildren<Animator>();
         camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
 
@@ -68,7 +69,7 @@ public class BlockShot : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void ThrowRpc()
     {
-        if (SharedBlockData.BlockNumber > 0)
+        if (blockData.BlockNumber > 0)
         {
             GameObject block = Instantiate(ShotBlock, blockShotPoint.transform.position, Quaternion.identity);
             Debug.Log(block.transform.position);
@@ -79,8 +80,8 @@ public class BlockShot : NetworkBehaviour
             rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse);
             Debug.Log(currentGauge);
 
-            SharedBlockData.BlockNumber -= 1;
-            blockCountText.text = $"{SharedBlockData.BlockNumber}";
+            blockData.BlockNumber -= 1;
+            blockCountText.text = $"{blockData.BlockNumber}";
 
             animator.SetTrigger("IsThrowing");
         }

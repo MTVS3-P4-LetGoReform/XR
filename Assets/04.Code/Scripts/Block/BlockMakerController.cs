@@ -14,6 +14,7 @@ public class BlockMakerController : NetworkBehaviour
     public Transform playerTransform;
     public TMP_Text pressText;
     public Slider blockMakeGauge;
+    public BlockData blockData;
     
     void Start()
     {
@@ -59,7 +60,7 @@ public class BlockMakerController : NetworkBehaviour
                 if (blockMakeGauge.value >= 20)
                 {
                     blockMakeGauge.value = 0f;
-                    SharedBlockData.BlockNumber = 20;
+                    blockData.BlockNumber = 20;
                     StartCoroutine(BlockChargeSystem());
                 }
             }
