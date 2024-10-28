@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
-using Fusion.Sockets;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,8 +11,11 @@ public class RunnerManager : MonoBehaviour
    public NetworkRunner networkRunnerPrefab;
    public NetworkObject playerPrefab;
    public NetworkObject blockMakerPrefab;
-   public Transform spawnPoint;
+   public Transform publicParkSpawnPoint;
+   public Transform playSpawnPoint;
+   public Transform personalSpawnPoint;
    
+   private Transform _currentSpawnPoint;
    private NetworkRunner _runner;
    private NetworkObject _spawnedPlayer;
 
@@ -65,7 +65,20 @@ public class RunnerManager : MonoBehaviour
    
    private async UniTask PlayerSpawn()
    {
-      var playerOp = _runner.SpawnAsync(playerPrefab,spawnPoint.position,quaternion.identity);
+      switch (SceneManager.GetActiveScene().name)
+      {
+         case "Proto_PublicParkScene":
+            _currentSpawnPoint = publicParkSpawnPoint;
+            break;
+         case "Proto_PlayScene":
+            _currentSpawnPoint = playSpawnPoint;
+            break;
+         case "Proto_PersonalScene":
+            _currentSpawnPoint = personalSpawnPoint;
+            break;
+      }
+     
+      var playerOp = _runner.SpawnAsync(playerPrefab,_currentSpawnPoint.position,quaternion.identity);
       UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
