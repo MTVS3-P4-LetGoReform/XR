@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,8 +13,10 @@ public class RunnerManager : MonoBehaviour
    
    public NetworkRunner networkRunnerPrefab;
    public NetworkObject playerPrefab;
+   public NetworkObject blockMakerPrefab;
    
    private NetworkRunner _runner;
+   private NetworkObject _spawnedPlayer;
 
    private void Awake()
    {
@@ -50,12 +53,26 @@ public class RunnerManager : MonoBehaviour
             var loadSceneTask = SceneManager.LoadSceneAsync(sceneIndex);  // 씬 로딩
             await loadSceneTask;
          }
-         
-         await _runner.SpawnAsync(playerPrefab);
+
+         await PlayerSpawn();
       }
       else
       {
          Debug.LogError($"세션 생성에 실패했습니다.: {result.ShutdownReason}");
+      }
+   }
+   
+   private async UniTask PlayerSpawn()
+   {
+      var playerOp = _runner.SpawnAsync(playerPrefab);
+      UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
+      _spawnedPlayer = playerOp.Object;
+      _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
+      
+      if (SceneManager.GetActiveScene().name == "Proto_PlayScene PJH")
+      {
+         var makerOp = _runner.SpawnAsync(blockMakerPrefab,new Vector3(7.3f,0,-6.971f),quaternion.identity);
+         UniTask.WaitUntil(() => makerOp.Status == NetworkSpawnStatus.Spawned);
       }
    }
    

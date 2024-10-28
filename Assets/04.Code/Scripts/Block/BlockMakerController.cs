@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
+using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BlockMakerController : MonoBehaviour
+public class BlockMakerController : NetworkBehaviour
 {
     private TestMoveController tMoveCon;
 
@@ -16,6 +17,18 @@ public class BlockMakerController : MonoBehaviour
     
     void Start()
     {
+        if (!HasStateAuthority)
+        {
+            Destroy(gameObject);
+        }
+        
+        GameObject textObject = GameObject.Find("Press_E_Text");
+        if (textObject != null)
+        {
+            pressText = textObject.GetComponent<TMP_Text>();
+            pressText.gameObject.SetActive(false);
+        }
+        
         tMoveCon = GetComponent<TestMoveController>();
        // player = GameObject.Find("PlayerCamera").transform;
         

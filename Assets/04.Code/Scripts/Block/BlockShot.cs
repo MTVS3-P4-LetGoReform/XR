@@ -1,8 +1,9 @@
+using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BlockShot : MonoBehaviour
+public class BlockShot : NetworkBehaviour
 {
     public GameObject ShotBlock;
     public TMP_Text blockCountText;
@@ -55,28 +56,37 @@ public class BlockShot : MonoBehaviour
                 chargeGauge.gameObject.SetActive(false);
                 currentGauge = chargeGauge.value;
                 chargeGauge.value = chargeGauge.minValue;
-                if (SharedBlockData.BlockNumber > 0)
+
+                if (HasStateAuthority)
                 {
-                    GameObject block = Instantiate(ShotBlock, blockShotPoint.transform.position, Quaternion.identity);
-                    Debug.Log(block.transform.position);
-                    Rigidbody rB = block.GetComponent<Rigidbody>();
-
-                    Vector3 throwDirection = (camera.transform.forward * 20) + (Vector3.up * 10);
-
-                    rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse);
-                    Debug.Log(currentGauge);
-
-                    SharedBlockData.BlockNumber -= 1;
-                    blockCountText.text = $"{SharedBlockData.BlockNumber}";
-
-                    animator.SetTrigger("IsThrowing");
-
-                }
-                else
-                {
-                    Debug.Log("No Block!!");
+                    ThrowRpc();
                 }
             }
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    private void ThrowRpc()
+    {
+        if (SharedBlockData.BlockNumber > 0)
+        {
+            GameObject block = Instantiate(ShotBlock, blockShotPoint.transform.position, Quaternion.identity);
+            Debug.Log(block.transform.position);
+            Rigidbody rB = block.GetComponent<Rigidbody>();
+
+            Vector3 throwDirection = (camera.transform.forward * 20) + (Vector3.up * 10);
+
+            rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse);
+            Debug.Log(currentGauge);
+
+            SharedBlockData.BlockNumber -= 1;
+            blockCountText.text = $"{SharedBlockData.BlockNumber}";
+
+            animator.SetTrigger("IsThrowing");
+        }
+        else
+        {
+            Debug.Log("No Block!!");
         }
     }
 }
