@@ -32,7 +32,8 @@ public class TreasureBox : MonoBehaviour
             pressEText.gameObject.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E))
             {
-                
+                //보상 스태츄를 얻는 부분
+                pressEText.gameObject.SetActive(false);
             }
         }
         
