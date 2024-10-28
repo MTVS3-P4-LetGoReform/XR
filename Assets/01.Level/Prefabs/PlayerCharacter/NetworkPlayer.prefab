@@ -110,13 +110,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376cd7c123b4d844cb44b95e60ca2fc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShotBlock: {fileID: 6617484009809533024, guid: 1f5f6be9225d5c84698300033a58004d, type: 3}
   blockCountText: {fileID: 2391559843938026990}
   blockShotPoint: {fileID: 251832762674884464}
   chargeGauge: {fileID: 1247154832889511721}
   increaseSpeed: 5
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
-  blockDataList: []
 --- !u!114 &8497099668357783304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,6 +673,7 @@ GameObject:
   - component: {fileID: 1197933593454579680}
   - component: {fileID: -8782103467466904132}
   - component: {fileID: -1937622748263621269}
+  - component: {fileID: -3834339856755207954}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -720,6 +719,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 65694557482261686}
   - {fileID: 1197933593454579680}
+  - {fileID: -3834339856755207954}
   - {fileID: 7596400408363899965}
   - {fileID: 6493811960196803425}
   - {fileID: 8497099668357783304}
@@ -833,6 +833,18 @@ CapsuleCollider:
   m_Height: 2.11
   m_Direction: 1
   m_Center: {x: 0, y: 1.12, z: 0}
+--- !u!114 &-3834339856755207954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6387794623503204657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6376dd7fc23b3764483a7349b58502e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6482207985683558296
 GameObject:
   m_ObjectHideFlags: 0
