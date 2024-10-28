@@ -34,10 +34,6 @@ public class Canon_Block : MonoBehaviour
         playerTransform.position = playerCanonPoint.position;
         
         
-        
-        
-        
-        
     }
 
     
