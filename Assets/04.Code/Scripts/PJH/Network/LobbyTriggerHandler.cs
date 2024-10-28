@@ -12,8 +12,8 @@ public class LobbyTriggerHandler : MonoBehaviour
         if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
         {
             _canInteract = false;
-            ToggleSessionCanvas();
-            _canInteract = true;
+            Debug.Log("이게 왜 두번??");
+            JoinLobbyTrigger();
         }
     }
 
@@ -22,7 +22,7 @@ public class LobbyTriggerHandler : MonoBehaviour
         if (_canInteract && Input.GetKeyDown(KeyCode.Escape))
         {
             _canInteract = false;
-            ToggleSessionCanvas();
+            JoinPublicSessionTrigger();
             _canInteract = true;
         }
     }
@@ -32,16 +32,31 @@ public class LobbyTriggerHandler : MonoBehaviour
         sessionCanvas.enabled = !sessionCanvas.enabled;
         if (sessionCanvas.enabled)
         {
-            Cursor.lockState = CursorLockMode.None;
-            await RunnerManager.Instance.ShutdownRunner();
-            await RunnerManager.Instance.JoinLobby();
+            
            
         }
         else
         {
-            await RunnerManager.Instance.ShutdownRunner();
-            await RunnerManager.Instance.JoinPublicSession();
-            Cursor.lockState = CursorLockMode.Locked;
+            
         }
+    }
+
+    private async void JoinLobbyTrigger()
+    {
+        sessionCanvas.enabled = true;
+        Debug.Log("Interact");
+        Cursor.lockState = CursorLockMode.None;
+        await RunnerManager.Instance.ShutdownRunner();
+        await RunnerManager.Instance.JoinLobby();
+        _canInteract = true;
+    }
+
+    private async void JoinPublicSessionTrigger()
+    {
+        sessionCanvas.enabled = false;
+        Debug.Log("Interact");
+        await RunnerManager.Instance.ShutdownRunner();
+        await RunnerManager.Instance.JoinPublicSession();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

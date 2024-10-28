@@ -14,6 +14,7 @@ public class RunnerManager : MonoBehaviour
    public NetworkRunner networkRunnerPrefab;
    public NetworkObject playerPrefab;
    public NetworkObject blockMakerPrefab;
+   public Transform spawnPoint;
    
    private NetworkRunner _runner;
    private NetworkObject _spawnedPlayer;
@@ -64,7 +65,7 @@ public class RunnerManager : MonoBehaviour
    
    private async UniTask PlayerSpawn()
    {
-      var playerOp = _runner.SpawnAsync(playerPrefab);
+      var playerOp = _runner.SpawnAsync(playerPrefab,spawnPoint.position,quaternion.identity);
       UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
