@@ -61,8 +61,10 @@ public class BlockShot : MonoBehaviour
                 GameObject block = Instantiate(ShotBlock, blockShotPoint.transform.position, Quaternion.identity);
                 Debug.Log(block.transform.position);
                 Rigidbody rB = block.GetComponent<Rigidbody>();
+
+                Vector3 throwDirection = (camera.transform.forward * 20) + (Vector3.up * 10);
                 
-                rB.AddForce(camera.transform.forward * currentGauge, ForceMode.Impulse); 
+                rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse); 
                 Debug.Log(currentGauge);
                 
                 SharedBlockData.BlockNumber -= 1;
@@ -76,6 +78,8 @@ public class BlockShot : MonoBehaviour
                 Debug.Log("No Block!!");
             }
         }
+
+       
     }
     
     
