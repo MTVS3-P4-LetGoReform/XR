@@ -16,12 +16,14 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [SerializeField]
     private Camera camera;
     private RaycastHit Hit;
+    private GameObject BasicBlockParent;
 
     private ModelPlacementChecker _modelPlacementChecker;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
+        BasicBlockParent = GameObject.Find("BasicBlockParent");
         camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
     }

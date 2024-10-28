@@ -7,6 +7,7 @@ public class ModelFloorChecker : MonoBehaviour
 {
     // 한 층의 오브젝트 리스트
     public List<Vector3> voxelPos;
+    public List<GameObject> voxels;
     public int maxCnt = 1;
     public int cnt = 0;
     private bool isComplete = true;
@@ -14,6 +15,7 @@ public class ModelFloorChecker : MonoBehaviour
     public void Awake()
     {
         voxelPos = new List<Vector3>();
+        voxels = new List<GameObject>();
         _layerController = FindObjectOfType<LayerController>();
     }
 
@@ -26,6 +28,7 @@ public class ModelFloorChecker : MonoBehaviour
     public void ResetVoxelPos()
     {
         voxelPos.Clear();
+        voxels.Clear();
         maxCnt = 0;
     }
     public void AddVoxelPos(Vector3 pos)
@@ -40,11 +43,44 @@ public class ModelFloorChecker : MonoBehaviour
         if (other.CompareTag("Block"))
         {
             Debug.Log("ModelFloorChecker : Block Place Trigger");
+            voxels.Add(other.gameObject);
             cnt++;
         }
 
         if (cnt >= maxCnt)
         {
+            Vector3 scaleFactor = new Vector3(10.0f, 10.0f, 10.0f);
+            for (int i = 0; i < maxCnt; i++)
+            {
+                MeshFilter targetFilter = voxels[i].GetComponent<MeshFilter>();
+                MeshRenderer sourceRenderer = _layerController.curFloorObjects[i].GetComponent<MeshRenderer>();
+                MeshRenderer targetRenderer = voxels[i].GetComponent<MeshRenderer>();
+
+                targetRenderer.materials = sourceRenderer.materials;  // material 전체 배열 복사
+                targetFilter.sharedMesh = _layerController.curFloorObjects[i].GetComponent<MeshFilter>().sharedMesh;
+
+                // Mesh mesh = Instantiate(targetFilter.mesh);
+                // Vector3[] vertices = mesh.vertices;
+                //
+                // for (int j = 0; j < vertices.Length; j++)
+                // {
+                //     vertices[j] = Vector3.Scale(vertices[j], scaleFactor);
+                // }
+                //
+                // mesh.vertices = vertices;
+                // mesh.RecalculateBounds();
+                //
+                // targetFilter.mesh = mesh;
+            }
+            
+            // foreach (GameObject vox in _layerController.curFloorObjects)
+            // {
+            //     vox.SetActive(true);
+            // }
+            // foreach (GameObject voxel in voxels)
+            // {
+            //     voxel.SetActive(false);
+            // }
             Debug.Log("ModelFloorChecker : AdvanceFloor");
             _layerController.AdvanceFloor();
             //ResetVoxelPos();
@@ -58,47 +94,3 @@ public class ModelFloorChecker : MonoBehaviour
         }
     }
 }
-    
-    // public void Initialize()
-    // {
-    //     voxelList = _layerController.curFloorObjects;
-    //     maxCnt = voxelList.Count;
-    //     StartCheckFloorComplete();
-    // }
-    // public void StartCheckFloorComplete()
-    // {
-    //     StartCoroutine(CheckFloorComplete());
-    // }
-
-
-    // public bool CheckValidation(Vector3 pos)
-    // {
-    //     foreach (GameObject voxel in voxelList)
-    //     {
-    //         if (voxel.transform.position == pos)
-    //         {
-    //             cnt++;
-    //             if (cnt == maxCnt)
-    //             {
-    //                 isComplete = true;
-    //             }
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-
-    // private IEnumerator CheckFloorComplete()
-    // {
-    //     while (true)
-    //     {
-    //         yield return new WaitUntil(() => isComplete == true);
-    //         isComplete = false;
-    //         _layerController.AdvanceFloor();
-    //         // FIXME : 텍스처 갈아끼우기 추가
-    //         voxelList = _layerController.curFloorObjects;
-    //         maxCnt = voxelList.Count;
-    //         cnt = 0;
-    //     }
-    // }
