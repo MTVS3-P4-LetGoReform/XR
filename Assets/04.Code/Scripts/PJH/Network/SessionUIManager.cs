@@ -76,7 +76,7 @@ public class SessionUIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("이미지를 불러오지 못했습니다.");
+            Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
         }
         Debug.Log("결괏값: " + prompt);
         return prompt;

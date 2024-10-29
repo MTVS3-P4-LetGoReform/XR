@@ -48,13 +48,13 @@ public class KccCameraTest : NetworkBehaviour
             if (togglePov)
             {
                 // 1인칭 시점으로 전환
-                Debug.Log("Switching to First Person");
+                //Debug.Log("Switching to First Person");
                 transform.position = Vector3.Lerp(transform.position, FpCameraPoint.position, Time.deltaTime * positionLerpSpeed);
             }
             else
             {
                 // 3인칭 시점으로 전환
-                Debug.Log("Switching to Third Person");
+                //Debug.Log("Switching to Third Person");
                 transform.position = Vector3.Lerp(transform.position, TpCameraPoint.position, Time.deltaTime * positionLerpSpeed);
             }
         }

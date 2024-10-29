@@ -1,18 +1,18 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BlockShot : NetworkBehaviour
 {
-    public GameObject ShotBlock;
     public TMP_Text blockCountText;
     public Transform blockShotPoint;
     public Slider chargeGauge;
     public int increaseSpeed = 2;
     public BlockData blockData;
-    public List<BlockData> blockDataList;
     private Camera camera;
     private float currentGauge = 0f;
     private Animator animator;
@@ -33,7 +33,11 @@ public class BlockShot : NetworkBehaviour
 
     private void ThrowBlock()
     {
-       
+        if (!HasStateAuthority)
+        {
+            return;
+        }
+
         if (KccCameraTest.togglePov)
         {
             if (Input.GetKey(KeyCode.F))
@@ -60,40 +64,32 @@ public class BlockShot : NetworkBehaviour
                 chargeGauge.gameObject.SetActive(false);
                 currentGauge = chargeGauge.value;
                 chargeGauge.value = chargeGauge.minValue;
-
-                if (HasStateAuthority)
+                
+                if (blockData.BlockNumber > 0)
                 {
-                    ThrowRpc();
+                    blockData.BlockNumber -= 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
+                    Vector3 throwDirection = (camera.transform.forward * 20f) + (Vector3.up * 10f);
+                    Vector3 force = throwDirection * currentGauge;
+                    ThrowRpc(force);
+                }
+                else
+                {
+                    Debug.Log("No Block!!");
                 }
             }
         }
     }
-
-    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
-    private void ThrowRpc()
+    
+    private async UniTask ThrowRpc(Vector3 force)
     {
+        var blockOp = RunnerManager.Instance.runner.SpawnAsync(blockData.PhysicsBlockPrefab,
+            blockShotPoint.transform.position, quaternion.identity);
+        await UniTask.WaitUntil(() => blockOp.Status == NetworkSpawnStatus.Spawned);
+        Rigidbody rB = blockOp.Object.GetComponent<Rigidbody>();
         
-        if (blockData.BlockNumber > 0)
-        {
-            GameObject block = 
-                Instantiate(blockData.PhysicsBlockPrefab, blockShotPoint.transform.position, Quaternion.identity);
-            
-            Debug.Log(block.transform.position);
-            Rigidbody rB = block.GetComponent<Rigidbody>();
+        rB.AddForce(force, ForceMode.Impulse);
 
-            Vector3 throwDirection = (camera.transform.forward * 20) + (Vector3.up * 10);
-
-            rB.AddForce(throwDirection * currentGauge, ForceMode.Impulse);
-            Debug.Log(currentGauge);
-
-            blockData.BlockNumber -= 1;
-            blockCountText.text = $"{blockData.BlockNumber}";
-
-            animator.SetTrigger("IsThrowing");
-        }
-        else
-        {
-            Debug.Log("No Block!!");
-        }
+        animator.SetTrigger("IsThrowing");
     }
 }

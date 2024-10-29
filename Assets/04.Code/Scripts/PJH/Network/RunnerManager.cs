@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
-using Fusion.Sockets;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class RunnerManager : MonoBehaviour
 {
@@ -13,10 +11,15 @@ public class RunnerManager : MonoBehaviour
    
    public NetworkRunner networkRunnerPrefab;
    public NetworkObject playerPrefab;
-   public NetworkObject blockMakerPrefab;
+   public NetworkRunner runner;
    
-   private NetworkRunner _runner;
+   public Transform publicParkSpawnPoint;
+   public Transform playSpawnPoint;
+   public Transform personalSpawnPoint;
+   
    private NetworkObject _spawnedPlayer;
+   
+   private Transform _currentSpawnPoint;
 
    private void Awake()
    {
@@ -38,12 +41,12 @@ public class RunnerManager : MonoBehaviour
 
    public async UniTask RunnerStart(StartGameArgs args,int sceneIndex = -1)
    {
-      if (_runner == null)
+      if (runner == null)
       {
          InstantiateRunner();
       }
 
-      var result = await _runner.StartGame(args);
+      var result = await runner.StartGame(args);
       if (result.Ok)
       {
          Debug.Log($"세션이름: '{args.SessionName}'이 만들어졌습니다.");
@@ -64,35 +67,42 @@ public class RunnerManager : MonoBehaviour
    
    private async UniTask PlayerSpawn()
    {
-      var playerOp = _runner.SpawnAsync(playerPrefab);
+      switch (SceneManager.GetActiveScene().name)
+      {
+         case "Proto_PublicParkScene":
+            _currentSpawnPoint = publicParkSpawnPoint;
+            break;
+         case "Proto_PlayScene":
+            _currentSpawnPoint = playSpawnPoint;
+            break;
+         case "Proto_PersonalScene":
+            _currentSpawnPoint = personalSpawnPoint;
+            break;
+      }
+     
+      var playerOp = runner.SpawnAsync(playerPrefab,_currentSpawnPoint.position,quaternion.identity);
       UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
-      
-     /* if (SceneManager.GetActiveScene().name == "Proto_PlayScene PJH")
-      {
-         var makerOp = _runner.SpawnAsync(blockMakerPrefab,new Vector3(7.3f,0,-6.971f),quaternion.identity);
-         UniTask.WaitUntil(() => makerOp.Status == NetworkSpawnStatus.Spawned);
-      } */
    } 
    
    public async UniTask ShutdownRunner()
    {
-      if (_runner != null && _runner.IsRunning)
+      if (runner != null && runner.IsRunning)
       {
-         await _runner.Shutdown();
-         _runner = null;
+         await runner.Shutdown();
+         runner = null;
       }
    }
 
    public async UniTask JoinLobby()
    {
-      if (_runner == null)
+      if (runner == null)
       {
          InstantiateRunner();
       }
 
-      var result = await _runner.JoinSessionLobby(SessionLobby.Shared);
+      var result = await runner.JoinSessionLobby(SessionLobby.Shared);
       if (result.Ok)
       {
          Debug.Log("로비에 입장하였습니다.");
@@ -120,7 +130,7 @@ public class RunnerManager : MonoBehaviour
 
    private void InstantiateRunner()
    {
-      _runner = Instantiate(networkRunnerPrefab);
-      _runner.AddCallbacks(new NetworkCallbackHandler());
+      runner = Instantiate(networkRunnerPrefab);
+      runner.AddCallbacks(new NetworkCallbackHandler());
    }
 }
