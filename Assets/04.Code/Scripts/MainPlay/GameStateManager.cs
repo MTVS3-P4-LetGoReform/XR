@@ -39,37 +39,26 @@ public class GameStateManager : MonoBehaviour
         else
         {
             _instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
     }
     void Start()
     {
         _modelgenerateController = FindObjectOfType<ModelgenerateController>();
         _modelgenerateController.GeneratePlayModel();
-    }
-
-    public void Update()
-    {
-        if (isComplete)
-        {
-            DoCompleteRoutine();
-        }
-    }
-
-    private void DoCompleteRoutine()
-    {
-        guideObjects.SetActive(false);
-        otherScreen.SetActive(false);
-        pedestral.SetActive(false);
         StartCoroutine(CompleteCoroutine());
     }
+
     
+
     private IEnumerator CompleteCoroutine()
     {
         // 소리 및 효과 재생
+        yield return new WaitUntil(() => isComplete);
+        guideObjects.SetActive(false);
+        otherScreen.SetActive(false);
+        pedestral.SetActive(false);
         yield return new WaitForSeconds(5f);
         Cursor.lockState = CursorLockMode.None;
         completeScreen.SetActive(true);
     }
-    
 }

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 public class Inventory_temporary : MonoBehaviour
 {
     public Image inventory;
+    public Button closeButton;
+    public GameObject minionsPrefab;
     
     private bool isInvenPush = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,6 +20,17 @@ public class Inventory_temporary : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             inventory.gameObject.SetActive(true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Vector3 point = new Vector3(19, 26, 15);
+            Instantiate(minionsPrefab, point, Quaternion.identity);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            inventory.gameObject.SetActive(false);
         }
     }
 }

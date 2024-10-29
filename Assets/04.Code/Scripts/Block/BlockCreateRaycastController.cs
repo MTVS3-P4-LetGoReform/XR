@@ -135,6 +135,10 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void DeleteBlockRpc(NetworkObject networkObject)
     {
+        if (networkObject == null)
+        {
+            return;
+        }
         RunnerManager.Instance.runner.Despawn(networkObject);
     }
     
