@@ -103,10 +103,9 @@ public class BlockCreateRaycastController : NetworkBehaviour
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
                     DeleteBlockRpc(block);
+                    blockData.BlockNumber += 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
                 }
-
-                blockData.BlockNumber += 1;
-                blockCountText.text = $"{blockData.BlockNumber}";
             }
         }
 
@@ -118,10 +117,9 @@ public class BlockCreateRaycastController : NetworkBehaviour
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
                     DeleteBlockRpc(block);
+                    blockData.BlockNumber += 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
                 }
-
-                blockData.BlockNumber += 1;
-                blockCountText.text = $"{blockData.BlockNumber}";
             }
         }
 
