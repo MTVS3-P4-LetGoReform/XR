@@ -8,6 +8,6 @@ public class RewardChoiceController : MonoBehaviour
     public void ChoiceStatue()
     {
         statueIcon.SetActive(true);
-        
     }
+    
 }
