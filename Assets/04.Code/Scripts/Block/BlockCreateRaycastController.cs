@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using TMPro;
 using UnityEngine;
@@ -40,91 +41,101 @@ public class BlockCreateRaycastController : NetworkBehaviour
         {
             return;
         }
-        
+
         blockCountText.text = $"{blockData.BlockNumber}";
-        if (KccCameraTest.togglePov)
+
+        if (!KccCameraTest.togglePov)
         {
-            Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
+            return;
+        }
+
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
+        {
+            Vector3 pos = Hit.point;
+
+            pos = new Vector3(
+                Mathf.Floor(pos.x),
+                Mathf.Floor(pos.y),
+                Mathf.Floor(pos.z));
+
+            pos += Vector3.one * 0.5f;
+
+            NewBlockOutLine.transform.position = pos;
+
+            if (Input.GetKey(KeyCode.F))
             {
-                Vector3 pos = Hit.point;
+                NewBlockOutLine.gameObject.SetActive(false);
+            }
 
-                pos = new Vector3(
-                    Mathf.Floor(pos.x),
-                    Mathf.Floor(pos.y),
-                    Mathf.Floor(pos.z));
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                NewBlockOutLine.gameObject.SetActive(true);
+            }
 
-                pos += Vector3.one * 0.5f;
 
-                NewBlockOutLine.transform.position = pos;
-
-                if (Input.GetKey(KeyCode.F))
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (blockData.BlockNumber > 0)
                 {
-                    NewBlockOutLine.gameObject.SetActive(false);
-                }
-
-                if (Input.GetKeyUp(KeyCode.F))
-                {
-                    NewBlockOutLine.gameObject.SetActive(true);
-                }
-
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (blockData.BlockNumber > 0)
+                    if (_modelPlacementChecker.CheckValidation(pos))
                     {
-                        CreateBlockRpc(pos);
                         blockData.BlockNumber -= 1;
                         blockCountText.text = $"{blockData.BlockNumber}";
+                        Debug.Log("TestBlockCreateRayCastController : Valid Place!");
+                        CreateBlockRpc(pos);
                     }
                     else
                     {
-                        Debug.Log("No Block!!");
-                        StartCoroutine(NoBlockTextSet());
+                        Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
                     }
                 }
-
-                if (Input.GetMouseButtonDown(1))
+                else
                 {
-                    DeleteBlcokRpc();
-                    blockData.BlockNumber += 1;
-                    blockCountText.text = $"{blockData.BlockNumber}";
+                    Debug.Log("No Block!!");
+                    StartCoroutine(NoBlockTextSet());
                 }
             }
 
-            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, PBLayerMask))
+            if (Input.GetMouseButtonDown(1))
             {
-                if (Input.GetMouseButtonDown(1))
+                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
-                    DeleteBlcokRpc();
+                    var block = Hit.collider.GetComponent<NetworkObject>();
+                    DeleteBlockRpc(block);
                     blockData.BlockNumber += 1;
                     blockCountText.text = $"{blockData.BlockNumber}";
                 }
             }
         }
+
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, PBLayerMask))
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                {
+                    var block = Hit.collider.GetComponent<NetworkObject>();
+                    DeleteBlockRpc(block);
+                    blockData.BlockNumber += 1;
+                    blockCountText.text = $"{blockData.BlockNumber}";
+                }
+            }
+        }
+
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
     {
-        if (_modelPlacementChecker.CheckValidation(pos))
-        {
-            Debug.Log("TestBlockCreateRayCastController : Valid Place!");
-            Instantiate(blockData.BasicBlockPrefab, pos, Quaternion.identity);
-        }
-        else
-        {
-            Debug.Log("TestBlockCreateRayCastController : Invalid Place!");
-        }
+        RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
+            pos, Quaternion.identity);
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
-    private void DeleteBlcokRpc()
+    private void DeleteBlockRpc(NetworkObject networkObject)
     {
-        if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
-        {
-            Destroy(Hit.collider.gameObject);
-        }
+        RunnerManager.Instance.runner.Despawn(networkObject);
     }
     
     /*private void OnDrawGizmos()
