@@ -21,16 +21,16 @@ public class Inventory_temporary : MonoBehaviour
         {
             inventory.gameObject.SetActive(true);
         }
-    }
 
-    public void ChooseStatueOnClick()
-    {
-        Vector3 point = new Vector3(5, 26, -17);
-        Instantiate(minionsPrefab, point, Quaternion.identity);
-    }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Vector3 point = new Vector3(5, 26, -17);
+            Instantiate(minionsPrefab, point, Quaternion.identity);
+        }
 
-    public void CloseButtonOnClick()
-    {
-        inventory.gameObject.SetActive(false);
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            inventory.gameObject.SetActive(false);
+        }
     }
 }

@@ -39,7 +39,7 @@ public class GameStateManager : MonoBehaviour
         else
         {
             _instance = this;
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
     }
     void Start()
