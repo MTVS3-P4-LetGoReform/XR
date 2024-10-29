@@ -5,11 +5,14 @@ public class GameMasterContorller : MonoBehaviour
     private GameObject voxelizedObjects;
     public GameObject parentObject;
     public GameObject orgVoxels;
-    public GameObject guideObjects;
+
+    
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
+            GameStateManager.Instance.isComplete = true;
+            orgVoxels.SetActive(false);
             SetComplete();
         }
     }
@@ -17,8 +20,7 @@ public class GameMasterContorller : MonoBehaviour
     private void SetComplete()
     {
         voxelizedObjects = parentObject.transform.GetChild(0).gameObject;
-        guideObjects.SetActive(false);
-        orgVoxels.SetActive(false);
+        
         foreach (Transform child in voxelizedObjects.transform)
         {
             child.gameObject.SetActive(true);
