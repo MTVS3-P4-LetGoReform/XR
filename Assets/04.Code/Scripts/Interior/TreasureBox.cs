@@ -1,11 +1,13 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TreasureBox : MonoBehaviour
 {
     public Transform playerTransform;
     public TMP_Text pressEText;
+    public Button statueButton;
     
     void Start()
     {
@@ -33,7 +35,7 @@ public class TreasureBox : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 //보상 스태츄를 얻는 부분
-                pressEText.gameObject.SetActive(false);
+                statueButton.gameObject.SetActive(true);
             }
         }
         
