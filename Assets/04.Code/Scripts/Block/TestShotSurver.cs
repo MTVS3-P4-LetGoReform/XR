@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BlockShot : NetworkBehaviour
+public class TestShotServer : NetworkBehaviour
 {
     public TMP_Text blockCountText;
     public Transform blockShotPoint;
