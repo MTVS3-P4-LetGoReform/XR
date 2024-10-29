@@ -127,7 +127,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
     }
     
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(camera.transform.position, camera.transform.forward * 99999);
@@ -136,7 +136,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
         Gizmos.DrawSphere(Hit.point, 0.05f);
         
         Gizmos.DrawRay(Hit.point, Hit.normal);
-    }
+    }*/
 
     IEnumerator NoBlockTextSet()
     {
