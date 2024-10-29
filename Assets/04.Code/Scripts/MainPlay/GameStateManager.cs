@@ -68,6 +68,7 @@ public class GameStateManager : MonoBehaviour
     {
         // 소리 및 효과 재생
         yield return new WaitForSeconds(5f);
+        Cursor.lockState = CursorLockMode.None;
         completeScreen.SetActive(true);
     }
     

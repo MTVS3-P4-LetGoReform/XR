@@ -27,20 +27,6 @@ public class LobbyTriggerHandler : MonoBehaviour
         }
     }
 
-    private async void ToggleSessionCanvas()
-    {
-        sessionCanvas.enabled = !sessionCanvas.enabled;
-        if (sessionCanvas.enabled)
-        {
-            
-           
-        }
-        else
-        {
-            
-        }
-    }
-
     private async void JoinLobbyTrigger()
     {
         sessionCanvas.enabled = true;

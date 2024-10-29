@@ -115,8 +115,8 @@ public class RunnerManager : MonoBehaviour
 
    public async UniTask JoinPublicSession()
    {
-      var sceneInfo = new NetworkSceneInfo();
-      sceneInfo.AddSceneRef(SceneRef.FromIndex(1)); // MainScene
+      /*var sceneInfo = new NetworkSceneInfo();
+      sceneInfo.AddSceneRef(SceneRef.FromIndex(0));// MainScene*/
       var startArgs = new StartGameArgs
       {
          GameMode = GameMode.Shared,
@@ -125,7 +125,7 @@ public class RunnerManager : MonoBehaviour
       };
             
       await ShutdownRunner();
-      await RunnerStart(startArgs);
+      await RunnerStart(startArgs,0);
    }
 
    private void InstantiateRunner()
