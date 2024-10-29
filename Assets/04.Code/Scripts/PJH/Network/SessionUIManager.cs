@@ -101,11 +101,11 @@ public class SessionUIManager : MonoBehaviour
             GameMode = GameMode.Shared,
             SessionName = sessionName,
             PlayerCount = 4,
-            Scene = sceneInfo,
-            SessionProperties = new Dictionary<string, SessionProperty>
+            //Scene = sceneInfo,
+            /*SessionProperties = new Dictionary<string, SessionProperty>
             {
                 { "Prompt", sessionIntroductionInput.text }
-            }
+            }*/
         };
 
         await RunnerManager.Instance.ShutdownRunner();
@@ -123,6 +123,6 @@ public class SessionUIManager : MonoBehaviour
         };
 
         await RunnerManager.Instance.ShutdownRunner();
-        await RunnerManager.Instance.RunnerStart(startArgs);
+        await RunnerManager.Instance.RunnerStart(startArgs,1);
     }
 }
