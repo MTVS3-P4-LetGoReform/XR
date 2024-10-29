@@ -92,8 +92,9 @@ public class SessionUIManager : MonoBehaviour
             return;
         }
 
+        var playSceneNum = 1;
         var sceneInfo = new NetworkSceneInfo();
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(3));
+        sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneNum)); // PlayScene으로 이동
         
         var startArgs = new StartGameArgs
         {
@@ -108,7 +109,7 @@ public class SessionUIManager : MonoBehaviour
         };
 
         await RunnerManager.Instance.ShutdownRunner();
-        await RunnerManager.Instance.RunnerStart(startArgs,3);
+        await RunnerManager.Instance.RunnerStart(startArgs,playSceneNum);
     }
     
     private async void OnJoinSession(SessionInfo session)

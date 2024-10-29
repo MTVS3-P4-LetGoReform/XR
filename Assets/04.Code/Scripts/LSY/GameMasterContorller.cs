@@ -6,11 +6,17 @@ public class GameMasterContorller : MonoBehaviour
     public GameObject parentObject;
     public GameObject orgVoxels;
     public GameObject guideObjects;
+
+    public GameObject completeScreen;
+
+    public GameObject otherScreen;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             SetComplete();
+            completeScreen.SetActive(true);
+            otherScreen.SetActive(false);
         }
     }
 
