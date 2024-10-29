@@ -7,7 +7,7 @@ public class LobbyTriggerHandler : MonoBehaviour
     public Canvas sessionCanvas;
     private bool _canInteract = true;
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
         {
@@ -19,25 +19,11 @@ public class LobbyTriggerHandler : MonoBehaviour
 
     private void Update()
     {
-        if (_canInteract && Input.GetKeyDown(KeyCode.Escape))
+        if (sessionCanvas.enabled &&_canInteract && Input.GetKeyDown(KeyCode.Escape))
         {
             _canInteract = false;
             JoinPublicSessionTrigger();
             _canInteract = true;
-        }
-    }
-
-    private async void ToggleSessionCanvas()
-    {
-        sessionCanvas.enabled = !sessionCanvas.enabled;
-        if (sessionCanvas.enabled)
-        {
-            
-           
-        }
-        else
-        {
-            
         }
     }
 
