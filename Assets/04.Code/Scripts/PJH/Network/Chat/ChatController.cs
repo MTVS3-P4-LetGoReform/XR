@@ -1,17 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Photon.Chat;
 using ExitGames.Client.Photon;
-using Photon.Voice;
 using TMPro;
 
 public class ChatController : MonoBehaviour, IChatClientListener
 {
-	private ChatClient chatClient;
-	private string userName = "Text";
-	private string currentChannelName;
+	private ChatClient _chatClient;
+	private string _userName;
+	private string _currentChannelName;
 
 	public TMP_InputField inputField;
 	public TMP_Text outputText;
@@ -21,10 +17,10 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	{
 		Application.runInBackground = true;
 
-		userName = System.Environment.UserName;
-		currentChannelName = "Channel 001";
+		_userName = UserData.UserName;
+		_currentChannelName = "Channel 001";
 
-		chatClient = new ChatClient(this);
+		_chatClient = new ChatClient(this);
 
 		// var settings = new ChatAppSettings()
 		// {
@@ -32,9 +28,10 @@ public class ChatController : MonoBehaviour, IChatClientListener
 		// }
 		// chatClient.ConnectUsingSettings(settings);
 		
-		chatClient.Connect("f9b6f292-fcf5-424d-8d31-75b7450643f2", "2", new AuthenticationValues(userName));
+		_chatClient.Connect("f9b6f292-fcf5-424d-8d31-75b7450643f2", "2", new AuthenticationValues(_userName));
 
-		AddLine(string.Format("연결시도", userName));
+		//AddLine(string.Format("연결시도", _userName));
+		AddLine("연결시도");
 	}
 
 	
@@ -45,19 +42,19 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 	public void OnApplicationQuit()
 	{
-		if (chatClient != null)
+		if (_chatClient != null)
 		{
-			chatClient.Disconnect();
+			_chatClient.Disconnect();
 		}
 	}
 
-	public void DebugReturn(ExitGames.Client.Photon.DebugLevel level, string message)
+	public void DebugReturn(DebugLevel level, string message)
 	{
-		if (level == ExitGames.Client.Photon.DebugLevel.ERROR)
+		if (level == DebugLevel.ERROR)
 		{
 			Debug.LogError(message);
 		}
-		else if (level == ExitGames.Client.Photon.DebugLevel.WARNING)
+		else if (level == DebugLevel.WARNING)
 		{
 			Debug.LogWarning(message);
 		}
@@ -71,7 +68,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	{
 		AddLine("서버에 연결되었습니다.");
 
-		chatClient.Subscribe(new string[] { currentChannelName }, 10);
+		_chatClient.Subscribe(_currentChannelName, 10);
 	}
 
 	public void OnDisconnected()
@@ -114,15 +111,15 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 	void Update()
 	{
-		chatClient.Service();
+		_chatClient.Service();
 	}
 
 	public void Input_OnEndEdit(string text)
 	{
-		if (chatClient.State == ChatState.ConnectedToFrontEnd)
+		if (_chatClient.State == ChatState.ConnectedToFrontEnd)
 		{
 			//chatClient.PublishMessage(currentChannelName, text);
-			chatClient.PublishMessage(currentChannelName, inputField.text);
+			_chatClient.PublishMessage(_currentChannelName, inputField.text);
 
 			inputField.text = "";
 		}
@@ -130,11 +127,11 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
     public void OnUserSubscribed(string channel, string user)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     public void OnUserUnsubscribed(string channel, string user)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

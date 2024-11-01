@@ -10,7 +10,7 @@ public class DBTest : MonoBehaviour
     public TMP_Text friendCount;
     public TMP_Text estateName;
 
-    /*private void Start()
+    private void Start()
     {
         User newUser = new User
         {
@@ -18,7 +18,7 @@ public class DBTest : MonoBehaviour
             userName = "JaneDoe",
         };
         CreateData("users",newUser);
-    }*/
+    }
 
     public void Create()
     {
