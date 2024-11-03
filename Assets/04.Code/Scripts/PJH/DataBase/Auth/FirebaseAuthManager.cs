@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Firebase.Auth;
-using Newtonsoft.Json;
 
 public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
 { 
@@ -45,7 +44,10 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
         }
     }
     
-    public void Create(string email, string password,string nickname)
+    /// <summary>
+    /// 회원가입 후 사용자 정보를 데이터베이스에 저장합니다.
+    /// </summary>
+    public void CreateAccount(string email, string password,string nickname)
     {
         _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
@@ -59,14 +61,21 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                 Debug.LogError("회원가입 실패");
                 return;
             }
-
+            
             FirebaseUser newUser = task.Result.User;
-            
-            
             Debug.Log("회원가입 완료");
+
+            User user = new User(nickname, email, "default_profile_image_url", true, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            RealtimeDatabase.CreateUser(newUser.UserId, user,
+                onSuccess: () => Debug.Log("사용자 정보 저장 완료"),
+                onFailure: (exception) => Debug.LogError("사용자 정보 저장 실패: " + exception.Message));
+            
         });
     }
 
+    /// <summary>
+    /// 로그인 후 사용자 데이터를 불러옵니다.
+    /// </summary>
     public void Login(string email, string password)
     {
         _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
@@ -82,9 +91,21 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                 return;
             }
 
-            AuthResult result = task.Result;
-            FirebaseUser newUser = result.User;
-            Debug.Log("로그인 완료");
+            FirebaseUser newUser = task.Result.User;
+            Debug.Log("로그인 성공");
+            
+            RealtimeDatabase.GetUser(newUser.UserId, user =>
+                {
+                    if (user != null)
+                    {
+                        Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
+                    }
+                    else
+                    {
+                        Debug.Log("사용자 데이터를 찾을 수 없습니다.");
+                    }
+                },
+                onFailure: (exception) => Debug.LogError("사용자 데이터 로드 실패: " + exception.Message));
         });
     }
 
@@ -94,18 +115,3 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
         Debug.Log("로그아웃");
     }
 }
-    /*private static FirebaseAuthManager instance = null;
-
-    public static FirebaseAuthManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new FirebaseAuthManager();
-            }
-
-            return instance;
-        }
-    }
-    */

@@ -64,7 +64,9 @@ public static partial class RealtimeDatabase
     {
         GetUserLand(userId, userLand =>
         {
-            if (userLand == null) userLand = new UserLand();
+            if (userLand == null) 
+                userLand = new UserLand();
+            
             userLand.AddObject(landObject);
 
             SetUserLand(userId, userLand, onSuccess, onFailure);
@@ -78,7 +80,9 @@ public static partial class RealtimeDatabase
     {
         GetFriendList(userId, friendList =>
         {
-            if (friendList == null) friendList = new FriendList();
+            if (friendList == null) 
+                friendList = new FriendList();
+           
             friendList.AddFriend(friend);
 
             CreateData($"friend_list/{userId}", friendList, onSuccess, onFailure);

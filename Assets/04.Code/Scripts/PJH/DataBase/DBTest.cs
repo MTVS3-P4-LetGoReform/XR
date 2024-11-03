@@ -27,18 +27,18 @@ public class DBTest : MonoBehaviour
         CreateUser();
         Invoke(nameof(ReadUser), 3f);
         Invoke(nameof(UpdateUser), 6f);
-        Invoke(nameof(DeleteUser), 9f);
+        //Invoke(nameof(DeleteUser), 9f);
 
         // 2. UserLand 테스트 (유저 생성 이후 테스트)
-        Invoke(nameof(CreateUserLand), 12f);
-        Invoke(nameof(ReadUserLand), 15f);
-        Invoke(nameof(AddObjectToUserLand), 18f);
-        Invoke(nameof(DeleteObjectFromUserLand), 21f);
+        Invoke(nameof(CreateUserLand), 9f);
+        Invoke(nameof(ReadUserLand), 12f);
+        Invoke(nameof(AddObjectToUserLand), 15f);
+        //Invoke(nameof(DeleteObjectFromUserLand), 21f);
 
-        // 3. FriendList 테스트 (유저 생성 이후 테스트)
+        /*// 3. FriendList 테스트 (유저 생성 이후 테스트)
         Invoke(nameof(AddFriend), 24f);
         Invoke(nameof(ReadFriendList), 27f);
-        Invoke(nameof(RemoveFriend), 30f);
+        //Invoke(nameof(RemoveFriend), 30f);*/
     }
 
     /// <summary>
@@ -103,6 +103,11 @@ public class DBTest : MonoBehaviour
     private void CreateUserLand()
     {
         UserLand userLand = new UserLand();
+        
+        // 더미 데이터
+        LandObject defaultObject = new LandObject("dummy", new Vector3(0, 0, 0), Vector3.zero, Vector3.one);
+        userLand.AddObject(defaultObject);
+        
         RealtimeDatabase.SetUserLand(testUserId, userLand,
             onSuccess: () => Debug.Log("유저 영지 생성 완료"),
             onFailure: (exception) => Debug.LogError("유저 영지 생성 실패: " + exception.Message));
@@ -177,18 +182,28 @@ public class DBTest : MonoBehaviour
     private void ReadFriendList()
     {
         RealtimeDatabase.GetFriendList(testUserId, friendList =>
-        {
-            if (friendList != null)
             {
-                Debug.Log($"친구 목록 개수: {friendList.friends.Count}");
-            }
-            else
-            {
-                Debug.Log("친구 목록이 없습니다.");
-            }
-        },
-        onFailure: (exception) => Debug.LogError("친구 목록 조회 실패: " + exception.Message));
+                if (friendList != null && friendList.friends.Count > 0)
+                {
+                    Debug.Log("친구 목록:");
+
+                    // 친구 목록 순회하여 ID와 이름 출력
+                    foreach (var friendEntry in friendList.friends)
+                    {
+                        string friendId = friendEntry.Key;
+                        Friend friend = friendEntry.Value;
+                
+                        Debug.Log($"친구 ID: {friendId}, 닉네임: {friend.name}");
+                    }
+                }
+                else
+                {
+                    Debug.Log("친구 목록이 없습니다.");
+                }
+            },
+            onFailure: (exception) => Debug.LogError("친구 목록 조회 실패: " + exception.Message));
     }
+
 
     /// <summary>
     /// 친구 삭제 예제

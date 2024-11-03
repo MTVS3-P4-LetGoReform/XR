@@ -29,7 +29,7 @@ public class LoginSystem : MonoBehaviour
         string p = password.text;
         string n = nickname.text;
         
-        FirebaseAuthManager.Instance.Create(e,p,n);
+        FirebaseAuthManager.Instance.CreateAccount(e,p,n);
     }
 
     public void Login()

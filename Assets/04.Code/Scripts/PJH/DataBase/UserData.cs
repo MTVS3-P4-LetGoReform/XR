@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 
 public class UserData : MonoBehaviour
 {
     public static string UserName;
-
+    public static string UserId;
     
     private void Start()
     {
@@ -13,6 +12,6 @@ public class UserData : MonoBehaviour
     
     private void OnChangedState(bool sign)
     {
-        UserName += FirebaseAuthManager.Instance.UserId;
+        UserId += FirebaseAuthManager.Instance.UserId;
     }
 }
