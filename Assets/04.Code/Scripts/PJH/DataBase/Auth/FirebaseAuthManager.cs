@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Firebase.Auth;
+using Newtonsoft.Json;
 
 public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
 { 
@@ -44,7 +45,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
         }
     }
     
-    public void Create(string email, string password)
+    public void Create(string email, string password,string nickname)
     {
         _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
@@ -59,8 +60,9 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                 return;
             }
 
-            AuthResult result = task.Result;
-            FirebaseUser newUser = result.User;
+            FirebaseUser newUser = task.Result.User;
+            
+            
             Debug.Log("회원가입 완료");
         });
     }

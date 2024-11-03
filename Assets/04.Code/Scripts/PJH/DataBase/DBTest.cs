@@ -1,192 +1,202 @@
+using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-
-using static FirebaseDatabaseAPI;
 
 public class DBTest : MonoBehaviour
 {
-    public TMP_Text userName;
-    public TMP_Text friendCount;
-    public TMP_Text estateName;
+    private string testUserId;
 
     private void Start()
     {
-        User newUser = new User
+        // Firebase 초기화 후 CRUD 작업 수행
+        RealtimeDatabase.InitializeFirebase(onInitialized: () =>
         {
-            userId = "user123",
-            userName = "JaneDoe",
+            Debug.Log("Firebase 초기화 완료");
+            RunAllTests();
+        },
+        onFailure: (exception) => Debug.LogError("Firebase 초기화 실패: " + exception.Message));
+    }
+
+    /// <summary>
+    /// 모든 CRUD 작업을 테스트합니다.
+    /// </summary>
+    private void RunAllTests()
+    {
+        // 1. User 테스트
+        testUserId = RealtimeDatabase.GenerateKey("users");
+        CreateUser();
+        Invoke(nameof(ReadUser), 3f);
+        Invoke(nameof(UpdateUser), 6f);
+        Invoke(nameof(DeleteUser), 9f);
+
+        // 2. UserLand 테스트 (유저 생성 이후 테스트)
+        Invoke(nameof(CreateUserLand), 12f);
+        Invoke(nameof(ReadUserLand), 15f);
+        Invoke(nameof(AddObjectToUserLand), 18f);
+        Invoke(nameof(DeleteObjectFromUserLand), 21f);
+
+        // 3. FriendList 테스트 (유저 생성 이후 테스트)
+        Invoke(nameof(AddFriend), 24f);
+        Invoke(nameof(ReadFriendList), 27f);
+        Invoke(nameof(RemoveFriend), 30f);
+    }
+
+    /// <summary>
+    /// 유저 생성 예제
+    /// </summary>
+    private void CreateUser()
+    {
+        User newUser = new User("Alice", "alice@example.com", "https://example.com/alice.jpg", true, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        RealtimeDatabase.CreateUser(testUserId, newUser,
+            onSuccess: () => Debug.Log("유저 생성 완료"),
+            onFailure: (exception) => Debug.LogError("유저 생성 실패: " + exception.Message));
+    }
+
+    /// <summary>
+    /// 유저 읽기 예제
+    /// </summary>
+    private void ReadUser()
+    {
+        RealtimeDatabase.GetUser(testUserId, user =>
+        {
+            if (user != null)
+            {
+                Debug.Log($"유저 정보: 이름 = {user.name}, 이메일 = {user.email}, 온라인 상태 = {user.onlineStatus}");
+            }
+            else
+            {
+                Debug.Log("유저 정보를 찾을 수 없습니다.");
+            }
+        },
+        onFailure: (exception) => Debug.LogError("유저 정보 읽기 실패: " + exception.Message));
+    }
+
+    /// <summary>
+    /// 유저 업데이트 예제
+    /// </summary>
+    private void UpdateUser()
+    {
+        var updates = new Dictionary<string, object>
+        {
+            { "onlineStatus", false },
+            { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
         };
-        CreateData("users",newUser);
+
+        RealtimeDatabase.UpdateUser(testUserId, updates,
+            onSuccess: () => Debug.Log("유저 정보 업데이트 완료"),
+            onFailure: (exception) => Debug.LogError("유저 정보 업데이트 실패: " + exception.Message));
     }
 
-    public void Create()
+    /// <summary>
+    /// 유저 삭제 예제
+    /// </summary>
+    private void DeleteUser()
     {
-        InitializeFirebase(onInitialized: () =>
-            {
-                Debug.Log("Firebase 초기화 완료!");
-
-                // 사용자 데이터 생성
-                User newUser = new User
-                {
-                    userId = "user123",
-                    userName = "JaneDoe",
-                    friends = new List<Friend>
-                    {
-                        new ("friend456", "JohnSmith"),
-                        new ("friend789", "AliceJones")
-                    },
-                    estateInfo = new EstateInfo
-                    {
-                        EstateName = "Jane's Estate",
-                        objects = new List<EstateObject>
-                        {
-                            new EstateObject
-                            {
-                                objectId = "obj001",
-                                objectType = "Tree",
-                                position = new Vector3(1.0f, 0.0f, 3.5f),
-                                rotation = new Vector3(0.0f, 45.0f, 0.0f),
-                                scale = new Vector3(1.0f, 1.0f, 1.0f)
-                            }
-                        }
-                    }
-                };
-
-                // 데이터 저장 경로 
-                string path = $"users/{newUser.userId}";
-
-                // 데이터 생성 
-                CreateData(path, newUser,
-                    onSuccess: () => Debug.Log("사용자 데이터 생성 완료"),
-                    onFailure: (exception) => Debug.LogError("데이터 생성 실패: " + exception.Message)
-                );
-            },
-            onFailure: (exception) =>
-            {
-                Debug.LogError("Firebase 초기화 실패: " + exception.Message);
-            });
+        RealtimeDatabase.DeleteUser(testUserId,
+            onSuccess: () => Debug.Log("유저 삭제 완료"),
+            onFailure: (exception) => Debug.LogError("유저 삭제 실패: " + exception.Message));
     }
 
-    public void Read()
+    /// <summary>
+    /// 유저 영지 생성 예제
+    /// </summary>
+    private void CreateUserLand()
     {
-        InitializeFirebase(onInitialized: () =>
-            {
-                Debug.Log("Firebase 초기화 완료!");
-                
-                var userId = "user123";
-                var path = $"users/{userId}";
-                
-                ReadData<User>(path,
-                    onSuccess: (user) =>
-                    {
-                        if (user != null)
-                        {
-                            Debug.Log($"사용자 이름: {user.userName}");
-                            Debug.Log($"친구 수: {user.friends.Count}");
-                            Debug.Log($"에스테이트 이름: {user.estateInfo.EstateName}");
-                            
-                            userName.text = user.userName;
-                            friendCount.text = $"{user.friends.Count}";
-                            estateName.text = user.estateInfo.EstateName;
-                        }
-                        else
-                        {
-                            Debug.Log("사용자 데이터를 찾을 수 없습니다.");
-                        }
-                    },
-                    onFailure: (exception) => Debug.LogError("데이터 읽기 실패: " + exception.Message)
-                );
-            },
-            onFailure: (exception) =>
-            {
-                Debug.LogError("Firebase 초기화 실패: " + exception.Message);
-            });
+        UserLand userLand = new UserLand();
+        RealtimeDatabase.SetUserLand(testUserId, userLand,
+            onSuccess: () => Debug.Log("유저 영지 생성 완료"),
+            onFailure: (exception) => Debug.LogError("유저 영지 생성 실패: " + exception.Message));
     }
 
-    public void UpdateTest()
+    /// <summary>
+    /// 유저 영지 읽기 예제
+    /// </summary>
+    private void ReadUserLand()
     {
-        InitializeFirebase(onInitialized: () =>
+        RealtimeDatabase.GetUserLand(testUserId, userLand =>
+        {
+            if (userLand != null)
             {
-                Debug.Log("Firebase 초기화");
-
-                string userId = "user123";
-                string basePath = $"users/{userId}";
-
-                
-                var updates = new Dictionary<string, object>();
-                updates[$"{basePath}/userName"] = "JaneDoeUpdated";
-                
-                UpdateData(updates,
-                    onSuccess: () => Debug.Log("사용자 데이터 업데이트 완료"),
-                    onFailure: (exception) => Debug.LogError("데이터 업데이트 실패: " + exception.Message)
-                );
-            },
-            onFailure: (exception) =>
+                Debug.Log($"유저 영지 정보: 오브젝트 개수 = {userLand.objects.Count}");
+            }
+            else
             {
-                Debug.LogError("Firebase 초기화 실패: " + exception.Message);
-            });
+                Debug.Log("유저 영지 정보를 찾을 수 없습니다.");
+            }
+        },
+        onFailure: (exception) => Debug.LogError("유저 영지 읽기 실패: " + exception.Message));
     }
 
-    public void Delete()
+    /// <summary>
+    /// 유저 영지에 오브젝트 추가 예제
+    /// </summary>
+    private void AddObjectToUserLand()
     {
-        InitializeFirebase(onInitialized: () =>
-            {
-                Debug.Log("Firebase 초기화 완료!");
-
-                string userId = "user123";
-                string path = $"users/{userId}";
-
-                // 데이터 삭제 호출
-                DeleteData(path,
-                    onSuccess: () => Debug.Log("사용자 데이터 삭제 완료"),
-                    onFailure: (exception) => Debug.LogError("데이터 삭제 실패: " + exception.Message)
-                );
-            },
-            onFailure: (exception) =>
-            {
-                Debug.LogError("Firebase 초기화 실패: " + exception.Message);
-            });
+        LandObject landObject = new LandObject("Tree", new Vector3(1, 1, 1), Vector3.zero, Vector3.one);
+        RealtimeDatabase.AddObjectToUserLand(testUserId, landObject,
+            onSuccess: () => Debug.Log("영지 오브젝트 추가 완료"),
+            onFailure: (exception) => Debug.LogError("영지 오브젝트 추가 실패: " + exception.Message));
     }
 
-    private string userId = "user123";
-    private string path;
-    
-    public void ListenForDataChanges()
+    /// <summary>
+    /// 유저 영지에서 오브젝트 삭제 예제
+    /// </summary>
+    private void DeleteObjectFromUserLand()
     {
-        path = $"users/{userId}";
-        
-        InitializeFirebase(onInitialized: () =>
+        RealtimeDatabase.GetUserLand(testUserId, userLand =>
+        {
+            if (userLand != null && userLand.objects.Count > 0)
             {
-                Debug.Log("Firebase 초기화 완료!");
-
-                // 데이터 변경 수신 시작
-                FirebaseDatabaseAPI.ListenForDataChanges<User>(path,
-                    onDataChanged: (user) =>
-                    {
-                        if (user != null)
-                        {
-                            Debug.Log("데이터 변경 감지:");
-                            Debug.Log($"사용자 이름: {user.userName}");
-                            Debug.Log($"친구 수: {user.friends?.Count ?? 0}");
-                            Debug.Log($"에스테이트 이름: {user.estateInfo?.EstateName}");
-
-                            userName.text = user.userName;
-                            friendCount.text = $"{user.friends?.Count}";
-                            estateName.text = user.estateInfo?.EstateName;
-                            
-                        }
-                        else
-                        {
-                            Debug.Log("사용자 데이터가 없습니다.");
-                        }
-                    },
-                    onError: (exception) => Debug.LogError("데이터 수신 오류: " + exception.Message)
-                );
-            },
-            onFailure: (exception) =>
+                userLand.objects.RemoveAt(0); // 첫 번째 오브젝트 삭제
+                RealtimeDatabase.SetUserLand(testUserId, userLand,
+                    onSuccess: () => Debug.Log("영지 오브젝트 삭제 완료"),
+                    onFailure: (exception) => Debug.LogError("영지 오브젝트 삭제 실패: " + exception.Message));
+            }
+            else
             {
-                Debug.LogError("Firebase 초기화 실패: " + exception.Message);
-            });
+                Debug.Log("삭제할 영지 오브젝트가 없습니다.");
+            }
+        },
+        onFailure: (exception) => Debug.LogError("유저 영지 조회 실패: " + exception.Message));
+    }
+
+    /// <summary>
+    /// 친구 추가 예제
+    /// </summary>
+    private void AddFriend()
+    {
+        Friend friend = new Friend("friend123", "Bob", true);
+        RealtimeDatabase.AddFriend(testUserId, friend,
+            onSuccess: () => Debug.Log("친구 추가 완료"),
+            onFailure: (exception) => Debug.LogError("친구 추가 실패: " + exception.Message));
+    }
+
+    /// <summary>
+    /// 친구 목록 읽기 예제
+    /// </summary>
+    private void ReadFriendList()
+    {
+        RealtimeDatabase.GetFriendList(testUserId, friendList =>
+        {
+            if (friendList != null)
+            {
+                Debug.Log($"친구 목록 개수: {friendList.friends.Count}");
+            }
+            else
+            {
+                Debug.Log("친구 목록이 없습니다.");
+            }
+        },
+        onFailure: (exception) => Debug.LogError("친구 목록 조회 실패: " + exception.Message));
+    }
+
+    /// <summary>
+    /// 친구 삭제 예제
+    /// </summary>
+    private void RemoveFriend()
+    {
+        RealtimeDatabase.RemoveFriend(testUserId, "friend123",
+            onSuccess: () => Debug.Log("친구 삭제 완료"),
+            onFailure: (exception) => Debug.LogError("친구 삭제 실패: " + exception.Message));
     }
 }
