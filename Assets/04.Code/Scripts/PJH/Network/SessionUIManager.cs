@@ -4,20 +4,33 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
+using UnityEngine.Serialization;
 
 public class SessionUIManager : MonoBehaviour
 {
     public static SessionUIManager Instance { get; private set; }
     
-    public Canvas createRoomCanvas;
-    public Button createRoomButton;
+    public GameObject roomListPanel;
+    public GameObject createRoomPanel;
+    
+    
     public TMP_InputField sessionNameInput;
-    public TMP_InputField sessionIntroductionInput;
-    public Button startSessionButton;
-    public Button backButton;
-    public GameObject sessionPrefab;
+    public TMP_InputField sessionPromptInput;
+    
     public Transform sessionListParent;
+    public GameObject sessionPrefab;
+    
+    public Button create;
+    public Button join;
+    
+    public Button roomListBack;
+    
+    public Button createRoomBack;
+    public Button createRoomRecreate;
+    public Button createRoomStart;
 
+    public GameObject test;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -32,10 +45,21 @@ public class SessionUIManager : MonoBehaviour
 
     private void Start()
     {
-        createRoomButton.onClick.AddListener(ToggleCreateRoomCanvas);
-        startSessionButton.onClick.AddListener(CreateSession);
-        backButton.onClick.AddListener(ToggleCreateRoomCanvas);
+        create.onClick.AddListener(ActiveCreateRoom);
+        join.onClick.AddListener(ActiveRoomList);
+        
+        roomListBack.onClick.AddListener(OffRoomList);
+        
+        createRoomBack.onClick.AddListener(OffCreateRoom);
+        createRoomRecreate.onClick.AddListener(ImageCraft);
+        createRoomStart.onClick.AddListener(CreateSession);
     }
+
+    private void ImageCraft()
+    {
+        test.SetActive(true);
+    }
+    
 
     // 세션 목록 UI 업데이트
     public void UpdateSessionList(List<SessionInfo> sessionList)
@@ -62,9 +86,24 @@ public class SessionUIManager : MonoBehaviour
         }
     }
 
-    private void ToggleCreateRoomCanvas()
+    private void ActiveRoomList()
     {
-        createRoomCanvas.enabled = !createRoomCanvas.enabled;
+        roomListPanel.SetActive(true);
+    }
+    
+    private void OffRoomList()
+    {
+        roomListPanel.SetActive(false);
+    }
+
+    private void ActiveCreateRoom()
+    {
+        createRoomPanel.SetActive(true);
+    }
+    
+    private void OffCreateRoom()
+    {
+        createRoomPanel.SetActive(false);
     }
     
     private string GetImage(SessionInfo session)

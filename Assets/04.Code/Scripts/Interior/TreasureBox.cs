@@ -32,11 +32,14 @@ public class TreasureBox : MonoBehaviour
         if (Vector3.Distance(transform.position, playerTransform.position) < 5f)
         {
             pressEText.gameObject.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                //보상 스태츄를 얻는 부분
-                statueButton.gameObject.SetActive(true);
-            }
+            
+        }
+        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+           
+            statueButton.gameObject.SetActive(true);
+            pressEText.gameObject.SetActive(false);
         }
         
         

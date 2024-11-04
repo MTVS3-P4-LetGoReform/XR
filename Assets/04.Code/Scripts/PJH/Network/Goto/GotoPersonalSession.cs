@@ -28,4 +28,5 @@ public class GotoPersonalSession : MonoBehaviour
         await RunnerManager.Instance.RunnerStart(args,2);
         _interact = true;
     }
+    
 }

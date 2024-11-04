@@ -99,7 +99,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
             if (Input.GetMouseButtonDown(1))
             {
-                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                if ( Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
                     DeleteBlockRpc(block);
@@ -113,7 +113,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
         {
             if (Input.GetMouseButtonDown(1))
             {
-                if (Hit.collider.name == "BasicBlock(Clone)" || Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                if ( Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
                     DeleteBlockRpc(block);
@@ -135,6 +135,10 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void DeleteBlockRpc(NetworkObject networkObject)
     {
+        if (networkObject == null)
+        {
+            return;
+        }
         RunnerManager.Instance.runner.Despawn(networkObject);
     }
     

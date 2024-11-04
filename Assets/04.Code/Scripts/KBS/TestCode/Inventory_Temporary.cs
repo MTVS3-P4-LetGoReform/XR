@@ -24,7 +24,7 @@ public class Inventory_temporary : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Vector3 point = new Vector3(19, 26, 15);
+            Vector3 point = new Vector3(19f, 27.23f, 15f);
             Instantiate(minionsPrefab, point, Quaternion.identity);
         }
 
