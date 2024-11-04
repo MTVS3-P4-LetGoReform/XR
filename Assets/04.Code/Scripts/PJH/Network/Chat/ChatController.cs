@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Photon.Chat;
 using ExitGames.Client.Photon;
@@ -5,30 +6,28 @@ using TMPro;
 
 public class ChatController : MonoBehaviour, IChatClientListener
 {
-	private ChatClient _chatClient;
-	private string _userName;
-	private string _currentChannelName;
-
 	public TMP_InputField inputField;
 	public TMP_Text outputText;
 
-	// Use this for initialization
+	private ChatClient _chatClient;
+	private string _userName;
+	private string _currentChannelName;
+	private string _appId = "f9b6f292-fcf5-424d-8d31-75b7450643f2";
+
+	private void Awake()
+	{
+		_userName = UserData.Instance.UserName;
+	}
+
 	void Start()
 	{
 		Application.runInBackground = true;
 
-		_userName = UserData.UserName;
 		_currentChannelName = "Channel 001";
 
 		_chatClient = new ChatClient(this);
 
-		// var settings = new ChatAppSettings()
-		// {
-		// 	AppIdChat = 
-		// }
-		// chatClient.ConnectUsingSettings(settings);
-		
-		_chatClient.Connect("f9b6f292-fcf5-424d-8d31-75b7450643f2", "2", new AuthenticationValues(_userName));
+		_chatClient.Connect(_appId, "1", new AuthenticationValues(_userName));
 
 		//AddLine(string.Format("연결시도", _userName));
 		AddLine("연결시도");

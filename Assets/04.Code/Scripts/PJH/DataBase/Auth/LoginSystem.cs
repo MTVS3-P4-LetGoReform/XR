@@ -1,11 +1,15 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static RealtimeDatabase;
 public class LoginSystem : MonoBehaviour
 {
-    public TMP_InputField email;
-    public TMP_InputField password;
+    public TMP_InputField loginEmail;
+    public TMP_InputField loginPassword;
+
+    public TMP_InputField signupEmail;
+    public TMP_InputField signupPassword;
     public TMP_InputField nickname;
 
     public TMP_Text outputText;
@@ -25,8 +29,8 @@ public class LoginSystem : MonoBehaviour
 
     public void Create()
     {
-        string e = email.text;
-        string p = password.text;
+        string e = signupEmail.text;
+        string p = signupPassword.text;
         string n = nickname.text;
         
         FirebaseAuthManager.Instance.CreateAccount(e,p,n);
@@ -34,7 +38,7 @@ public class LoginSystem : MonoBehaviour
 
     public void Login()
     {
-        FirebaseAuthManager.Instance.Login(email.text,password.text);
+        FirebaseAuthManager.Instance.Login(loginEmail.text,loginPassword.text);
     }
 
     public void LogOut()

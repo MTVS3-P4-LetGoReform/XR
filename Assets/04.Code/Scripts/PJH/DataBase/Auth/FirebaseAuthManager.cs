@@ -1,15 +1,19 @@
 using System;
 using UnityEngine;
 using Firebase.Auth;
+using UnityEngine.SceneManagement;
 
 public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
 { 
     public string UserId => _user.UserId;
-
+    public string UserName => _name;
+    
     public Action<bool> LoginState;
+    public Action<bool> NickName;
     
     private FirebaseAuth _auth;
     private FirebaseUser _user;
+    private string _name;
     
     public void Init()
     {
@@ -65,7 +69,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             FirebaseUser newUser = task.Result.User;
             Debug.Log("회원가입 완료");
 
-            User user = new User(nickname, email, "default_profile_image_url", true, DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            User user = new User(nickname, email, "default_profile_image_url", true, DateTimeOffset.UtcNow.AddHours(9).ToUnixTimeSeconds());
             RealtimeDatabase.CreateUser(newUser.UserId, user,
                 onSuccess: () => Debug.Log("사용자 정보 저장 완료"),
                 onFailure: (exception) => Debug.LogError("사용자 정보 저장 실패: " + exception.Message));
@@ -99,10 +103,14 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                     if (user != null)
                     {
                         Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
+                        _name = user.name;
+                        NickName?.Invoke(true);
+                        SceneManager.LoadScene(3);
                     }
                     else
                     {
                         Debug.Log("사용자 데이터를 찾을 수 없습니다.");
+                        NickName?.Invoke(false);
                     }
                 },
                 onFailure: (exception) => Debug.LogError("사용자 데이터 로드 실패: " + exception.Message));
