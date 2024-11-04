@@ -20,7 +20,7 @@ public class TestBlockShot : MonoBehaviour
     void Start()
     {
         Debug.Log(SharedBlockData.BlockNumber);
-        animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInParent<Animator>();
 
     }
 
