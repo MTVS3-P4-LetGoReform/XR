@@ -32,7 +32,6 @@ public class ChatController : MonoBehaviour, IChatClientListener
 		//AddLine(string.Format("연결시도", _userName));
 		AddLine("연결시도");
 	}
-
 	
 	public void AddLine(string lineString)
 	{

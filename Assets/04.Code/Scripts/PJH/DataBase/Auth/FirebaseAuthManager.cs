@@ -105,7 +105,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                         Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
                         _name = user.name;
                         NickName?.Invoke(true);
-                        SceneManager.LoadScene(3);
+                        SceneManager.LoadScene(0);
                     }
                     else
                     {
