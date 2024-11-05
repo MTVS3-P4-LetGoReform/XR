@@ -1,17 +1,23 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TestInteriorMode : MonoBehaviour
 {
     public GameObject craftHammer;
-    public GameObject testWall;
-    public GameObject testShadow;
     private GameObject newTestShadow;
     public TMP_Text stateText;
     public GameObject boxLine;
     public Canvas interiorCanvas;
     private RaycastHit Hit;
+    public event Action OnClicked, OnExit;
+
+    [SerializeField] 
+    private ObjectDatabase objectDatabase;
+    private int selectedObjectIndex = -1;
+    
     private bool isHammer;
     [SerializeField] private LayerMask BFLayerMask;
     [SerializeField] public LayerMask PBLayerMask;
@@ -19,15 +25,81 @@ public class TestInteriorMode : MonoBehaviour
     void Start()
     {
         stateText.text = "InviteMode";
-        newTestShadow = Instantiate(testShadow, new Vector3(0, -20, 0), Quaternion.identity);
+        StopPlacement();
+    }
 
+    private void StopPlacement()
+    {
+        selectedObjectIndex = -1;
+        OnClicked -= PlaceStructure;
+        OnExit -= StopPlacement;
+    }
+
+    public void StartPlacement(int ID)
+    {
+        StopPlacement();
+        selectedObjectIndex = objectDatabase.objectData.FindIndex(data => data.ID == ID);
+        if (selectedObjectIndex < 0)
+        {
+            Debug.LogError($"No ID Found{ID}");
+            return;
+        }
+
+        OnClicked += PlaceStructure;
+        OnExit += StopPlacement;
+    }
+
+    private void PlaceStructure()
+    {
+        if (IsPointerOnUI())
+        {
+            return;
+        }
+        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
+        {
+            Vector3 pos = Hit.point;
+
+            pos = new Vector3(
+                Mathf.Floor(pos.x),
+                Mathf.Floor(pos.y),
+                Mathf.Floor(pos.z));
+
+            pos += (Vector3.down * 0.5f) + (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
+            
+            
+            
+            
+            GameObject gameObject = Instantiate(objectDatabase.objectData[selectedObjectIndex].Prefab, pos, Quaternion.identity);
+            //gameObject.transform.position = pos;
+        }
+        
     }
 
     void Update()
     {
         InteriorModeTrigger();
         boxLine.gameObject.SetActive(false);
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnClicked?.Invoke();
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnExit?.Invoke();
+        }
+
+        if (selectedObjectIndex < 0)
+        {
+            return;
+        }
     }
+
+    public bool IsPointerOnUI()
+        => EventSystem.current.IsPointerOverGameObject();
+
 
     private void InteriorModeTrigger()
     {
@@ -48,6 +120,7 @@ public class TestInteriorMode : MonoBehaviour
         {
             craftHammer.gameObject.SetActive(false);
             stateText.text = "InviteMode";
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -68,15 +141,9 @@ public class TestInteriorMode : MonoBehaviour
                 Mathf.Floor(pos.y),
                 Mathf.Floor(pos.z));
 
-            pos += Vector3.one * 0.5f;
-
-            newTestShadow.transform.position = pos;
+            pos += Vector3.one;
             
-    
-            if (Input.GetMouseButtonDown(0))
-            {
-                Instantiate(testWall, pos, Quaternion.identity);
-            }
+            
         }
     }
 

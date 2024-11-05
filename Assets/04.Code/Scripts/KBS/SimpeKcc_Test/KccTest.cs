@@ -4,6 +4,7 @@ using UnityEngine;
 public class KccTest : NetworkBehaviour
 {
     private Animator animator;
+    private NetworkMecanimAnimator NetworkMecanimAnimator;
 
     private NetworkCharacterController networkCC;
 
@@ -21,7 +22,7 @@ public class KccTest : NetworkBehaviour
     {
         networkCC = GetComponent<NetworkCharacterController>();
         animator = GetComponentInChildren<Animator>();
-        
+        NetworkMecanimAnimator = GetComponentInChildren<NetworkMecanimAnimator>();
     }
 
     public override void Spawned()
