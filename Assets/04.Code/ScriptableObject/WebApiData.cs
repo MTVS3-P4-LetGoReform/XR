@@ -8,7 +8,7 @@ public class WebApiData : ScriptableObject
 
     public string Baseurl
     {
-        get;
+        get { return baseUrl;}
     }
 
     [SerializeField] 
@@ -16,7 +16,7 @@ public class WebApiData : ScriptableObject
 
     public string ImageGenPoint
     {
-        get;
+        get { return imageGenPoint;}
     }
     
     [SerializeField] 
@@ -24,22 +24,22 @@ public class WebApiData : ScriptableObject
 
     public string ImageDownPoint
     {
-        get;
+        get { return imageDownPoint; }
     }
     
     [SerializeField] 
-    private string objGenPoint;
+    private string modelGenPoint;
 
-    public string ObjGenPoint
+    public string ModelGenPoint
     {
-        get;
+        get { return modelGenPoint; }
     }
     
     [SerializeField] 
-    private string objDownPoint;
+    private string modelDownPoint;
 
-    public string ObjDownPoint
+    public string ModelDownPoint
     {
-        get;
+        get { return modelDownPoint; }
     }
 }

@@ -8,7 +8,7 @@ public class ImageGen
 {
     public ImageGenReq _imageGenReq;
     public ImageGenRes _imageGenRes;
-    private WebApiData webApiData;
+    public WebApiData webApiData;
     public ImageGen(WebApiData webapi)
     {
         _imageGenReq = new ImageGenReq();
@@ -25,8 +25,8 @@ public class ImageGen
         // string jsonData = "{\"filename\":\"" + fileName + "\"}";
 
         // UnityWebRequest Post요청 생성
+        Debug.Log(webApiData.Baseurl+webApiData.ImageGenPoint);
         UnityWebRequest request = new UnityWebRequest( webApiData.Baseurl+webApiData.ImageGenPoint, "POST");
-        
         // 요청 데이터 직렬화
         string jsonData = JsonUtility.ToJson(_imageGenReq);
         // 문자열 데이터를 UTF-8바이트로 변환(Post 요청 본문 형식으로 변환)

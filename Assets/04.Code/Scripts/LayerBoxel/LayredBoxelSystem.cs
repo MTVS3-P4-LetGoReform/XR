@@ -10,10 +10,7 @@ public class LayeredBoxelSystem : MonoBehaviour
     private GameObject boxelizedObject;
     private Dictionary<float, List<GameObject>> voxelList;
     //Dictionary<float, List<GameObject>>
-    
     // scaling 관련
-    
-
     
     public void DoLayering()
     {
