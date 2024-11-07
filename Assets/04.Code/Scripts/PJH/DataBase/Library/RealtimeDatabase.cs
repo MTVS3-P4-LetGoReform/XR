@@ -3,9 +3,10 @@ using Firebase.Database;
 using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
-public static partial class FirebaseDatabaseAPI
+public static partial class RealtimeDatabase
 {
     private static DatabaseReference databaseReference;
     private static bool isInitialized = false;
@@ -79,7 +80,7 @@ public static partial class FirebaseDatabaseAPI
     {
         EnsureInitialized(() =>
         {
-            string jsonData = JsonUtility.ToJson(data);
+            string jsonData = JsonConvert.SerializeObject(data);
             databaseReference.Child(path).SetRawJsonValueAsync(jsonData).ContinueWithOnMainThread(task =>
             {
                 if (task.IsCompleted)
@@ -134,7 +135,7 @@ public static partial class FirebaseDatabaseAPI
                     if (snapshot.Exists)
                     {
                         string jsonData = snapshot.GetRawJsonValue();
-                        T data = JsonUtility.FromJson<T>(jsonData);
+                        T data = JsonConvert.DeserializeObject<T>(jsonData);
                         onSuccess?.Invoke(data);
                     }
                     else
@@ -172,11 +173,11 @@ public static partial class FirebaseDatabaseAPI
     /// );
     /// </code>
     /// </example>
-    public static void UpdateData(Dictionary<string, object> updates, Action onSuccess = null, Action<Exception> onFailure = null)
+    public static void UpdateData(string path, Dictionary<string, object> updates, Action onSuccess = null, Action<Exception> onFailure = null)
     {
         EnsureInitialized(() =>
         {
-            databaseReference.UpdateChildrenAsync(updates).ContinueWithOnMainThread(task =>
+            databaseReference.Child(path).UpdateChildrenAsync(updates).ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted)
                 {
@@ -196,6 +197,7 @@ public static partial class FirebaseDatabaseAPI
             });
         }, onFailure);
     }
+
 
 
     /// <summary>
