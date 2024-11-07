@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UserData : MonoBehaviourSingleton<UserData>
 {
-    public string UserName = "t";
+    public string UserName = "testName";
     public string UserId;
     
     

@@ -9,6 +9,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	public TMP_InputField inputField;
 	public TMP_Text outputText;
 
+	private bool test;
 	private ChatClient _chatClient;
 	private string _userName;
 	private string _currentChannelName;
@@ -21,9 +22,11 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 	void Start()
 	{
+		PlayerInput.OnChat += Chating;
+		
 		Application.runInBackground = true;
 
-		_currentChannelName = "Channel 001";
+		_currentChannelName = "메인 광장";
 
 		_chatClient = new ChatClient(this);
 
@@ -31,6 +34,18 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 		//AddLine(string.Format("연결시도", _userName));
 		AddLine("연결시도");
+	}
+
+	private void Chating()
+	{
+		if (inputField.isFocused)
+		{
+			inputField.DeactivateInputField(); // 입력 비활성화
+		}
+		else
+		{
+			inputField.ActivateInputField();
+		}
 	}
 	
 	public void AddLine(string lineString)

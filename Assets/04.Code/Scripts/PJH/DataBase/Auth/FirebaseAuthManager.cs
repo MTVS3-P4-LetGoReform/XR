@@ -62,7 +62,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             }
             if (task.IsFaulted)
             {
-                Debug.LogError("회원가입 실패");
+                Debug.LogError("회원가입 실패" + task.Exception);
                 return;
             }
             

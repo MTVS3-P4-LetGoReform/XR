@@ -16,7 +16,8 @@ public class KccTest : NetworkBehaviour
 
     private float mx = 0f;
 
-
+    private bool _onChat;
+    
     private void Awake()
     {
         networkCC = GetComponent<NetworkCharacterController>();
@@ -30,12 +31,22 @@ public class KccTest : NetworkBehaviour
         {
             camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         }
-    } 
+
+        PlayerInput.OnChat += StopMoving;
+    }
+
+    private void StopMoving()
+    {
+        _onChat = !_onChat;
+    }
 
 
     public override void FixedUpdateNetwork()
     {
         if(!HasStateAuthority) return;
+
+        if (_onChat)
+            return;
         
         PlayerMove();
         PlayerRotate();

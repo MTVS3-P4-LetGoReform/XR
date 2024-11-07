@@ -3,7 +3,6 @@ using Fusion;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class RunnerManager : MonoBehaviour
 {
