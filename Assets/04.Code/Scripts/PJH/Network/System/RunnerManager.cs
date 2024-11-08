@@ -52,8 +52,11 @@ public class RunnerManager : MonoBehaviour
 
          if (sceneIndex >= 0)
          {
-            var loadSceneTask = SceneManager.LoadSceneAsync(sceneIndex);  // 씬 로딩
-            await loadSceneTask;
+            /*var loadSceneTask = SceneManager.LoadSceneAsync(sceneIndex);  // 씬 로딩
+            //var loadSceneTask = runner.LoadScene("Proto_PlayScene");
+            await loadSceneTask;*/
+            
+            await LoadingUI.Instance.LoadScene(sceneIndex);
          }
 
          await PlayerSpawn();
@@ -92,6 +95,8 @@ public class RunnerManager : MonoBehaviour
    {
       if (runner != null && runner.IsRunning)
       {
+         LoadingUI.Instance.loadingScreen.SetActive(true);
+         LoadingUI.Instance.progressBar.gameObject.SetActive(true);
          await runner.Shutdown();
          runner = null;
       }
@@ -122,10 +127,11 @@ public class RunnerManager : MonoBehaviour
       var startArgs = new StartGameArgs
       {
          GameMode = GameMode.Shared,
-         //Scene = sceneInfo,
+         //Scene = SceneRef.FromIndex(0),
          SessionName = "공용 세션"
       };
-            
+      
+      
       await ShutdownRunner();
       await RunnerStart(startArgs,0);
    }

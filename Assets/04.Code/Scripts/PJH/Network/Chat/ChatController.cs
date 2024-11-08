@@ -3,6 +3,7 @@ using UnityEngine;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 using TMPro;
+using Unity.VisualScripting;
 
 public class ChatController : MonoBehaviour, IChatClientListener
 {
@@ -14,6 +15,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	private string _userName;
 	private string _currentChannelName;
 	private string _appId = "f9b6f292-fcf5-424d-8d31-75b7450643f2";
+	
 
 	private void Awake()
 	{
@@ -23,6 +25,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	void Start()
 	{
 		PlayerInput.OnChat += Chating;
+		inputField.onEndEdit.AddListener(Input_OnEndEdit);
 		
 		Application.runInBackground = true;
 
@@ -36,15 +39,21 @@ public class ChatController : MonoBehaviour, IChatClientListener
 		AddLine("연결시도");
 	}
 
-	private void Chating()
+	private void Chating(bool chatOn)
 	{
-		if (inputField.isFocused)
+		if (!inputField.isFocused && chatOn)
 		{
-			inputField.DeactivateInputField(); // 입력 비활성화
+			inputField.ActivateInputField(); 
+			return;
 		}
-		else
+		if(inputField.isFocused && inputField.text.Trim() == "" && !chatOn)
 		{
-			inputField.ActivateInputField();
+			inputField.DeactivateInputField();
+			return;
+		}
+		if (!chatOn)
+		{
+			inputField.DeactivateInputField();
 		}
 	}
 	
@@ -131,10 +140,16 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	{
 		if (_chatClient.State == ChatState.ConnectedToFrontEnd)
 		{
-			//chatClient.PublishMessage(currentChannelName, text);
-			_chatClient.PublishMessage(_currentChannelName, inputField.text);
-
+			if(inputField.text.Trim() == "")
+			{
+				inputField.DeactivateInputField();
+				return;
+			}
+			
+			_chatClient.PublishMessage(_currentChannelName,text);
+			
 			inputField.text = "";
+			inputField.DeactivateInputField();
 		}
 	}
 

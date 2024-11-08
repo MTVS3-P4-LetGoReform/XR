@@ -34,7 +34,7 @@ public class MicController : NetworkBehaviour
         _micStatus = (voiceNetworkObject.SpeakerInUse && voiceNetworkObject.IsSpeaking) || 
                      (voiceNetworkObject.RecorderInUse && voiceNetworkObject.IsRecording);
         
-        Debug.Log(_micStatus);
+        //Debug.Log(_micStatus);
         IsPlaying?.Invoke(_micStatus);
     }
 
@@ -43,7 +43,7 @@ public class MicController : NetworkBehaviour
         if (HasStateAuthority)
         {
             recorder.TransmitEnabled = state;
-            Debug.Log("마이크 :"+ state);
+            //Debug.Log("마이크 :"+ state);
         }
     }
 }
