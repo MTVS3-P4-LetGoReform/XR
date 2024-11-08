@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-public class LayerController:MonoBehaviour
+using Fusion;
+
+public class LayerController : MonoBehaviour
 {
-    
+    public BlockData blockData;
     private LayeredBoxelSystem layeredBoxelSystem; //인스펙터 연결
     private ModelScaling ModelScaling;
     public GameObject parentGuideObject;
@@ -26,6 +28,19 @@ public class LayerController:MonoBehaviour
         ModelScaling = FindObjectOfType<ModelScaling>();
         _modelFloorChecker = FindObjectOfType<ModelFloorChecker>();
     }
+
+    // public void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.BackQuote))
+    //     {
+    //         if (Object.HasStateAuthority)
+    //         {
+    //             RpcAdvanceFloorMasterKey();
+    //         }else {
+    //             Debug.LogWarning("NetworkBehaviour가 아직 초기화되지 않았습니다.");
+    //         }
+    //     }
+    // }
 
     public void AdvanceFloor()
     {
@@ -95,7 +110,7 @@ public class LayerController:MonoBehaviour
         //FIXME : 중복으로 계속 생기는 문제 해결
         GameObject guideObject = new GameObject("Gudieline");
         
-        MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
+        //MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
         foreach (GameObject voxel in curFloorObjects)
         {
             DrawGuide(voxel, guideObject);
@@ -103,6 +118,16 @@ public class LayerController:MonoBehaviour
         guideObject.SetActive(false);
     }
 
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void AdvanceFloorMasterKey()
+    {
+        foreach (GameObject voxel in curFloorObjects)
+        {
+            RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
+                voxel.transform.position, Quaternion.identity);
+        }
+        
+    }
     public void DrawGuide(GameObject voxel, GameObject guideObject)
     {
         Mesh outlineMesh = outlineRenderer.CreateOutlineMesh(voxel.GetComponent<MeshFilter>().mesh);
