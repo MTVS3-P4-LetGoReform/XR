@@ -12,10 +12,17 @@ public class TestInteriorMode : MonoBehaviour
     public Canvas interiorCanvas;
     [SerializeField]
     private GameObject newPreviewPrefab;
+
+    private Quaternion newPreviewPrefabRatate;
+    private Quaternion originRotation;
     private RaycastHit Hit;
     private bool isInstantitate = false;
-    [SerializeField] 
+    
     private Coroutine currentCoroutine;
+
+    private float rotateSpeed = 200f;
+
+    
 
     private Vector3 pos;
     public event Action OnClicked, OnExit; // Action 델리게이트를 사용하여 메소드 선언
@@ -94,17 +101,31 @@ public class TestInteriorMode : MonoBehaviour
 
                 pos += (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
 
+                
                 if (!isInstantitate)
                 {
                     newPreviewPrefab = Instantiate(objectDatabase.objectData[selectedObjectIndex].PreviewPrefab,
                         pos, Quaternion.identity);
                     isInstantitate = true;
+
+                    originRotation = newPreviewPrefab.transform.rotation;
                     // bool type의 isInstantiate가 1번만 실행
                 }
                 
                 if (newPreviewPrefab != null)
                 {
                     newPreviewPrefab.transform.position = pos;
+                    if (Input.GetKeyDown(KeyCode.Q))
+                    { 
+                        newPreviewPrefab.transform.Rotate(Vector3.down, 90f, Space.World);
+                        newPreviewPrefabRatate = newPreviewPrefab.transform.rotation;
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        newPreviewPrefab.transform.Rotate(Vector3.up, 90f, Space.World);
+                        newPreviewPrefabRatate = newPreviewPrefab.transform.rotation;
+                    }
                 }
 
             }
@@ -139,6 +160,7 @@ public class TestInteriorMode : MonoBehaviour
         {
             return;
         } 
+        
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
         { 
@@ -151,9 +173,11 @@ public class TestInteriorMode : MonoBehaviour
 
             pos += (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
             
-            GameObject gameObject = Instantiate(objectDatabase.objectData[selectedObjectIndex].Prefab, pos, Quaternion.identity);
-            // 추후 설치 방향 재 정립, 설치되는 위치 값을 pivot 기준으로 분류할것인지, 물건 위주로 분류할것인지 구상(후자일 가능성 높음)
+            GameObject gameObject = Instantiate(objectDatabase.objectData[selectedObjectIndex].Prefab, pos, newPreviewPrefabRatate);
             
+            newPreviewPrefab.transform.rotation = originRotation;
+            // 추후 설치 방향 재 정립, 설치되는 위치 값을 pivot 기준으로 분류할것인지, 물건 위주로 분류할것인지 구상(후자일 가능성 높음)
+
         }
     }
     
