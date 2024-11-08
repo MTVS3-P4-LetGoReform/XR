@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 
 public class LayeredBoxelSystem : MonoBehaviour
@@ -15,6 +16,8 @@ public class LayeredBoxelSystem : MonoBehaviour
     public void DoLayering()
     {
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
+        GameStateManager.Instance.maxCnt = boxelizedObject.transform.childCount;
+        Debug.Log("LayeredBoxelSystem : 총 복셀 수 - "+ GameStateManager.Instance.allCnt);
         voxelList = new Dictionary<float, List<GameObject>>();
         Vector3 pos;
         foreach (Transform child in boxelizedObject.transform)

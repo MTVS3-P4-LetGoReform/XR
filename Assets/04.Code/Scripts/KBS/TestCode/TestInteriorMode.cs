@@ -65,7 +65,7 @@ public class TestInteriorMode : MonoBehaviour
                 Mathf.Floor(pos.y),
                 Mathf.Floor(pos.z));
 
-            pos += (Vector3.down * 0.5f) + (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
+            pos += (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
             
             
             
