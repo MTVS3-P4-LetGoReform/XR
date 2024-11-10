@@ -75,8 +75,7 @@ public class SessionUIManager : MonoBehaviour
             {
                 return;
             }
-
-            string password = GetPassword(session);
+            
             string url = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
             
             //목록 생성
@@ -88,21 +87,7 @@ public class SessionUIManager : MonoBehaviour
             button.onClick.AddListener(() => OnJoinSession(session));
         }
     }
-
-    private string GetPassword(SessionInfo session)
-    {
-        string Password = "";
-        if (session.Properties.TryGetValue("Password", out var sessionDescription))
-        {
-            Password = sessionDescription;
-        }
-        else
-        {
-            Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
-        }
-        Debug.Log("결괏값: " + Password);
-        return Password;
-    }
+    
     private string GetImage(SessionInfo session)
     {
         string ImageUrl = "";
@@ -117,7 +102,6 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + ImageUrl);
         return ImageUrl;
     }
-    string password;
     private async void CreateSession()
     {
         string sessionName = sessionNameInput.text;
@@ -143,7 +127,6 @@ public class SessionUIManager : MonoBehaviour
             {
                 { "Prompt", sessionPromptInput.text },
                 { "ImageUrl", sessionPromptInput.text },
-                { "Password", password }
             }
         };
 
