@@ -1084,8 +1084,9 @@ GameObject:
   - component: {fileID: 226581685}
   - component: {fileID: 226581687}
   - component: {fileID: 226581686}
+  - component: {fileID: 226581688}
   m_Layer: 5
-  m_Name: UICanvas
+  m_Name: LoadingUICanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1215,6 +1216,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emptySceneName: Empty
+--- !u!114 &226581688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226581679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14c901846f54aa843bc7b4576c7d3a2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &236764216
 PrefabInstance:
   m_ObjectHideFlags: 0

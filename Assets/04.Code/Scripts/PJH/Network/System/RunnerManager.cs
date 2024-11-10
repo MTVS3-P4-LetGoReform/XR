@@ -20,6 +20,7 @@ public class RunnerManager : MonoBehaviour
    private NetworkObject _spawnedPlayer;
    
    private Transform _currentSpawnPoint;
+   
 
    private void Awake()
    {
@@ -51,13 +52,13 @@ public class RunnerManager : MonoBehaviour
       {
          Debug.Log($"세션이름: '{args.SessionName}'이 만들어졌습니다.");
 
-         if (sceneIndex >= 0)
+         if (sceneIndex >= -1)
          {
             // 씬 로딩 완료 후 PlayerSpawn을 호출하도록 설정
             //await LoadingSceneController.Instance.LoadScene(sceneIndex, PlayerSpawn);
             var sceneName = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
             SceneLoadManager.Instance.LoadScene(sceneName);
-            Debug.Log("씬이름 : "+ sceneName);
+            Debug.Log("씬이름 : "+ sceneIndex);
          }
 
          await UniTask.WaitUntil(()=>SceneLoadManager.isLoaded);
@@ -134,7 +135,7 @@ public class RunnerManager : MonoBehaviour
       
       
       await ShutdownRunner();
-      await RunnerStart(startArgs,0);
+      await RunnerStart(startArgs,1);
    }
    
    public async UniTask Test()

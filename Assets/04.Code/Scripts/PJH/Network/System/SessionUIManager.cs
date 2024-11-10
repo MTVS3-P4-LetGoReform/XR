@@ -29,6 +29,7 @@ public class SessionUIManager : MonoBehaviour
 
     public GameObject test;
     
+   
     private void Awake()
     {
         if (Instance == null)
@@ -50,7 +51,7 @@ public class SessionUIManager : MonoBehaviour
         
         createRoomBack.onClick.AddListener(OffCreateRoom);
         createRoomRecreate.onClick.AddListener(ImageCraft);
-        createRoomStart.onClick.AddListener(CreateSession);
+        createRoomStart.onClick.AddListener(CreatePlaySession);
     }
 
     private void ImageCraft()
@@ -84,7 +85,7 @@ public class SessionUIManager : MonoBehaviour
             sessionText.text = $"{session.Name} <br>{session.PlayerCount}/{session.MaxPlayers}";
             
             Button button = sessionButton.GetComponent<Button>();
-            button.onClick.AddListener(() => OnJoinSession(session));
+            button.onClick.AddListener(() => JoinPlaySession(session));
         }
     }
     
@@ -102,7 +103,7 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + ImageUrl);
         return ImageUrl;
     }
-    private async void CreateSession()
+    private async void CreatePlaySession()
     {
         string sessionName = sessionNameInput.text;
      
@@ -112,11 +113,6 @@ public class SessionUIManager : MonoBehaviour
             Debug.LogWarning("세션 이름이 비어있습니다.");
             return;
         }
-
-        var playSceneNum = 1;
-        var sceneInfo = new NetworkSceneInfo();
-        sceneInfo.AddSceneRef(SceneRef.FromIndex(playSceneNum)); // PlayScene으로 이동
-        
         var startArgs = new StartGameArgs
         {
             GameMode = GameMode.Shared,
@@ -131,10 +127,10 @@ public class SessionUIManager : MonoBehaviour
         };
 
         await RunnerManager.Instance.ShutdownRunner();
-        await RunnerManager.Instance.RunnerStart(startArgs,playSceneNum);
+        await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
     
-    private async void OnJoinSession(SessionInfo session)
+    private async void JoinPlaySession(SessionInfo session)
     {
         Debug.Log($"Joining session: {session.Name}");
 
@@ -146,7 +142,7 @@ public class SessionUIManager : MonoBehaviour
         };
 
         await RunnerManager.Instance.ShutdownRunner();
-        await RunnerManager.Instance.RunnerStart(startArgs,1);
+        await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
     
     private void ActiveRoomList()
