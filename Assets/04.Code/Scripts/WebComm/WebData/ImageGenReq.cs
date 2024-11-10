@@ -6,4 +6,6 @@ public class ImageGenReq
     public string prompt;
     // 생성할 이미지 수
     public int batch;
+    // 생성 유저 아이디
+    public string creator_id;
 }
