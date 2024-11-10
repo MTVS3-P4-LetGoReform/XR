@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Fusion;
+using UnityEngine.SceneManagement;
 
 public class SessionUIManager : MonoBehaviour
 {
@@ -61,19 +62,23 @@ public class SessionUIManager : MonoBehaviour
     // 세션 목록 UI 업데이트
     public void UpdateSessionList(List<SessionInfo> sessionList)
     {
+        // 기존 목록 삭제 같은 목록이 겹치는걸 방지함.
         foreach (Transform child in sessionListParent)
         {
             Destroy(child.gameObject);
         }
 
+        // 세션 정보를 불러옴
         foreach (var session in sessionList)
         {
             if (session.Name == "공용 세션")
             {
                 return;
             }
+            
             string url = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
             
+            //목록 생성
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
             TMP_Text sessionText = sessionButton.GetComponentInChildren<TMP_Text>();
             sessionText.text = $"{session.Name} <br>{session.PlayerCount}/{session.MaxPlayers}";
@@ -97,10 +102,10 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + ImageUrl);
         return ImageUrl;
     }
-
     private async void CreateSession()
     {
         string sessionName = sessionNameInput.text;
+     
 
         if (string.IsNullOrEmpty(sessionName))
         {
@@ -121,7 +126,7 @@ public class SessionUIManager : MonoBehaviour
             SessionProperties = new Dictionary<string, SessionProperty>
             {
                 { "Prompt", sessionPromptInput.text },
-                {"ImageUrl",sessionPromptInput.text}
+                { "ImageUrl", sessionPromptInput.text },
             }
         };
 
@@ -136,7 +141,8 @@ public class SessionUIManager : MonoBehaviour
         var startArgs = new StartGameArgs
         {
             GameMode = GameMode.Shared,
-            SessionName = session.Name
+            SessionName = session.Name,
+            //Scene = SceneRef.FromIndex(SceneUtility.GetBuildIndexByScenePath(""))
         };
 
         await RunnerManager.Instance.ShutdownRunner();

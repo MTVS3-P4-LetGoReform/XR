@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Fusion;
+using Photon.Voice.Unity;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,7 +36,7 @@ public class RunnerManager : MonoBehaviour
 
    private async void Start()
    {
-      await JoinPublicSession(); 
+      await Test(); 
    }
 
    public async UniTask RunnerStart(StartGameArgs args,int sceneIndex = -1)
@@ -52,11 +53,16 @@ public class RunnerManager : MonoBehaviour
 
          if (sceneIndex >= 0)
          {
-            var loadSceneTask = SceneManager.LoadSceneAsync(sceneIndex);  // 씬 로딩
-            await loadSceneTask;
+            // 씬 로딩 완료 후 PlayerSpawn을 호출하도록 설정
+            //await LoadingSceneController.Instance.LoadScene(sceneIndex, PlayerSpawn);
+            var sceneName = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
+            SceneLoadManager.Instance.LoadScene(sceneName);
+            Debug.Log("씬이름 : "+ sceneName);
          }
 
+         await UniTask.WaitUntil(()=>SceneLoadManager.isLoaded);
          await PlayerSpawn();
+         Debug.Log("캐릭터 생성");
       }
       else
       {
@@ -122,16 +128,48 @@ public class RunnerManager : MonoBehaviour
       var startArgs = new StartGameArgs
       {
          GameMode = GameMode.Shared,
-         //Scene = sceneInfo,
+         //Scene = SceneRef.FromIndex(0),
          SessionName = "공용 세션"
       };
-            
+      
+      
       await ShutdownRunner();
       await RunnerStart(startArgs,0);
+   }
+   
+   public async UniTask Test()
+   {
+      var startArgs = new StartGameArgs
+      {
+         GameMode = GameMode.Shared,
+         //Scene = SceneRef.FromIndex(0),
+         SessionName = "공용 세션"
+      };
+      
+      await ShutdownRunner();
+      
+      if (runner == null)
+      {
+         InstantiateRunner();
+      }
+
+      var result = await runner.StartGame(startArgs);
+      if (result.Ok)
+      {
+         await PlayerSpawn();
+         Debug.Log($"세션이름: '{startArgs.SessionName}'이 만들어졌습니다.");
+      }
+      else
+      {
+         Debug.LogError($"세션 생성에 실패했습니다.: {result.ShutdownReason}");
+      }
    }
 
    private void InstantiateRunner()
    {
+      var recorder = GameObject.FindAnyObjectByType<Recorder>(FindObjectsInactive.Include);
+      Debug.Log($"Recorder : {recorder}");
+      
       runner = Instantiate(networkRunnerPrefab);
       runner.AddCallbacks(new NetworkCallbackHandler());
    }

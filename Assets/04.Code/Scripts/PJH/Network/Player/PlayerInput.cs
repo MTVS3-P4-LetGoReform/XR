@@ -5,11 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class PlayerInput : NetworkBehaviour
 {
-    public delegate void ChatEvent();
-    public static event ChatEvent OnChat;
- 
+    public static Action<bool>OnChat;
+    private bool _chatOn = false;
+    
     public static Action<bool> MicMute;
-
     private bool _micOn = false;
     
     private void Update()
@@ -18,13 +17,27 @@ public class PlayerInput : NetworkBehaviour
         {
             if (OnChat != null)
             {
-                OnChat?.Invoke();
+                Chat();
             }
         }
 
         if (Input.GetKeyDown(KeyCode.V) && SceneManager.GetActiveScene().name == "Proto_PlayScene")
         {
             Mic();
+        }
+    }
+
+    private void Chat()
+    {
+        if (_chatOn)
+        {
+            OnChat?.Invoke(false);
+            _chatOn = false;
+        }
+        else
+        {
+            OnChat?.Invoke(true);
+            _chatOn = true;
         }
     }
 

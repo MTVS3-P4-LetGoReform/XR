@@ -13,7 +13,7 @@ public class GotoPersonalSession : MonoBehaviour
         {
             _interact = false;
             Debug.Log("눌렀다");
-            GotoPersonal();
+            GotoPersonal(UserData.Instance.UserName);
         }
     }
 
@@ -22,6 +22,7 @@ public class GotoPersonalSession : MonoBehaviour
         var args = new StartGameArgs
         {
             GameMode = GameMode.Shared,
+            //Scene = SceneRef.FromIndex(2),
             SessionName = name
         };
         await RunnerManager.Instance.ShutdownRunner();
