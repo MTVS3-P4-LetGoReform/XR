@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -24,7 +25,11 @@ public class GotoPersonalSession : MonoBehaviour
         {
             GameMode = GameMode.Shared,
             //Scene = SceneRef.FromIndex(2),
-            SessionName = userId
+            SessionName = userId,
+            SessionProperties = new Dictionary<string, SessionProperty>
+            {
+                { "UserId", userId },
+            }
         };
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(args,3);
