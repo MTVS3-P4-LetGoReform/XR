@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Firebase.Auth;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +33,7 @@ public class WebCommManager : MonoBehaviour
     { 
         ImageGen _imageGen = new ImageGen(webApiData);
 
-        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum));
+        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum, FirebaseAuthManager.Instance.UserId));
         genImageNameList = _imageGen._imageGenRes.filenames;
 
         ImageDownload _imageDownload = new ImageDownload(webApiData);
@@ -52,7 +53,7 @@ public class WebCommManager : MonoBehaviour
     { 
         ImageGen _imageGen = new ImageGen(webApiData);
 
-        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, RegenImageNum));
+        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId));
         genImageNameList[idx] = _imageGen._imageGenRes.filenames[0];
         ImageDownload _imageDownload = new ImageDownload(webApiData);
         yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[idx]));
@@ -100,7 +101,7 @@ public class WebCommManager : MonoBehaviour
     public IEnumerator ModelGenDown()
     {
         ModelGen _modelGen = new ModelGen(webApiData);
-        yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex]));
+        yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], webApiData.ModelId));
         Debug.Log(_modelGen._modelGenRes.filename);
         modelName = _modelGen._modelGenRes.filename;
         ModelDown _modelDown = new ModelDown(webApiData);

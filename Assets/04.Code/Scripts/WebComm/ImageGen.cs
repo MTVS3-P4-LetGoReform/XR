@@ -16,10 +16,12 @@ public class ImageGen
         webApiData = webapi;
     }
     
-    public IEnumerator RequestImageGen(string pmpt, int num)
+    public IEnumerator RequestImageGen(string pmpt, int num, string id)
     {
         _imageGenReq.prompt = pmpt;
         _imageGenReq.batch = num;
+        _imageGenReq.creator_id = id;
+        webApiData.UserId = id;
         
         // // JSON 데이터 생성
         // string jsonData = "{\"filename\":\"" + fileName + "\"}";
@@ -46,6 +48,7 @@ public class ImageGen
         if (request.result == UnityWebRequest.Result.Success)
         {
             _imageGenRes = JsonUtility.FromJson<ImageGenRes>(request.downloadHandler.text);
+            webApiData.ModelId = _imageGenRes.model_id;
         }
         else
         {
