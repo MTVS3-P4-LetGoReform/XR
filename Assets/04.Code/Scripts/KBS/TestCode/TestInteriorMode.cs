@@ -73,11 +73,11 @@ public class TestInteriorMode : MonoBehaviour
 
         if (currentCoroutine != null)
         {
-            StopCoroutine(PreviewObjectMoveController());
+            StopCoroutine(currentCoroutine);
             currentCoroutine = null;
             //해당 코루틴을 1번만 실행시켜주게 하는 코드
         }
-
+        
         currentCoroutine = StartCoroutine(PreviewObjectMoveController());
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
@@ -108,7 +108,7 @@ public class TestInteriorMode : MonoBehaviour
                         pos, Quaternion.identity);
                     isInstantitate = true;
 
-                    originRotation = newPreviewPrefab.transform.rotation;
+                    originRotation = Quaternion.identity;
                     // bool type의 isInstantiate가 1번만 실행
                 }
                 
@@ -174,7 +174,8 @@ public class TestInteriorMode : MonoBehaviour
             pos += (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
             
             GameObject gameObject = Instantiate(objectDatabase.objectData[selectedObjectIndex].Prefab, pos, newPreviewPrefabRatate);
-            
+
+            newPreviewPrefabRatate = originRotation;
             newPreviewPrefab.transform.rotation = originRotation;
             // 추후 설치 방향 재 정립, 설치되는 위치 값을 pivot 기준으로 분류할것인지, 물건 위주로 분류할것인지 구상(후자일 가능성 높음)
 
