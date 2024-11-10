@@ -83,7 +83,9 @@ public class TestInteriorMode : MonoBehaviour
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
         OnExit += StopPlacement; // StopPlacement 메소드 구독
+
         
+
     }
 
     IEnumerator PreviewObjectMoveController() // PreviewPrefab을 이동시키기 위한 코드
@@ -161,6 +163,8 @@ public class TestInteriorMode : MonoBehaviour
         {
             return;
         } 
+        
+        Cursor.lockState = CursorLockMode.Locked;
         
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
