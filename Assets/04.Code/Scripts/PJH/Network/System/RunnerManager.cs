@@ -4,24 +4,28 @@ using Photon.Voice.Unity;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class RunnerManager : MonoBehaviour
 {
    public static RunnerManager Instance { get; private set; }
    
+   public NetworkPrefabRef playerPrefab; 
+   public NetworkPrefabRef sharedGameDataPrefab;
    public NetworkRunner networkRunnerPrefab;
-   public NetworkObject playerPrefab;
+   
    public NetworkRunner runner;
    
-   public Transform publicParkSpawnPoint;
-   public Transform playSpawnPoint;
-   public Transform personalSpawnPoint;
-   
    private NetworkObject _spawnedPlayer;
-   
+   private NetworkObject _sharedGameData;
    private Transform _currentSpawnPoint;
    
-
+   #region SpawnPoint
+   [SerializeField] private Transform publicParkSpawnPoint;
+   [SerializeField] private Transform playSpawnPoint;
+   [SerializeField] private Transform personalSpawnPoint;
+   #endregion
+   
    private void Awake()
    {
       if (Instance == null)
@@ -37,10 +41,10 @@ public class RunnerManager : MonoBehaviour
 
    private async void Start()
    {
-      await Test(); 
+      await FirstStartGame(); 
    }
 
-   public async UniTask RunnerStart(StartGameArgs args,int sceneIndex = -1)
+   public async UniTask RunnerStart(StartGameArgs args,int sceneIndex)
    {
       if (runner == null)
       {
@@ -52,49 +56,31 @@ public class RunnerManager : MonoBehaviour
       {
          Debug.Log($"세션이름: '{args.SessionName}'이 만들어졌습니다.");
 
-         if (sceneIndex >= -1)
-         {
-            // 씬 로딩 완료 후 PlayerSpawn을 호출하도록 설정
-            //await LoadingSceneController.Instance.LoadScene(sceneIndex, PlayerSpawn);
-            var sceneName = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
-            SceneLoadManager.Instance.LoadScene(sceneName);
-            Debug.Log("씬이름 : "+ sceneIndex);
-         }
-
-         await UniTask.WaitUntil(()=>SceneLoadManager.isLoaded);
+         LoadScene(sceneIndex);
+         await UniTask.WaitUntil(() => SceneLoadManager.isLoaded);
+         
          await PlayerSpawn();
          Debug.Log("캐릭터 생성");
+         
+         if (SceneManager.GetActiveScene().name == "3.Test_PlayScene")
+         {
+            await SharedGameDataSpawn();
+            Debug.Log("공유게임정보 생성");
+         }
       }
       else
       {
          Debug.LogError($"세션 생성에 실패했습니다.: {result.ShutdownReason}");
       }
    }
-   
-   private async UniTask PlayerSpawn()
+
+   private void LoadScene(int sceneIndex)
    {
-      switch (SceneManager.GetActiveScene().name)
-      {
-         case "Test_PublicParkScene":
-            _currentSpawnPoint = publicParkSpawnPoint;
-            break;
-         case "Proto_PlayScene":
-            _currentSpawnPoint = playSpawnPoint;
-            break;
-         case "Proto_PersonalScene":
-            _currentSpawnPoint = personalSpawnPoint;
-            break;
-         default:
-            _currentSpawnPoint = publicParkSpawnPoint;
-            break;
-      }
-     
-      var playerOp = runner.SpawnAsync(playerPrefab,_currentSpawnPoint.position,quaternion.identity);
-      await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
-      _spawnedPlayer = playerOp.Object;
-      _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
-   } 
-   
+      var sceneName = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
+      SceneLoadManager.Instance.LoadScene(sceneName);
+      Debug.Log("씬이름 : " + sceneIndex);
+   }
+
    public async UniTask ShutdownRunner()
    {
       if (runner != null && runner.IsRunning)
@@ -124,35 +110,25 @@ public class RunnerManager : MonoBehaviour
 
    public async UniTask JoinPublicSession()
    {
-      /*var sceneInfo = new NetworkSceneInfo();
-      sceneInfo.AddSceneRef(SceneRef.FromIndex(0));// MainScene*/
       var startArgs = new StartGameArgs
       {
          GameMode = GameMode.Shared,
-         //Scene = SceneRef.FromIndex(0),
          SessionName = "공용 세션"
       };
-      
       
       await ShutdownRunner();
       await RunnerStart(startArgs,1);
    }
    
-   public async UniTask Test()
+   private async UniTask FirstStartGame()
    {
+      InstantiateRunner();
+      
       var startArgs = new StartGameArgs
       {
          GameMode = GameMode.Shared,
-         //Scene = SceneRef.FromIndex(0),
          SessionName = "공용 세션"
       };
-      
-      await ShutdownRunner();
-      
-      if (runner == null)
-      {
-         InstantiateRunner();
-      }
 
       var result = await runner.StartGame(startArgs);
       if (result.Ok)
@@ -166,6 +142,37 @@ public class RunnerManager : MonoBehaviour
       }
    }
 
+   private async UniTask PlayerSpawn()
+   {
+      switch (SceneManager.GetActiveScene().buildIndex)
+      {
+         case 1:
+            _currentSpawnPoint = publicParkSpawnPoint;
+            break;
+         case 2:
+            _currentSpawnPoint = playSpawnPoint;
+            break;
+         case 3:
+            _currentSpawnPoint = personalSpawnPoint;
+            break;
+         default:
+            _currentSpawnPoint = publicParkSpawnPoint;
+            break;
+      }
+      
+      var playerOp = runner.SpawnAsync(playerPrefab,_currentSpawnPoint.position,quaternion.identity);
+      await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
+      _spawnedPlayer = playerOp.Object;
+      _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
+   }
+
+   private async UniTask SharedGameDataSpawn()
+   {
+      var sharedGameDataOp = runner.SpawnAsync(sharedGameDataPrefab);
+      await UniTask.WaitUntil(() => sharedGameDataOp.Status == NetworkSpawnStatus.Spawned);
+      _sharedGameData = sharedGameDataOp.Object;
+      _sharedGameData.name = $"Player: {_sharedGameData.Id}";
+   }
    private void InstantiateRunner()
    {
       var recorder = GameObject.FindAnyObjectByType<Recorder>(FindObjectsInactive.Include);

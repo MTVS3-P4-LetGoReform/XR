@@ -1,23 +1,29 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerStatus : NetworkBehaviour,IPlayerJoined
 {
     [Networked, OnChangedRender(nameof(OnMasterClientChanged))]
     public NetworkBool IsMasterClient { get; set; }
-
-    public Image masterClientIcon;
-
+    
+    
     public override void Spawned()
     {
         base.Spawned();
+
+        if (!HasStateAuthority)
+            return;
         
-        if (HasStateAuthority)
+        IsMasterClient = Runner.IsSharedModeMasterClient;
+        Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
+
+        if (IsMasterClient && SceneManager.GetActiveScene().buildIndex == 2)
         {
-            IsMasterClient = Runner.IsSharedModeMasterClient;
+            var readyCheck = FindAnyObjectByType<ReadyCheck>();
+            readyCheck.gameStartButton.gameObject.SetActive(true);
         }
-        masterClientIcon.enabled = IsMasterClient;
     }
 
     public override void Despawned(NetworkRunner runner, bool hasState)
@@ -33,6 +39,6 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
     
     void OnMasterClientChanged()
     {
-        masterClientIcon.enabled = IsMasterClient;
+        //masterClientIcon.enabled = IsMasterClient;
     }
 }

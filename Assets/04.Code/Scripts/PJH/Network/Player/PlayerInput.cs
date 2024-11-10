@@ -10,6 +10,12 @@ public class PlayerInput : NetworkBehaviour
     
     public static Action<bool> MicMute;
     private bool _micOn = false;
+
+    public static Action<bool> OnPlayerReady;
+    private bool _onReady;
+    
+    public static Action<bool> OnGameStart;
+    private bool _onGameStart;
     
     private void Update()
     {
@@ -21,9 +27,24 @@ public class PlayerInput : NetworkBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.V) && SceneManager.GetActiveScene().name == "Proto_PlayScene")
+        if (SceneManager.GetActiveScene().buildIndex != 2)
+            return;
+        
+        if (Input.GetKeyDown(KeyCode.V) )
         {
             Mic();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            Debug.Log("F5 키입력");
+            Ready();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            Debug.Log("F6 키입력");
+            StartGame();
         }
     }
 
@@ -52,6 +73,34 @@ public class PlayerInput : NetworkBehaviour
         {
             MicMute?.Invoke(true);
             _micOn = true;
+        }
+    }
+
+    private void Ready()
+    {
+        if (_onReady)
+        {
+            OnPlayerReady?.Invoke(false);
+            _onReady = false;
+        }
+        else
+        {
+            OnPlayerReady?.Invoke(true);
+            _onReady = true;
+        }
+    }
+
+    private void StartGame()
+    {
+        if (_onGameStart)
+        {
+            OnGameStart?.Invoke(false);
+            _onGameStart = false;
+        }
+        else
+        {
+            OnGameStart?.Invoke(true);
+            _onGameStart = true;
         }
     }
 }

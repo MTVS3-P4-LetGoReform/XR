@@ -78,7 +78,7 @@ public class SessionUIManager : MonoBehaviour
             }
             
             string check = CheckSession(session);
-            if (check == null)
+            if (check != null)
             {
                 return;
             }
