@@ -27,7 +27,7 @@ public class TestCamera : MonoBehaviour
        // transform.position = TpcameraPoint.transform.position;
         CameraRotate();
         ChangeCamPosition();
-        CameraTurnOnOff();
+       // CameraTurnOnOff();
     }
 
     private void CameraRotate()
