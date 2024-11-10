@@ -3,6 +3,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WebApiScriptableObject", menuName = "Scriptable Objects/WebApiScriptableObject", order = 1)]
 public class WebApiData : ScriptableObject
 {
+    [SerializeField] private string userId;
+
+    public string UserId
+    {
+        set { userId = value;}
+        get { return userId; }
+    }
+    [SerializeField] private string modelId;
+    public string ModelId
+    {
+        set { modelId = value;}
+        get { return modelId; }
+    }
+    
     [SerializeField] 
     private string baseUrl;
 
