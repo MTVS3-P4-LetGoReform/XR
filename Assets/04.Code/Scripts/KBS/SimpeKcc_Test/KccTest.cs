@@ -17,7 +17,7 @@ public class KccTest : NetworkBehaviour
 
     private float mx = 0f;
 
-    private bool _onChat;
+    private bool _onChat = false;
     
     private void Awake()
     {
@@ -36,9 +36,9 @@ public class KccTest : NetworkBehaviour
         PlayerInput.OnChat += StopMoving;
     }
 
-    private void StopMoving()
+    private void StopMoving(bool onChat)
     {
-        _onChat = !_onChat;
+        _onChat = onChat;
     }
 
 

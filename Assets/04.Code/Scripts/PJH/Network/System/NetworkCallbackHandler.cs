@@ -63,6 +63,13 @@ public class NetworkCallbackHandler : INetworkRunnerCallbacks
     }
 
     // 로딩화면 구현시 사용 예정
-    public void OnSceneLoadStart(NetworkRunner runner) { }
-    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public void OnSceneLoadStart(NetworkRunner runner)
+    {
+        
+    }
+
+    public void OnSceneLoadDone(NetworkRunner runner)
+    {
+       
+    }
 }
