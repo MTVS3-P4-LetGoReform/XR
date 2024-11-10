@@ -2,9 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Fusion;
-using UnityEngine.Serialization;
 
 public class SessionUIManager : MonoBehaviour
 {
@@ -12,7 +10,6 @@ public class SessionUIManager : MonoBehaviour
     
     public GameObject roomListPanel;
     public GameObject createRoomPanel;
-    
     
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPromptInput;
@@ -85,40 +82,20 @@ public class SessionUIManager : MonoBehaviour
             button.onClick.AddListener(() => OnJoinSession(session));
         }
     }
-
-    private void ActiveRoomList()
-    {
-        roomListPanel.SetActive(true);
-    }
-    
-    private void OffRoomList()
-    {
-        roomListPanel.SetActive(false);
-    }
-
-    private void ActiveCreateRoom()
-    {
-        createRoomPanel.SetActive(true);
-    }
-    
-    private void OffCreateRoom()
-    {
-        createRoomPanel.SetActive(false);
-    }
     
     private string GetImage(SessionInfo session)
     {
-        string prompt = "";
-        if (session.Properties.TryGetValue("Prompt", out var sessionDescription))
+        string ImageUrl = "";
+        if (session.Properties.TryGetValue("ImageUrl", out var sessionDescription))
         {
-            prompt = sessionDescription;
+            ImageUrl = sessionDescription;
         }
         else
         {
             Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
         }
-        Debug.Log("결괏값: " + prompt);
-        return prompt;
+        Debug.Log("결괏값: " + ImageUrl);
+        return ImageUrl;
     }
 
     private async void CreateSession()
@@ -141,10 +118,11 @@ public class SessionUIManager : MonoBehaviour
             SessionName = sessionName,
             PlayerCount = 4,
             //Scene = sceneInfo,
-            /*SessionProperties = new Dictionary<string, SessionProperty>
+            SessionProperties = new Dictionary<string, SessionProperty>
             {
-                { "Prompt", sessionIntroductionInput.text }
-            }*/
+                { "Prompt", sessionPromptInput.text },
+                {"ImageUrl",sessionPromptInput.text}
+            }
         };
 
         await RunnerManager.Instance.ShutdownRunner();
@@ -163,5 +141,25 @@ public class SessionUIManager : MonoBehaviour
 
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,1);
+    }
+    
+    private void ActiveRoomList()
+    {
+        roomListPanel.SetActive(true);
+    }
+    
+    private void OffRoomList()
+    {
+        roomListPanel.SetActive(false);
+    }
+
+    private void ActiveCreateRoom()
+    {
+        createRoomPanel.SetActive(true);
+    }
+    
+    private void OffCreateRoom()
+    {
+        createRoomPanel.SetActive(false);
     }
 }

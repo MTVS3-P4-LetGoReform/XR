@@ -11,6 +11,9 @@ public class GameStateManager : MonoBehaviour
     public GameObject pedestral;
     
     public bool isComplete = false;
+
+    public int maxCnt = -1;
+    public int allCnt = 0;
     
     public static GameStateManager Instance
     {
@@ -46,6 +49,7 @@ public class GameStateManager : MonoBehaviour
         _modelgenerateController = FindObjectOfType<ModelgenerateController>();
         _modelgenerateController.GeneratePlayModel();
         StartCoroutine(CompleteCoroutine());
+        // FIXME : 복셀화 끝나고 나서 멀티쪽 동기화 호출
     }
 
     
@@ -60,5 +64,27 @@ public class GameStateManager : MonoBehaviour
         yield return new WaitForSeconds(5f);
         Cursor.lockState = CursorLockMode.None;
         completeScreen.SetActive(true);
+    }
+
+    public void DoCompleteCoroutine()
+    {
+        isComplete = true;
+        //StartCoroutine(CompleteCoroutine());
+    }
+
+    public void SetMaxVoxelCnt(int num)
+    {
+        maxCnt = num;
+        allCnt = 0;
+    }
+
+    public void AddCnt(int num)
+    {
+        allCnt += num; 
+    }
+
+    public bool IsComplete()
+    {
+        return allCnt == maxCnt;
     }
 }

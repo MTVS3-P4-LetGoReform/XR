@@ -3,7 +3,6 @@ using Fusion;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class RunnerManager : MonoBehaviour
 {
@@ -69,7 +68,7 @@ public class RunnerManager : MonoBehaviour
    {
       switch (SceneManager.GetActiveScene().name)
       {
-         case "Proto_PublicParkScene":
+         case "Test_PublicParkScene":
             _currentSpawnPoint = publicParkSpawnPoint;
             break;
          case "Proto_PlayScene":
@@ -77,6 +76,9 @@ public class RunnerManager : MonoBehaviour
             break;
          case "Proto_PersonalScene":
             _currentSpawnPoint = personalSpawnPoint;
+            break;
+         default:
+            _currentSpawnPoint = publicParkSpawnPoint;
             break;
       }
      

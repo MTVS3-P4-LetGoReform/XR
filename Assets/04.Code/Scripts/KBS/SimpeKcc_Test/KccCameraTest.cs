@@ -1,4 +1,3 @@
-
 using Fusion;
 using UnityEngine;
 
@@ -15,7 +14,8 @@ public class KccCameraTest : NetworkBehaviour
     
     private float mouseX = 0f;
     private float mouseY = 0f;
-    
+
+    private bool _onChat;
     void Start()
     {
         if (!HasStateAuthority)
@@ -23,10 +23,30 @@ public class KccCameraTest : NetworkBehaviour
             Destroy(gameObject);
         }
         Cursor.lockState = CursorLockMode.Locked;
+        PlayerInput.OnChat += CameraLock;
+    }
+
+    private void CameraLock()
+    {
+        if (_onChat)
+        {
+            rotationSpeed = 5f;
+            _onChat = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else if (!_onChat)
+        {
+            rotationSpeed = 0f;
+            _onChat = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     private void Update()
     {
+        if (_onChat)
+            return;
+        
         mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
         
@@ -36,27 +56,29 @@ public class KccCameraTest : NetworkBehaviour
         ChangeCamPosition();
         
     }
-    
-        private void ChangeCamPosition()
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                togglePov = !togglePov;
-            }
 
-            // 시점에 따라 카메라 위치를 전환
-            if (togglePov)
-            {
-                // 1인칭 시점으로 전환
-                //Debug.Log("Switching to First Person");
-                transform.position = Vector3.Lerp(transform.position, FpCameraPoint.position, Time.deltaTime * positionLerpSpeed);
-            }
-            else
-            {
-                // 3인칭 시점으로 전환
-                //Debug.Log("Switching to Third Person");
-                transform.position = Vector3.Lerp(transform.position, TpCameraPoint.position, Time.deltaTime * positionLerpSpeed);
-            }
+    private void ChangeCamPosition()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            togglePov = !togglePov;
         }
+
+        // 시점에 따라 카메라 위치를 전환
+        if (togglePov)
+        {
+            // 1인칭 시점으로 전환
+            //Debug.Log("Switching to First Person");
+            transform.position = Vector3.Lerp(transform.position, FpCameraPoint.position,
+                Time.deltaTime * positionLerpSpeed);
+        }
+        else
+        {
+            // 3인칭 시점으로 전환
+            //Debug.Log("Switching to Third Person");
+            transform.position = Vector3.Lerp(transform.position, TpCameraPoint.position,
+                Time.deltaTime * positionLerpSpeed);
+        }
+    }
 }
 

@@ -41,6 +41,7 @@ public class TestInteriorMode : MonoBehaviour
         StopPlacement();
     }
     
+
     void Update()
     {
         InteriorModeTrigger();

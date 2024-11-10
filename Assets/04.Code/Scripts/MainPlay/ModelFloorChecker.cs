@@ -19,12 +19,6 @@ public class ModelFloorChecker : MonoBehaviour
         _layerController = FindObjectOfType<LayerController>();
     }
 
-    public void Start()
-    {
-        
-        
-    }
-
     public void ResetVoxelPos()
     {
         voxelPos.Clear();
