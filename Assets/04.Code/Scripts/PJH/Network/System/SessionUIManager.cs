@@ -51,7 +51,7 @@ public class SessionUIManager : MonoBehaviour
         
         createRoomBack.onClick.AddListener(OffCreateRoom);
         //createRoomRecreate.onClick.AddListener(ImageCraft);
-        createRoomStart.onClick.AddListener(CreatePlaySession);
+        //createRoomStart.onClick.AddListener(CreatePlaySession);
     }
 
     // private void ImageCraft()
@@ -123,11 +123,11 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + ImageUrl);
         return ImageUrl;
     }
-    private async void CreatePlaySession()
+    public async void CreatePlaySession()
     {
+        Debug.Log("SeissionUIManager : CreatePlaySession()");
         string sessionName = sessionNameInput.text;
-     
-
+        Debug.Log("SeissionUIManager : flag1");
         if (string.IsNullOrEmpty(sessionName))
         {
             Debug.LogWarning("세션 이름이 비어있습니다.");

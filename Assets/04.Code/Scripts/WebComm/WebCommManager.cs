@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using Firebase.Auth;
 using TMPro;
 using UnityEngine;
@@ -24,11 +25,20 @@ public class WebCommManager : MonoBehaviour
     private const int GenImageNum = 3;
     private const int RegenImageNum = 1;
     private string _userId;
+    
+    public Button createRoomStart;
+    private SessionUIManager _sessionUIManager;
+    
+    private bool isGenerating = false;
+    
     private void Start()
     {
         if (UserData.Instance ==null)
             return;
         _userId = UserData.Instance.UserId;
+        _sessionUIManager = FindObjectOfType<SessionUIManager>();
+        createRoomStart.onClick.AddListener(DoModelGenDown);
+        
     }
 
     // 초기 이미지 생성
@@ -101,11 +111,25 @@ public class WebCommManager : MonoBehaviour
             }
         }
     }
-    // 모델 생성
+
     public void DoModelGenDown()
     {
-        StartCoroutine(ModelGenDown());
+        if (!isGenerating)
+        {
+            isGenerating = true;
+            StartCoroutine(ModelGenDownSceneLoad());
+        }
     }
+    
+    public IEnumerator ModelGenDownSceneLoad()
+    {
+        yield return StartCoroutine(ModelGenDown());
+        Debug.Log(5);
+        
+        isGenerating = false;
+        Debug.Log(6);
+    }
+
     public IEnumerator ModelGenDown()
     {
         ModelGen _modelGen = new ModelGen(webApiData);
@@ -118,6 +142,10 @@ public class WebCommManager : MonoBehaviour
         //FIXME : 가이드라인 생성으로 추후 변경
 
         StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
-        _storageDatabase.DownModel(_modelGen._modelGenRes.filename);
+        Debug.Log(3);
+
+        _storageDatabase.DownModel(_modelGen._modelGenRes.filename, _sessionUIManager).Forget();
+        Debug.Log(4);
+
     }
 }
