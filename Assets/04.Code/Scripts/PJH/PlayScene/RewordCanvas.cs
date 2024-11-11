@@ -10,6 +10,9 @@ public class RewordCanvas : MonoBehaviour
     public Canvas userCanvas;
     public Button userRewordButton;
 
+    [SerializeField]
+    private WebApiData webApiData;
+
     private void Start()
     {
         masterRewordButton.onClick.AddListener(MasterReword);
@@ -18,10 +21,25 @@ public class RewordCanvas : MonoBehaviour
 
     private async void MasterReword()
     {
-        UserData.Instance.UserId;
-        Debug.Log("보상획득: 스태츄");
+        var userId = UserData.Instance.UserId;
+        
         Cursor.lockState = CursorLockMode.Locked;
-        await RunnerManager.Instance.JoinPublicSession();
+        
+        var properties = RunnerManager.Instance.runner.SessionInfo.Properties;
+        
+        string modelId = "m_id_e7525c40";
+        /*if (properties.TryGetValue("ModelId", out var sessionProperty))
+        {
+            modelId = sessionProperty;
+            Debug.Log("결괏값: " + modelId);
+        }
+        else
+        {
+            Debug.LogWarning($"{properties}: 이미지를 불러오지 못했습니다.");
+        }*/
+
+        RealtimeDatabase.CopyModelToUser(userId, modelId);
+        Debug.Log("보상획득: 스태츄");
     }
     
     private async void UserReword()

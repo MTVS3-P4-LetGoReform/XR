@@ -163,4 +163,54 @@ public static partial class RealtimeDatabase
             }
         }, onFailure);
     }
+    
+    public static void AddAiModel(string userId, Model model, Action onSuccess = null, Action<Exception> onFailure = null)
+    {
+        GetModelList(userId, modelList =>
+        {
+            if (modelList == null) 
+                modelList = new ModelList();
+            
+            bool added = modelList.AddModel(model);
+            if (!added)
+            {
+                Debug.LogWarning($"사용자 {userId}에게 이미 존재하는 모델 ID: {model.id}");
+                onFailure?.Invoke(new Exception("이미 존재하는 모델입니다."));
+                return;
+            }
+            
+            CreateData($"users/{userId}/models", modelList, onSuccess, onFailure);
+        }, onFailure);
+    }
+
+    public static void GetModelList(string userId, Action<ModelList> onSuccess, Action<Exception> onFailure = null)
+    {
+        ReadData($"users/{userId}/models", onSuccess, onFailure);
+    }
+
+    /// <summary>
+    /// 특정 ModelId에 해당하는 Model 데이터를 가져와 UserId 아래에 저장합니다.
+    /// </summary>
+    /// <param name="userId">모델을 저장할 유저의 ID입니다.</param>
+    /// <param name="modelId">가져올 모델의 ID입니다.</param>
+    /// <param name="onSuccess">작업 성공 시 호출되는 콜백입니다.</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백입니다.</param>
+    public static void CopyModelToUser(string userId, string modelId, Action onSuccess = null,
+        Action<Exception> onFailure = null)
+    {
+        // models/{modelId} 경로에서 Model 데이터 읽기
+        RealtimeDatabase.ReadData<Model>($"models/{modelId}", model =>
+        {
+            if (model == null)
+            {
+                Debug.LogError($"Model ID '{modelId}'에 해당하는 모델을 찾을 수 없습니다.");
+                onFailure?.Invoke(new Exception("모델을 찾을 수 없습니다."));
+                return;
+            }
+
+            // 불러온 모델 데이터를 users/{userId}/models/{modelId} 경로에 저장
+            RealtimeDatabase.CreateData($"users/{userId}/models/{modelId}", model, onSuccess, onFailure);
+
+        }, onFailure);
+    }
 }
