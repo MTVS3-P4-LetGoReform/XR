@@ -24,6 +24,7 @@ public class SceneLoadManager : MonoBehaviourSingleton<SceneLoadManager>
 
    public void LoadScene(string sceneName)
    {
+      Debug.Log("SeneLoadManager : LoadScene()");
        LoadProcess(sceneName).Forget();
    }
 
