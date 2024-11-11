@@ -48,7 +48,8 @@ public class ImageGen
         if (request.result == UnityWebRequest.Result.Success)
         {
             _imageGenRes = JsonUtility.FromJson<ImageGenRes>(request.downloadHandler.text);
-            webApiData.ModelId = _imageGenRes.model_id;
+            //webApiData.ModelId = _imageGenRes.model_id;
+            Debug.Log($"ImageGen : {_imageGenRes.id}");
         }
         else
         {
