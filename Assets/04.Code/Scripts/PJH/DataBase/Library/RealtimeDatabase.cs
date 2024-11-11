@@ -322,9 +322,8 @@ public static partial class RealtimeDatabase
     }
 
     /// <summary>
-    /// 지정된 경로에서 고유한 키를 생성합니다.
+    /// 고유한 키를 생성합니다.
     /// </summary>
-    /// <param name="path">키를 생성할 Firebase Database 경로입니다.</param>
     /// <returns>생성된 고유 키를 반환합니다.</returns>
     /// <example>
     /// <code>
@@ -332,14 +331,31 @@ public static partial class RealtimeDatabase
     /// Debug.Log("생성된 키: " + newKey);
     /// </code>
     /// </example>
-    public static string GenerateKey(string path)
+    public static string GenerateKey()
     {
+        // Firebase 초기화 확인
+        if (!isInitialized)
+        {
+            Debug.Log("Firebase 초기화 중...");
+            InitializeFirebase(() =>
+                {
+                    Debug.Log("Firebase 초기화 완료");
+                },
+                exception =>
+                {
+                    Debug.LogError("Firebase 초기화 실패: " + exception.Message);
+                });
+        }
+
+        // 초기화 실패 시 null 반환
         if (!isInitialized)
         {
             Debug.LogError("Firebase가 초기화되지 않았습니다.");
             return null;
         }
-        return databaseReference.Child(path).Push().Key;
+
+        // 초기화 완료 후 고유 키 생성
+        return databaseReference.Push().Key;
     }
 
     /// <summary>

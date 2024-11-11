@@ -7,7 +7,10 @@ public class UserLand
 {
     public List<LandObject> objects = new List<LandObject>();
 
-    public UserLand() { }
+    public UserLand()
+    {
+        objects = new List<LandObject>();
+    }
 
     public void AddObject(LandObject landObject)
     {
