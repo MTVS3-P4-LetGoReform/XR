@@ -41,7 +41,7 @@ public class SessionUIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
     private void Start()
     {
         create.onClick.AddListener(ActiveCreateRoom);
@@ -50,15 +50,15 @@ public class SessionUIManager : MonoBehaviour
         roomListBack.onClick.AddListener(OffRoomList);
         
         createRoomBack.onClick.AddListener(OffCreateRoom);
-        createRoomRecreate.onClick.AddListener(ImageCraft);
+        //createRoomRecreate.onClick.AddListener(ImageCraft);
         createRoomStart.onClick.AddListener(CreatePlaySession);
     }
 
-    private void ImageCraft()
-    {
-        test.SetActive(true);
-    }
-    
+    // private void ImageCraft()
+    // {
+    //     test.SetActive(true);
+    // }
+    //
 
     // 세션 목록 UI 업데이트
     public void UpdateSessionList(List<SessionInfo> sessionList)
@@ -165,22 +165,22 @@ public class SessionUIManager : MonoBehaviour
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
     
-    private void ActiveRoomList()
+    public void ActiveRoomList()
     {
         roomListPanel.SetActive(true);
     }
     
-    private void OffRoomList()
+    public void OffRoomList()
     {
         roomListPanel.SetActive(false);
     }
 
-    private void ActiveCreateRoom()
+    public void ActiveCreateRoom()
     {
         createRoomPanel.SetActive(true);
     }
     
-    private void OffCreateRoom()
+    public void OffCreateRoom()
     {
         createRoomPanel.SetActive(false);
     }

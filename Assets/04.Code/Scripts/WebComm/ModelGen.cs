@@ -20,6 +20,7 @@ public class ModelGen
     {
         _modelGenReq.image_filename = fname;
         _modelGenReq.model_id = modelId;
+        webApiData.ModelId = modelId;
         UnityWebRequest request = new UnityWebRequest( webApiData.Baseurl+webApiData.ModelGenPoint, "POST");
         string jsonData = JsonUtility.ToJson(_modelGenReq);
         byte[] jsonToSend = new UTF8Encoding().GetBytes(jsonData);
