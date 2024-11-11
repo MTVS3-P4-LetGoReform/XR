@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2394856952032966360
+--- !u!1 &4739173073854883109
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2650008228224823242}
-  - component: {fileID: 3972919293521477446}
-  - component: {fileID: 6498838793088756288}
+  - component: {fileID: 2296441652957141004}
+  - component: {fileID: 5597969081294041573}
   m_Layer: 0
-  m_Name: SharedGameData
+  m_Name: WebCommManger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2650008228224823242
+--- !u!4 &2296441652957141004
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2394856952032966360}
+  m_GameObject: {fileID: 4739173073854883109}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,33 +32,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3972919293521477446
+--- !u!114 &5597969081294041573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2394856952032966360}
+  m_GameObject: {fileID: 4739173073854883109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d125c81895f7ae3418d3c2d69b984a72, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f940ce202d34f09ad088aaf627c9d57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6498838793088756288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2394856952032966360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SortKey: 1800139416
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 3972919293521477446}
+  webApiData: {fileID: 11400000, guid: 887fdf7ab03dc5540a31c3b7882642dd, type: 2}
+  promptInput: {fileID: 0}
+  imageRenderers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  genImageNameList: []
+  selectedImageIndex: 0
+  modelName: 
+  modelId: 
+  createRoomStart: {fileID: 0}
+  ImageGenBtn: {fileID: 0}
