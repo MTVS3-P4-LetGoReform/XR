@@ -12,7 +12,6 @@ public class LobbyTriggerHandler : MonoBehaviour
         if (other.CompareTag("Player") && _canInteract && Input.GetKeyDown(KeyCode.E))
         {
             _canInteract = false;
-            Debug.Log("이게 왜 두번??");
             JoinLobbyTrigger();
         }
     }

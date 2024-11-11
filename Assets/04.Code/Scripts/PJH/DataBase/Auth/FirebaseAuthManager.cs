@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Firebase.Auth;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
 { 
@@ -105,7 +106,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                         Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
                         _name = user.name;
                         NickName?.Invoke(true);
-                        SceneManager.LoadScene(0);
+                        SceneManager.LoadScene(1);
                     }
                     else
                     {
@@ -114,11 +115,27 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                     }
                 },
                 onFailure: (exception) => Debug.LogError("사용자 데이터 로드 실패: " + exception.Message));
+            var updates = new Dictionary<string, object>
+            {
+                { "onlineStatus", true },
+                { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+            };
+            RealtimeDatabase.UpdateUser(newUser.UserId, updates);
         });
     }
 
     public void LogOut()
     {
+       
+        var id = UserData.Instance.UserId;
+        
+        var updates = new Dictionary<string, object>
+        {
+            { "onlineStatus", false },
+            { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+        };
+        RealtimeDatabase.UpdateUser(id, updates);
+        
         _auth.SignOut();
         Debug.Log("로그아웃");
     }
