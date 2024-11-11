@@ -21,7 +21,15 @@ public class StorageDatabase
         //local_url = Application.persistentDataPath + webApiData.TempModelName;
     }
     
-    public async UniTask DownModel(string modelName, SessionUIManager _sessionUIManager)
+    public async UniTask DownModel(string modelName)
+    {
+        isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
+        local_url = Application.persistentDataPath + "/" + modelName;
+        Debug.Log(string.Format("{0}", local_url));
+        await isstorage_ref.GetFileAsync(local_url);
+    }
+    
+    public async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
     {
         isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
         local_url = Application.persistentDataPath + "/" + modelName;

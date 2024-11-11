@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour
 {
     public Action<bool> Complete;
+    public WebApiData webApiData;
     private ModelgenerateController _modelgenerateController;
     private static GameStateManager _instance;
     public GameObject completeScreen;
