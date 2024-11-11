@@ -26,6 +26,15 @@ public class StorageDatabase
         isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
         local_url = Application.persistentDataPath + "/" + modelName;
         Debug.Log(string.Format("{0}", local_url));
+        await isstorage_ref.GetFileAsync(local_url);
+        _sessionUIManager.CreatePlaySession();
+    }
+    
+    public async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
+    {
+        isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
+        local_url = Application.persistentDataPath + "/" + modelName;
+        Debug.Log(string.Format("{0}", local_url));
         //GetFileAsync : 파일 비동기로 로컬 저장소에 다운로드
         // COntinueWith : 다운로드 작업이 완료된 후의 작업을 설정.
         await isstorage_ref.GetFileAsync(local_url);

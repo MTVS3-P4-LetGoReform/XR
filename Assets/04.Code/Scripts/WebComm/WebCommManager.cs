@@ -146,7 +146,7 @@ public class WebCommManager : MonoBehaviour
         StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
         Debug.Log(3);
 
-        _storageDatabase.DownModel(_modelGen._modelGenRes.model_filename, _sessionUIManager).Forget();
+        _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager).Forget();
         Debug.Log(4);
 
     }
