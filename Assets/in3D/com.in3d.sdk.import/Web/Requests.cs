@@ -89,7 +89,7 @@ namespace com.in3d.sdk.import.Web
         public static async Task<UnityWebRequest> Post(string uri, string[] header = null,
                                                        Action<float, float> progress = null)
         {
-            var request = UnityWebRequest.Post(uri, "");
+            var request = UnityWebRequest.PostWwwForm(uri, "");
 
             return await request.SendWebRequest(header, progress);
         }
@@ -102,7 +102,7 @@ namespace com.in3d.sdk.import.Web
         public static async Task<UnityWebRequest> Post(Uri uri, string[] header = null,
                                                        Action<float, float> progress = null)
         {
-            var request = UnityWebRequest.Post(uri, "");
+            var request = UnityWebRequest.PostWwwForm(uri, "");
 
             return await request.SendWebRequest(header, progress);
         }
@@ -116,7 +116,7 @@ namespace com.in3d.sdk.import.Web
         public static async Task<UnityWebRequest> Post(string uri, string message, string[] header = null,
                                                        Action<float, float> progress = null)
         {
-            var request = UnityWebRequest.Post(uri, message);
+            var request = UnityWebRequest.PostWwwForm(uri, message);
 
             return await request.SendWebRequest(header, progress);
         }
