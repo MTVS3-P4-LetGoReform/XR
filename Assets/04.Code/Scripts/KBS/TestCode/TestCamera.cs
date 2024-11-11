@@ -5,7 +5,7 @@ public class TestCamera : MonoBehaviour
 {
     public Transform TpcameraPoint;
     public Transform FpCameraPoint;
-    public CinemachineCamera placementCamera;
+   
     private Camera camera;
 
     public float rotSpeed = 200f;
@@ -67,12 +67,12 @@ public class TestCamera : MonoBehaviour
         if (turnCam)
         {
             //camera.gameObject.SetActive(false);
-            placementCamera.gameObject.SetActive(true);
+            
         }
         else
         {
             //camera.gameObject.SetActive(true);
-            placementCamera.gameObject.SetActive(false);
+            
         }
     }
 }
