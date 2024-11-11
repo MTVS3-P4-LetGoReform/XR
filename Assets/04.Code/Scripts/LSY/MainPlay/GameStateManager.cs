@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
+    public Action<bool> Complete;
     private ModelgenerateController _modelgenerateController;
     private static GameStateManager _instance;
     public GameObject completeScreen;
@@ -64,6 +66,7 @@ public class GameStateManager : MonoBehaviour
         yield return new WaitForSeconds(5f);
         Cursor.lockState = CursorLockMode.None;
         completeScreen.SetActive(true);
+        Complete?.Invoke(true);
     }
 
     public void DoCompleteCoroutine()

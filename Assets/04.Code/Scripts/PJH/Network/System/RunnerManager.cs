@@ -116,6 +116,7 @@ public class RunnerManager : MonoBehaviour
       };
       
       await ShutdownRunner();
+      InstantiateRunner();
       await RunnerStart(startArgs,1);
    }
    
