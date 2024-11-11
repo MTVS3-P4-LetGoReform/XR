@@ -40,7 +40,7 @@ public class SessionUIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
     private void Start()
     {
         create.onClick.AddListener(ActiveCreateRoom);
@@ -49,15 +49,15 @@ public class SessionUIManager : MonoBehaviour
         roomListBack.onClick.AddListener(OffRoomList);
         
         createRoomBack.onClick.AddListener(OffCreateRoom);
-        createRoomRecreate.onClick.AddListener(ImageCraft);
+        //createRoomRecreate.onClick.AddListener(ImageCraft);
         createRoomStart.onClick.AddListener(CreateSession);
     }
 
-    private void ImageCraft()
-    {
-        test.SetActive(true);
-    }
-    
+    // private void ImageCraft()
+    // {
+    //     test.SetActive(true);
+    // }
+    //
 
     // 세션 목록 UI 업데이트
     public void UpdateSessionList(List<SessionInfo> sessionList)
