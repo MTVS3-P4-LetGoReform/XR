@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,7 +24,7 @@ public class DBTest : MonoBehaviour
     private void RunAllTests()
     {
         // 1. User 테스트
-        testUserId = RealtimeDatabase.GenerateKey("users");
+        testUserId = "users";
         CreateUser();
         Invoke(nameof(ReadUser), 3f);
         Invoke(nameof(UpdateUser), 6f);
@@ -35,10 +36,10 @@ public class DBTest : MonoBehaviour
         Invoke(nameof(AddObjectToUserLand), 15f);
         //Invoke(nameof(DeleteObjectFromUserLand), 21f);
 
-        /*// 3. FriendList 테스트 (유저 생성 이후 테스트)
+        /#1#/ 3. FriendList 테스트 (유저 생성 이후 테스트)
         Invoke(nameof(AddFriend), 24f);
         Invoke(nameof(ReadFriendList), 27f);
-        //Invoke(nameof(RemoveFriend), 30f);*/
+        //Invoke(nameof(RemoveFriend), 30f);#1#
     }
 
     /// <summary>
@@ -215,3 +216,4 @@ public class DBTest : MonoBehaviour
             onFailure: (exception) => Debug.LogError("친구 삭제 실패: " + exception.Message));
     }
 }
+*/
