@@ -26,6 +26,7 @@ public class WebCommManager : MonoBehaviour
     private string _userId;
     
     public Button createRoomStart;
+    public Button ImageGenBtn;
     private SessionUIManager _sessionUIManager;
     
     private bool isGenerating = false;
@@ -37,6 +38,7 @@ public class WebCommManager : MonoBehaviour
         _userId = UserData.Instance.UserId;
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
+        ImageGenBtn.onClick.AddListener(DoImageGenDown);
         
     }
 

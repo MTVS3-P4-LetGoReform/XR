@@ -143,6 +143,7 @@ public class SessionUIManager : MonoBehaviour
             {
                 { "Prompt", sessionPromptInput.text },
                 { "ImageUrl", sessionPromptInput.text },
+                //{"ModelId ", }
             }
         };
 
