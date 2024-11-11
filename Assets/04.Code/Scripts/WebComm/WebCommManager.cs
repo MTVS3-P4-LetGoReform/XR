@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Firebase.Auth;
@@ -22,6 +23,13 @@ public class WebCommManager : MonoBehaviour
 
     private const int GenImageNum = 3;
     private const int RegenImageNum = 1;
+    private string _userId;
+    private void Start()
+    {
+        if (UserData.Instance ==null)
+            return;
+        _userId = UserData.Instance.UserId;
+    }
 
     // 초기 이미지 생성
     public void DoImageGenDown()
@@ -33,7 +41,7 @@ public class WebCommManager : MonoBehaviour
     { 
         ImageGen _imageGen = new ImageGen(webApiData);
 
-        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum, FirebaseAuthManager.Instance.UserId));
+        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
         genImageNameList = _imageGen._imageGenRes.filenames;
 
         ImageDownload _imageDownload = new ImageDownload(webApiData);
@@ -104,9 +112,12 @@ public class WebCommManager : MonoBehaviour
         yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], webApiData.ModelId));
         Debug.Log(_modelGen._modelGenRes.filename);
         modelName = _modelGen._modelGenRes.filename;
-        ModelDown _modelDown = new ModelDown(webApiData);
-        yield return StartCoroutine(_modelDown.DownloadGLBFile(modelName));
-        _modelDown.LoadAndInstantiateGLB(modelName);
+        // ModelDown _modelDown = new ModelDown(webApiData);
+        // yield return StartCoroutine(_modelDown.DownloadGLBFile(modelName));
+        // _modelDown.LoadAndInstantiateGLB(modelName);
         //FIXME : 가이드라인 생성으로 추후 변경
+
+        StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
+        _storageDatabase.DownModel(_modelGen._modelGenRes.filename);
     }
 }
