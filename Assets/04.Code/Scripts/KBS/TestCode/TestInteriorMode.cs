@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,7 +9,7 @@ public class TestInteriorMode : MonoBehaviour
 {
     public GameObject craftHammer;
     public TMP_Text stateText;
-    public GameObject boxLine;
+    
     public Canvas interiorCanvas;
     [SerializeField]
     private GameObject newPreviewPrefab;
@@ -45,7 +46,6 @@ public class TestInteriorMode : MonoBehaviour
     void Update()
     {
         InteriorModeTrigger();
-        boxLine.gameObject.SetActive(false);
         if (Input.GetMouseButtonDown(0))
         {
             OnClicked?.Invoke(); // 마우스 좌클릭시, OnClicked에 구독된 모든 메서드 호출
@@ -54,6 +54,7 @@ public class TestInteriorMode : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnExit?.Invoke();
+            
         }
 
         if (selectedObjectIndex < 0)
@@ -80,11 +81,12 @@ public class TestInteriorMode : MonoBehaviour
         }
         
         currentCoroutine = StartCoroutine(PreviewObjectMoveController());
+        
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
         OnExit += StopPlacement; // StopPlacement 메소드 구독
 
-        
+        Cursor.lockState = CursorLockMode.Locked;
 
     }
 
@@ -192,6 +194,10 @@ public class TestInteriorMode : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            interiorCanvas.gameObject.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+        /*{
             isHammer = !isHammer;
         }
 
@@ -212,6 +218,6 @@ public class TestInteriorMode : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             interiorCanvas.gameObject.SetActive(false);
-        }
+        } */
     }
 }
