@@ -15,7 +15,7 @@ public class KccCameraTest : NetworkBehaviour
     private float mouseX = 0f;
     private float mouseY = 0f;
 
-    private bool _onChat;
+    private bool _onChat = false;
     void Start()
     {
         if (!HasStateAuthority)
@@ -26,15 +26,15 @@ public class KccCameraTest : NetworkBehaviour
         PlayerInput.OnChat += CameraLock;
     }
 
-    private void CameraLock()
+    private void CameraLock(bool onChat)
     {
-        if (_onChat)
+        if (!onChat)
         {
             rotationSpeed = 5f;
             _onChat = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        else if (!_onChat)
+        else
         {
             rotationSpeed = 0f;
             _onChat = true;

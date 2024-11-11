@@ -723,6 +723,7 @@ GameObject:
   - component: {fileID: -1937622748263621269}
   - component: {fileID: -3834339856755207954}
   - component: {fileID: 3763578638053748435}
+  - component: {fileID: 939623970857168384}
   m_Layer: 0
   m_Name: NetworkPlayer
   m_TagString: Player
@@ -771,6 +772,7 @@ MonoBehaviour:
   - {fileID: 1197933593454579680}
   - {fileID: -3834339856755207954}
   - {fileID: 3763578638053748435}
+  - {fileID: 939623970857168384}
   - {fileID: 7596400408363899965}
   - {fileID: 6493811960196803425}
   - {fileID: 8497099668357783304}
@@ -912,6 +914,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recorder: {fileID: 0}
   voiceNetworkObject: {fileID: -3834339856755207954}
+--- !u!114 &939623970857168384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6387794623503204657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac75872e28c66a546b2a764efeafd272, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _IsMasterClient:
+    _value: 0
+  masterClientIcon: {fileID: 0}
 --- !u!1 &6482207985683558296
 GameObject:
   m_ObjectHideFlags: 0
