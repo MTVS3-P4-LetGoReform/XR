@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7784527886536837706
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2185171143502350844}
+  - component: {fileID: 8707445292654046934}
+  m_Layer: 0
+  m_Name: InteriorSystem_Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2185171143502350844
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784527886536837706}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8707445292654046934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784527886536837706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 429b95d9552932e4abf8654cb951a146, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  craftHammer: {fileID: 0}
+  stateText: {fileID: 0}
+  boxLine: {fileID: 0}
+  interiorCanvas: {fileID: 0}
+  newPreviewPrefab: {fileID: 0}
+  objectDatabase: {fileID: 11400000, guid: b3da83efa350eac438c7f64cb2ca5f84, type: 2}
+  BFLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  PBLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
