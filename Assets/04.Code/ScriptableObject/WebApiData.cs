@@ -25,6 +25,13 @@ public class WebApiData : ScriptableObject
         get { return baseUrl;}
     }
 
+    [SerializeField] private string tempBaseUrl;
+
+    public string TempBaseurl
+    {
+        get { return tempBaseUrl; }
+    }
+
     [SerializeField] 
     private string imageGenPoint;
 
@@ -55,5 +62,26 @@ public class WebApiData : ScriptableObject
     public string ModelDownPoint
     {
         get { return modelDownPoint; }
+    }
+
+    [SerializeField] private string storageBaseUrl;
+
+    public string StorageBaseUrl
+    {
+        get { return storageBaseUrl; }
+    }
+
+    [SerializeField] private string storageModelsPoint;
+
+    public string StorageModelsPoint
+    {
+        get { return storageModelsPoint; }
+    }
+
+    [SerializeField] private string tempModelName;
+
+    public string TempModelName
+    {
+        get { return tempModelName; }
     }
 }
