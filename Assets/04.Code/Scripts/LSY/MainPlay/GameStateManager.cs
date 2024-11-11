@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
+    public WebApiData webApiData;
     private ModelgenerateController _modelgenerateController;
     private static GameStateManager _instance;
     public GameObject completeScreen;
