@@ -41,7 +41,7 @@ public class SessionUIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
     private void Start()
     {
         create.onClick.AddListener(ActiveCreateRoom);
@@ -50,15 +50,15 @@ public class SessionUIManager : MonoBehaviour
         roomListBack.onClick.AddListener(OffRoomList);
         
         createRoomBack.onClick.AddListener(OffCreateRoom);
-        createRoomRecreate.onClick.AddListener(ImageCraft);
-        createRoomStart.onClick.AddListener(CreatePlaySession);
+        //createRoomRecreate.onClick.AddListener(ImageCraft);
+        //createRoomStart.onClick.AddListener(CreatePlaySession);
     }
 
-    private void ImageCraft()
-    {
-        test.SetActive(true);
-    }
-    
+    // private void ImageCraft()
+    // {
+    //     test.SetActive(true);
+    // }
+    //
 
     // 세션 목록 UI 업데이트
     public void UpdateSessionList(List<SessionInfo> sessionList)
@@ -123,11 +123,11 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + ImageUrl);
         return ImageUrl;
     }
-    private async void CreatePlaySession()
+    public async void CreatePlaySession()
     {
+        Debug.Log("SeissionUIManager : CreatePlaySession()");
         string sessionName = sessionNameInput.text;
-     
-
+        Debug.Log("SeissionUIManager : flag1");
         if (string.IsNullOrEmpty(sessionName))
         {
             Debug.LogWarning("세션 이름이 비어있습니다.");
@@ -165,22 +165,22 @@ public class SessionUIManager : MonoBehaviour
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
     
-    private void ActiveRoomList()
+    public void ActiveRoomList()
     {
         roomListPanel.SetActive(true);
     }
     
-    private void OffRoomList()
+    public void OffRoomList()
     {
         roomListPanel.SetActive(false);
     }
 
-    private void ActiveCreateRoom()
+    public void ActiveCreateRoom()
     {
         createRoomPanel.SetActive(true);
     }
     
-    private void OffCreateRoom()
+    public void OffCreateRoom()
     {
         createRoomPanel.SetActive(false);
     }

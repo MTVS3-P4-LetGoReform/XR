@@ -76,6 +76,7 @@ public class RunnerManager : MonoBehaviour
 
    private void LoadScene(int sceneIndex)
    {
+      Debug.Log("Runner Manager : LoadScene - "+ sceneIndex);
       var sceneName = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
       SceneLoadManager.Instance.LoadScene(sceneName);
       Debug.Log("씬이름 : " + sceneIndex);
