@@ -22,13 +22,13 @@ public class SceneLoadManager : MonoBehaviourSingleton<SceneLoadManager>
       DontDestroyOnLoad(gameObject);
    }
 
-   public void LoadScene(string sceneName)
+   public async UniTask LoadScene(string sceneName)
    {
       Debug.Log("SeneLoadManager : LoadScene()");
-       LoadProcess(sceneName).Forget();
+      await LoadProcess(sceneName);
    }
 
-   private async UniTaskVoid LoadProcess(string sceneName)
+   private async UniTask LoadProcess(string sceneName)
    {
       if (Current == sceneName)
          return;

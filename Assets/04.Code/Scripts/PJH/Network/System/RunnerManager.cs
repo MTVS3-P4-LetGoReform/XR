@@ -56,9 +56,7 @@ public class RunnerManager : MonoBehaviour
       {
          Debug.Log($"세션이름: '{args.SessionName}'이 만들어졌습니다.");
 
-         LoadScene(sceneIndex);
-         await UniTask.WaitUntil(() => SceneLoadManager.isLoaded);
-         
+         await LoadScene(sceneIndex);
          await PlayerSpawn();
          Debug.Log("캐릭터 생성");
          
@@ -74,11 +72,11 @@ public class RunnerManager : MonoBehaviour
       }
    }
 
-   private void LoadScene(int sceneIndex)
+   private async UniTask LoadScene(int sceneIndex)
    {
       Debug.Log("Runner Manager : LoadScene - "+ sceneIndex);
       var sceneName = SceneUtility.GetScenePathByBuildIndex(sceneIndex);
-      SceneLoadManager.Instance.LoadScene(sceneName);
+      await SceneLoadManager.Instance.LoadScene(sceneName);
       Debug.Log("씬이름 : " + sceneIndex);
    }
 
