@@ -9,26 +9,12 @@ public class LandManager : MonoBehaviour
 
     private void Start()
     {
-        //LoadAndPlaceLandObjects();
-        RealtimeDatabase.ListenForUserLandChanges(userId, UpdateLandObjects, exception => Debug.LogError("실시간 데이터 수신 오류: " + exception.Message));
-    }
-
-    private void LoadAndPlaceLandObjects()
-    {
-        RealtimeDatabase.GetUserLand(userId, userLand =>
+        if (UserData.Instance != null)
         {
-            if (userLand != null && userLand.objects != null)
-            {
-                foreach (LandObject landObject in userLand.objects)
-                {
-                    PlaceLandObject(landObject);
-                }
-            }
-            else
-            {
-                Debug.LogWarning("영지 정보가 없습니다.");
-            }
-        }, exception => Debug.LogError("영지 불러오기 실패: " + exception.Message));
+            userId = UserData.Instance.UserId;
+        }
+        
+        RealtimeDatabase.ListenForUserLandChanges(userId, UpdateLandObjects, exception => Debug.LogError("실시간 데이터 수신 오류: " + exception.Message));
     }
 
     private void PlaceLandObject(LandObject landObject)

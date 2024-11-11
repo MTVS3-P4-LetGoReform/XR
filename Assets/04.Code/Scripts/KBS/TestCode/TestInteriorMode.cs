@@ -187,8 +187,8 @@ public class TestInteriorMode : MonoBehaviour
             
             var landObject = LandObjectConverter.ConvertToLandObject(instantiateObject,selectedObjectIndex);
             LandManager.PlacedObjects[landObject.key] = instantiateObject;
-            RealtimeDatabase.AddObjectToUserLand("TestUser",landObject); // 테스트코드
-            //RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); 실제코드 
+            //RealtimeDatabase.AddObjectToUserLand("TestUser",landObject); // 테스트코드
+            RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); //실제코드 
             
             newPreviewPrefabRatate = originRotation;
             newPreviewPrefab.transform.rotation = originRotation;
