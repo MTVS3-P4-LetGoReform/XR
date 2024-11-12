@@ -22,15 +22,17 @@ public class ModelDown
     //public string directory = @"C:\Users\Admin\MTVS3_P4_Private\Assets\DownloadedGLB";
 
     public ModelDownReq _modelDownReq;
-
+    
     private WebApiData webApiData;
+    
     //private Stopwatch stopwatch;
-    // void Start()
-    // {
-    //     StartCoroutine(DownloadGLBFile(fileName));
-    //     stopwatch = new Stopwatch();
-    //     stopwatch.Start();
-    // }
+    void Start()
+    {
+        
+        //     StartCoroutine(DownloadGLBFile(fileName));
+        //     stopwatch = new Stopwatch();
+        //     stopwatch.Start();
+    }
     public ModelDown(WebApiData webapi)
     {
         _modelDownReq = new ModelDownReq();

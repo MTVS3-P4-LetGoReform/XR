@@ -74,6 +74,11 @@ public class C_MeshVoxelizer : MonoBehaviour
     //protected C_MVOptimization m_opt;
     protected Dictionary<C_MVInt3, C_MVVoxel> voxelDict = new Dictionary<C_MVInt3, C_MVVoxel>();
 
+    // public void Start()
+    // {
+    //     sourceGameObject = GameObject.FindWithTag("GLBModel");
+    //     voxelMesh = sourceGameObject.transform.gameObject.GetComponent<Mesh>();
+    // }
     public GameObject VoxelizeMesh(bool instantiateResult)
     {
         this.instantiateResult = instantiateResult;

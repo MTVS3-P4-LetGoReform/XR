@@ -12,9 +12,14 @@ public class LayeredBoxelSystem : MonoBehaviour
     private Dictionary<float, List<GameObject>> voxelList;
     //Dictionary<float, List<GameObject>>
     // scaling 관련
-    
-    public void DoLayering()
+
+    public void Start()
     {
+        parentObject = GameObject.FindWithTag("GLBModel");
+    }
+    public void DoLayering(GameObject modelObject)
+    {
+        parentObject = modelObject;
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
         GameStateManager.Instance.maxCnt = boxelizedObject.transform.childCount;
         Debug.Log("LayeredBoxelSystem : 총 복셀 수 - "+ GameStateManager.Instance.allCnt);

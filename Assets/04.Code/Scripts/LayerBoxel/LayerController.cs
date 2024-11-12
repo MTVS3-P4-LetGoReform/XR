@@ -2,6 +2,8 @@
 using UnityEngine;
 using DG.Tweening;
 using Fusion;
+using TMPro;
+using UnityEngine.UI;
 
 public class LayerController : MonoBehaviour
 {
@@ -14,11 +16,15 @@ public class LayerController : MonoBehaviour
     public Material guideMat;
     private List<float> keys;
     private int curIndex = -1;
+    private int progressPercent = 0;
     public List<GameObject> curFloorObjects;
     private List<GameObject> curGuideObjects;
     private OutlineRenderer outlineRenderer;
 
+    public TMP_Text progressText;
+    public Slider progressSlider;
     public GameObject pedestal;
+    public List<GameObject> GarBagePileList;
     
     public void Awake()
     {
@@ -42,6 +48,23 @@ public class LayerController : MonoBehaviour
     //     }
     // }
 
+    public void Update()
+    {
+        if (keys != null)
+        {
+            progressPercent = (int)((float)(curIndex) / keys.Count *100);
+            Debug.Log(
+                $"LayerController : progressPercent - {progressPercent} curIndex - {curIndex} keys.Count - {keys.Count}");
+            progressText.text = $"{progressPercent} %";
+            progressSlider.value = progressPercent/100f;
+
+            int idx = progressPercent / 10 - 1;
+            if (idx >= 0 && idx < 10)
+            {
+                GarBagePileList[idx].SetActive(false);
+            }
+        }
+    }
     public void AdvanceFloor()
     {
         Debug.Log("LayerController : AdvanceFloor()");

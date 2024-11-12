@@ -16,7 +16,14 @@ public class WebApiData : ScriptableObject
         set { modelId = value;}
         get { return modelId; }
     }
-    
+
+    [SerializeField] private string modelName;
+
+    public string ModelName
+    {
+        set { modelName = value; }
+        get { return modelName; }
+    }
     [SerializeField] 
     private string baseUrl;
 
