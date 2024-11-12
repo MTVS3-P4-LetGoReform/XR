@@ -15,8 +15,12 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
 
         if (!HasStateAuthority)
             return;
-        UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
-        userInfo.canvas.enabled = true;
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
+            userInfo.canvas.enabled = true;
+        }
+        
         IsMasterClient = Runner.IsSharedModeMasterClient;
         Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
 
