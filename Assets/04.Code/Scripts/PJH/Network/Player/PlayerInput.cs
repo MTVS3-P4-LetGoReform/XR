@@ -35,15 +35,15 @@ public class PlayerInput : NetworkBehaviour
             Mic();
         }
 
-        if (Input.GetKeyDown(KeyCode.F5))
+        if (Input.GetKeyDown(KeyCode.F1) && SceneManager.GetActiveScene().buildIndex == 1)
         {
-            Debug.Log("F5 키입력");
+            Debug.Log("F1 키입력");
             Ready();
         }
-        
-        if (Input.GetKeyDown(KeyCode.F6))
+
+        if (Input.GetKeyDown(KeyCode.F2) && SceneManager.GetActiveScene().buildIndex == 1)
         {
-            Debug.Log("F6 키입력");
+            Debug.Log("F2 키입력");
             StartGame();
         }
     }

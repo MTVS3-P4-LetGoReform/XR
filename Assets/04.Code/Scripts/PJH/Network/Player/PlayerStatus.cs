@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,11 +16,6 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
 
         if (!HasStateAuthority)
             return;
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
-            userInfo.canvas.enabled = true;
-        }
         
         IsMasterClient = Runner.IsSharedModeMasterClient;
         Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
@@ -30,6 +26,23 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
             readyCheck.gameStartButton.gameObject.SetActive(true);
 
             GameStateManager.Instance.Complete += Reword;
+        }
+        
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
+            if (userInfo == null)
+            {
+                Debug.LogError("UserInfoCanvas 객체를 찾을 수 없습니다.");
+                return;
+            }
+
+            if (UserData.Instance.UserName == null)
+            {
+                Debug.LogError("UserData를 찾을 수 없습니다.");
+            }
+            userInfo.canvas.enabled = true;
+            userInfo.username.text = UserData.Instance.UserName;
         }
     }
 
