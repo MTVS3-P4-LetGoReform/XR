@@ -24347,6 +24347,7 @@ GameObject:
   - component: {fileID: 7489577337099031305}
   - component: {fileID: 1202638048419180801}
   - component: {fileID: 5210042590531252921}
+  - component: {fileID: 7489577337099031306}
   m_Layer: 0
   m_Name: UserInfoCanvas
   m_TagString: Untagged
@@ -30395,7 +30396,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4774747361658973296}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -30411,6 +30412,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &7489577337099031306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4774747361658973296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 510136056dea0364eb1b8a1b2e701783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 7489577337099031305}
+  username: {fileID: 6754244011646081660}
 --- !u!1 &7495740965309518609
 GameObject:
   m_ObjectHideFlags: 0
