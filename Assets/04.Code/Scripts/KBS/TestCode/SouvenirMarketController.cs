@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class SouvenirMarketController : MonoBehaviour
 {
-    public Image souvenirMarket;
+    public Canvas canvasSouvenir;
     public Image imageGoodsPage;
     public Image imagePurchase;
     public Image imageEndPurchase;
@@ -11,7 +11,7 @@ public class SouvenirMarketController : MonoBehaviour
 
     public void ExitButtonOnClick()
     {
-        souvenirMarket.gameObject.SetActive(false);
+        canvasSouvenir.gameObject.SetActive(false);
     }
 
     public void StatueImgOnClick()
@@ -37,5 +37,11 @@ public class SouvenirMarketController : MonoBehaviour
     public void FinishPurchaseButtonOnClick()
     {
         imageEndPurchase.gameObject.SetActive(false);
+        imagePurchase.gameObject.SetActive(false);
+    }
+
+    public void CancelPurchaseButtonOnClick()
+    {
+        imagePurchase.gameObject.SetActive(false);
     }
 }

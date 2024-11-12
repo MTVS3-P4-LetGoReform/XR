@@ -14,7 +14,7 @@ public class JammoController : MonoBehaviour
     void Update()
     {
         //player가 가까이 다가왔을 때
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             npcCanvasJammo.gameObject.SetActive(true);
             
