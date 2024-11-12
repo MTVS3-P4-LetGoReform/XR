@@ -56,7 +56,7 @@ public class LandManager : MonoBehaviour
             else
             {
                 Debug.Log("배치되었습니다."+landObject.key);
-                    PlaceLandObject(landObject);
+                PlaceLandObject(landObject);
             }
         }
         
