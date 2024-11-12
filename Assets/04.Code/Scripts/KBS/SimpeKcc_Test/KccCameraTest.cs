@@ -62,10 +62,11 @@ public class KccCameraTest : NetworkBehaviour
         if (_onChat)
             return;
         
-        mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
+        // mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
 
         mouseY = Mathf.Clamp(mouseY, -45f, 45f);
+        
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         ChangeCamPosition();
