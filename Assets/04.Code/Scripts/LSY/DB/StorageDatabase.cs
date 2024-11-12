@@ -39,4 +39,9 @@ public class StorageDatabase
         await isstorage_ref.GetFileAsync(local_url);
         _sessionUIManager.CreatePlaySession();
     }
+    public async UniTask DownModelPlaySessionDebug(string modelName, SessionUIManager _sessionUIManager)
+    {
+        
+        _sessionUIManager.CreatePlaySession();
+    }
 }

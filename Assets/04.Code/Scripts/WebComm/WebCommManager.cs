@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Firebase.Auth;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class WebCommManager : MonoBehaviour
@@ -30,7 +31,7 @@ public class WebCommManager : MonoBehaviour
     private SessionUIManager _sessionUIManager;
     
     private bool isGenerating = false;
-    
+    public DebugModeData debugModeData;
     private void Start()
     {
         if (UserData.Instance ==null)
@@ -39,7 +40,6 @@ public class WebCommManager : MonoBehaviour
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
         ImageGenBtn.onClick.AddListener(DoImageGenDown);
-        
     }
 
     // 초기 이미지 생성
@@ -135,20 +135,32 @@ public class WebCommManager : MonoBehaviour
     public IEnumerator ModelGenDown()
     {
         ModelGen _modelGen = new ModelGen(webApiData);
-        yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
-        Debug.Log(_modelGen._modelGenRes.model_filename);
-        modelName = _modelGen._modelGenRes.model_filename;
-        webApiData.ModelName = _modelGen._modelGenRes.model_filename;
-        // ModelDown _modelDown = new ModelDown(webApiData);
-        // yield return StartCoroutine(_modelDown.DownloadGLBFile(modelName));
-        // _modelDown.LoadAndInstantiateGLB(modelName);
-        //FIXME : 가이드라인 생성으로 추후 변경
+        if (debugModeData.DebugMode == false)
+        {
+            yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
+            Debug.Log(_modelGen._modelGenRes.model_filename);
+            if (_modelGen.request.result == UnityWebRequest.Result.Success)
+            {
+                modelName = _modelGen._modelGenRes.model_filename;
+                webApiData.ModelName = _modelGen._modelGenRes.model_filename;
+                // ModelDown _modelDown = new ModelDown(webApiData);
+                // yield return StartCoroutine(_modelDown.DownloadGLBFile(modelName));
+                // _modelDown.LoadAndInstantiateGLB(modelName);
+                //FIXME : 가이드라인 생성으로 추후 변경
 
-        StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
-        Debug.Log(3);
+                StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
+                Debug.Log(3);
 
-        _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager).Forget();
-        Debug.Log(4);
+                _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager)
+                    .Forget();
+                Debug.Log(4);
+            }
+        }
+        else
+        {
+            StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
+            _storageDatabase.DownModelPlaySessionDebug(webApiData.ModelName, _sessionUIManager).Forget();
+        }
 
     }
 }
