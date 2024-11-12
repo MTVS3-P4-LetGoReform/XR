@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
 
 public class KccCameraTest : NetworkBehaviour
@@ -12,12 +13,17 @@ public class KccCameraTest : NetworkBehaviour
     private float rotationSpeed = 5f;
     [SerializeField]
     private float positionLerpSpeed = 10f;
+
+    private Quaternion cameraLockedRotation;
     
     private float mouseX = 0f;
     private float mouseY = 0f;
 
     private bool _onChat = false;
     private bool _onList = false;
+    private bool isLocked = false;
+    private bool isTapKeyPressed = false;
+    
     void Start()
     {
         if (!HasStateAuthority)
@@ -66,13 +72,42 @@ public class KccCameraTest : NetworkBehaviour
         
         mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
-        
+
         mouseY = Mathf.Clamp(mouseY, -45f, 45f);
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         ChangeCamPosition();
+        MousePointController();
         
     }
+
+    private void MousePointController()
+    {
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            isTapKeyPressed = true;
+            rotationSpeed = 0f;
+            
+        }
+
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            isTapKeyPressed = false;
+            rotationSpeed = 5f;
+            
+        }
+
+        if (isTapKeyPressed)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+    
 
     private void ChangeCamPosition()
     {
