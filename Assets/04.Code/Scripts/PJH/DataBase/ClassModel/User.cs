@@ -8,6 +8,7 @@ public class User
     public string profileImage;
     public bool onlineStatus;
     public long lastLogin;
+    public string[] models;
 
     public User() { }
 
