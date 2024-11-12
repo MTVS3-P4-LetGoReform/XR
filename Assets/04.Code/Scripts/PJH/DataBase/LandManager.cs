@@ -56,13 +56,13 @@ public class LandManager : MonoBehaviour
                 else
                 {
                     PlacedObjects.Remove(landObject.key);
-                    //PlaceLandObject(landObject);
+                    PlaceLandObject(landObject);
                 }
             }
             else
             {
                 Debug.Log("배치되었습니다."+landObject.key);
-                //PlaceLandObject(landObject);
+                    PlaceLandObject(landObject);
             }
         }
         
