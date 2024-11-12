@@ -20,6 +20,7 @@ public class KccCameraTest : NetworkBehaviour
     private float mouseY = 0f;
 
     private bool _onChat = false;
+    private bool _onList = false;
     private bool isLocked = false;
     private bool isTapKeyPressed = false;
     
@@ -31,6 +32,7 @@ public class KccCameraTest : NetworkBehaviour
         }
         Cursor.lockState = CursorLockMode.Locked;
         PlayerInput.OnChat += CameraLock;
+        PlayerInput.OnMessenger += CameraLock;
         
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
@@ -46,12 +48,14 @@ public class KccCameraTest : NetworkBehaviour
         if (!onChat)
         {
             rotationSpeed = 5f;
+            _onList = false;
             _onChat = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
             rotationSpeed = 0f;
+            _onList = true;
             _onChat = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -62,7 +66,11 @@ public class KccCameraTest : NetworkBehaviour
         if (_onChat)
             return;
         
-        // mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
+        if (_onList)
+            return;
+        
+        mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
+
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
 
         mouseY = Mathf.Clamp(mouseY, -45f, 45f);
@@ -100,7 +108,6 @@ public class KccCameraTest : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
     }
-
     
 
     private void ChangeCamPosition()
