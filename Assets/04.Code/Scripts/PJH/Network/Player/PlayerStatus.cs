@@ -44,6 +44,13 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
             userInfo.canvas.enabled = true;
             userInfo.username.text = UserData.Instance.UserName;
         }
+
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            ReadyCheck readyCheck = FindAnyObjectByType<ReadyCheck>();
+            readyCheck.readyCanvas.enabled = true;
+            readyCheck.progressInfo.SetActive(true);
+        }
     }
 
     private void Reword(bool complete)
