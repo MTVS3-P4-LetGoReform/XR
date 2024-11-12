@@ -70,6 +70,7 @@ public class KccCameraTest : NetworkBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         ChangeCamPosition();
         MousePointController();
+        
     }
 
     private void MousePointController()
@@ -78,17 +79,20 @@ public class KccCameraTest : NetworkBehaviour
         {
             isTapKeyPressed = true;
             rotationSpeed = 0f;
+            
         }
 
         if (Input.GetKeyUp(KeyCode.Tab))
         {
             isTapKeyPressed = false;
             rotationSpeed = 5f;
+            
         }
 
         if (isTapKeyPressed)
         {
             Cursor.lockState = CursorLockMode.None;
+            
         }
         else
         {
