@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,6 +26,30 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
             readyCheck.gameStartButton.gameObject.SetActive(true);
 
             GameStateManager.Instance.Complete += Reword;
+        }
+        
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
+            if (userInfo == null)
+            {
+                Debug.LogError("UserInfoCanvas 객체를 찾을 수 없습니다.");
+                return;
+            }
+
+            if (UserData.Instance.UserName == null)
+            {
+                Debug.LogError("UserData를 찾을 수 없습니다.");
+            }
+            userInfo.canvas.enabled = true;
+            userInfo.username.text = UserData.Instance.UserName;
+        }
+
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            ReadyCheck readyCheck = FindAnyObjectByType<ReadyCheck>();
+            readyCheck.readyCanvas.enabled = true;
+            readyCheck.progressInfo.SetActive(true);
         }
     }
 

@@ -7,13 +7,13 @@ using UnityEngine.UI;
 
 public class ReadyCheck : MonoBehaviour
 {
-    public GameObject readyCanvas;
+    public Canvas readyCanvas;
+    public GameObject progressInfo;
     public TMP_Text readyText; 
     public Button gameStartButton;
     
     private void Start()
     {
-        readyCanvas.SetActive(true);
         Check().Forget();
         PlayerInput.OnPlayerReady += Ready;
         PlayerInput.OnGameStart += StartGame;
@@ -52,6 +52,6 @@ public class ReadyCheck : MonoBehaviour
         }
         
         await UniTask.WaitForSeconds(wfs);
-        readyCanvas.SetActive(false);
+        readyCanvas.enabled = false;
     }
 }

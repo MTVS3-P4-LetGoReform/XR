@@ -10,7 +10,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	public TMP_InputField inputField;
 	public TMP_Text outputText;
 
-	private bool test;
+	private Canvas _canvas;
 	private ChatClient _chatClient;
 	private string _userName;
 	private string _currentChannelName;
@@ -20,6 +20,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	private void Awake()
 	{
 		_userName = UserData.Instance.UserName;
+		_canvas = GetComponent<Canvas>();
 	}
 
 	void Start()
@@ -106,6 +107,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	public void OnSubscribed(string[] channels, bool[] results)
 	{
 		AddLine(string.Format("채널 입장 ({0})", string.Join(",", channels)));
+		_canvas.enabled = true;
 	}
 
 	public void OnUnsubscribed(string[] channels)
@@ -117,7 +119,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	{
 		for (int i = 0; i < messages.Length; i++)
 		{
-			AddLine(string.Format("{0} : {1}", senders[i], messages[i].ToString()));
+			AddLine(string.Format("{0} : {1}", senders[i], messages[i]));
 		}
 	}
 

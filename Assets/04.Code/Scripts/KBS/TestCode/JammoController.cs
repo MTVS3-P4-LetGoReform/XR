@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TestSouvenirController : MonoBehaviour
+public class JammoController : MonoBehaviour
 {
     public Canvas npcCanvasJammo;
     public Canvas marketCanvasSouvenir;
@@ -14,7 +14,7 @@ public class TestSouvenirController : MonoBehaviour
     void Update()
     {
         //player가 가까이 다가왔을 때
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             npcCanvasJammo.gameObject.SetActive(true);
             
