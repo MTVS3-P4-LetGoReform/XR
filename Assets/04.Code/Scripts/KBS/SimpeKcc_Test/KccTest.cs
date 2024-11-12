@@ -35,6 +35,7 @@ public class KccTest : NetworkBehaviour
         }
 
         PlayerInput.OnChat += StopMoving;
+        PlayerInput.OnMessenger += StopMoving;
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
             var readyCheck = FindAnyObjectByType<ReadyCheck>();

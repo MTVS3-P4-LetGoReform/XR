@@ -28,7 +28,7 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
             GameStateManager.Instance.Complete += Reword;
         }
         
-        if (SceneManager.GetActiveScene().buildIndex == 1)
+        if (SceneManager.GetActiveScene().buildIndex == 1 && SceneManager.GetActiveScene().buildIndex == 3)
         {
             UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
             if (userInfo == null)
