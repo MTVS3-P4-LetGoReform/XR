@@ -138,6 +138,7 @@ public class WebCommManager : MonoBehaviour
         yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
         Debug.Log(_modelGen._modelGenRes.model_filename);
         modelName = _modelGen._modelGenRes.model_filename;
+        webApiData.ModelName = _modelGen._modelGenRes.model_filename;
         // ModelDown _modelDown = new ModelDown(webApiData);
         // yield return StartCoroutine(_modelDown.DownloadGLBFile(modelName));
         // _modelDown.LoadAndInstantiateGLB(modelName);
