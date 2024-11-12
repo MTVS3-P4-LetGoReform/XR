@@ -30,6 +30,7 @@ public class SessionUIManager : MonoBehaviour
     public GameObject test;
 
     public WebApiData webApiData;
+    public WebCommManager _webCommManager;
     
    
     private void Awake()
@@ -145,7 +146,8 @@ public class SessionUIManager : MonoBehaviour
             {
                 { "Prompt", sessionPromptInput.text },
                 { "ImageUrl", sessionPromptInput.text },
-                {"ModelId", webApiData.ModelId}
+                {"ModelId", webApiData.ModelId},
+                {"ModelName", webApiData.ModelName}
             }
         };
 
@@ -156,8 +158,19 @@ public class SessionUIManager : MonoBehaviour
     
     private async void JoinPlaySession(SessionInfo session)
     {
+        string ModelName = "";
+        if (session.Properties.TryGetValue("ModelName", out var sessionDescription))
+        {
+            ModelName = sessionDescription;
+            webApiData.ModelName = sessionDescription;
+            _webCommManager.JoinWebComm(ModelName);
+        }
+        else
+        {
+            Debug.LogWarning($"{session.Name}: 모델을 불러오지 못했습니다.");
+        }
+        
         Debug.Log($"Joining session: {session.Name}");
-
         var startArgs = new StartGameArgs
         {
             GameMode = GameMode.Shared,
