@@ -28,6 +28,8 @@ public class SessionUIManager : MonoBehaviour
     public Button createRoomStart;
 
     public GameObject test;
+
+    public WebApiData webApiData;
     
    
     private void Awake()
@@ -143,9 +145,11 @@ public class SessionUIManager : MonoBehaviour
             {
                 { "Prompt", sessionPromptInput.text },
                 { "ImageUrl", sessionPromptInput.text },
+                {"ModelId", webApiData.ModelId}
             }
         };
 
+        Debug.Log($"SessionUIManager : ModelId - {startArgs.SessionProperties["ModelId"]}");
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }

@@ -45,10 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8eb90e9281aea4080c3b3436d1aea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  webApiData: {fileID: 11400000, guid: 887fdf7ab03dc5540a31c3b7882642dd, type: 2}
   completeScreen: {fileID: 0}
   otherScreen: {fileID: 0}
   guideObjects: {fileID: 0}
   pedestral: {fileID: 0}
+  modelAreaObject: {fileID: 0}
   isComplete: 0
   maxCnt: -1
   allCnt: 0
@@ -149,6 +151,10 @@ PrefabInstance:
       value: ModelControlelr
       objectReference: {fileID: 0}
     - target: {fileID: 6916516327717219992, guid: 8dbe277357f065943b2f1538142999b3, type: 3}
+      propertyPath: voxelMesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6916516327717219992, guid: 8dbe277357f065943b2f1538142999b3, type: 3}
       propertyPath: fillCenter
       value: 0
       objectReference: {fileID: 0}
@@ -192,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 867964269
+  SortKey: 1609204557
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []

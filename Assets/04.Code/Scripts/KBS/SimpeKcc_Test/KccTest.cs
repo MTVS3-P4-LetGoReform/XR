@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KccTest : NetworkBehaviour
 {
@@ -34,6 +35,13 @@ public class KccTest : NetworkBehaviour
         }
 
         PlayerInput.OnChat += StopMoving;
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            var readyCheck = FindAnyObjectByType<ReadyCheck>();
+            readyCheck.gameStartButton.gameObject.SetActive(true);
+
+            GameStateManager.Instance.Complete += StopMoving;
+        }
     }
 
     private void StopMoving(bool onChat)

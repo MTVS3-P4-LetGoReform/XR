@@ -106,7 +106,8 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                         Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
                         _name = user.name;
                         NickName?.Invoke(true);
-                        SceneManager.LoadScene(1);
+                        var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
+                        SceneLoadManager.Instance.LoadScene(sceneName);
                     }
                     else
                     {
@@ -134,7 +135,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             { "onlineStatus", false },
             { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
         };
-        RealtimeDatabase.UpdateUser(id, updates);
+        RealtimeDatabase.UpdateUser(id+"/", updates);
         
         _auth.SignOut();
         Debug.Log("로그아웃");

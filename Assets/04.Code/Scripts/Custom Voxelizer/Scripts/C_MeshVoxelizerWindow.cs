@@ -66,8 +66,10 @@ public class C_MeshVoxelizerWindow : MonoBehaviour
         
     }
     
-    public void Voxelize()
+    public void Voxelize(GameObject meshObject)
     {
+        Debug.Log("flag");
+        c_meshVoxelizer.sourceGameObject = meshObject;
         InitVoxelizer();
         DoVozelization();
     }

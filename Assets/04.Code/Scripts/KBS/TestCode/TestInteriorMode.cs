@@ -45,7 +45,6 @@ public class TestInteriorMode : MonoBehaviour
 
     void Update()
     {
-        InteriorModeTrigger();
         if (Input.GetMouseButtonDown(0))
         {
             OnClicked?.Invoke(); // 마우스 좌클릭시, OnClicked에 구독된 모든 메서드 호출
@@ -54,7 +53,7 @@ public class TestInteriorMode : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnExit?.Invoke();
-            
+            Cursor.lockState = CursorLockMode.None;
         }
 
         if (selectedObjectIndex < 0)
@@ -163,10 +162,14 @@ public class TestInteriorMode : MonoBehaviour
     {
         if (IsPointerOnUI()) // 판별값이 true일때 placeStructure 실행
         {
-            return;
-        } 
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         
-        Cursor.lockState = CursorLockMode.Locked;
+        
         
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
@@ -184,45 +187,13 @@ public class TestInteriorMode : MonoBehaviour
             
             var landObject = LandObjectConverter.ConvertToLandObject(instantiateObject,selectedObjectIndex);
             LandManager.PlacedObjects[landObject.key] = instantiateObject;
-            RealtimeDatabase.AddObjectToUserLand("TestUser",landObject); // 테스트코드
-            //RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); 실제코드 
+            //RealtimeDatabase.AddObjectToUserLand("TestUser",landObject); // 테스트코드
+            RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); //실제코드 
             
             newPreviewPrefabRatate = originRotation;
             newPreviewPrefab.transform.rotation = originRotation;
             // 추후 설치 방향 재 정립, 설치되는 위치 값을 pivot 기준으로 분류할것인지, 물건 위주로 분류할것인지 구상(후자일 가능성 높음)
 
         }
-    }
-    
-    
-    private void InteriorModeTrigger() // 손에 망치를 드는 메소드, 추후 기능때 수정 예상
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            interiorCanvas.gameObject.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
-        }
-        /*{
-            isHammer = !isHammer;
-        }
-
-        if (isHammer)
-        {
-            craftHammer.gameObject.SetActive(true);
-            interiorCanvas.gameObject.SetActive(true);
-            stateText.text = "InstallMode";
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            craftHammer.gameObject.SetActive(false);
-            stateText.text = "InviteMode";
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            interiorCanvas.gameObject.SetActive(false);
-        } */
     }
 }

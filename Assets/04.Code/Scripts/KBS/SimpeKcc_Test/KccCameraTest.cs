@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KccCameraTest : NetworkBehaviour
 {
@@ -24,6 +25,14 @@ public class KccCameraTest : NetworkBehaviour
         }
         Cursor.lockState = CursorLockMode.Locked;
         PlayerInput.OnChat += CameraLock;
+        
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            var readyCheck = FindAnyObjectByType<ReadyCheck>();
+            readyCheck.gameStartButton.gameObject.SetActive(true);
+
+            GameStateManager.Instance.Complete += CameraLock;
+        }
     }
 
     private void CameraLock(bool onChat)
