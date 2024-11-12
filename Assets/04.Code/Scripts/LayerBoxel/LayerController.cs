@@ -24,6 +24,7 @@ public class LayerController : MonoBehaviour
     public TMP_Text progressText;
     public Slider progressSlider;
     public GameObject pedestal;
+    public List<GameObject> GarBagePileList;
     
     public void Awake()
     {
@@ -56,6 +57,12 @@ public class LayerController : MonoBehaviour
                 $"LayerController : progressPercent - {progressPercent} curIndex - {curIndex} keys.Count - {keys.Count}");
             progressText.text = $"{progressPercent} %";
             progressSlider.value = progressPercent/100f;
+
+            int idx = progressPercent / 10 - 1;
+            if (idx >= 0 && idx < 10)
+            {
+                GarBagePileList[idx].SetActive(false);
+            }
         }
     }
     public void AdvanceFloor()
