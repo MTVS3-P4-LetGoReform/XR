@@ -6,6 +6,8 @@ using UnityEngine;
 public class GotoPersonalSession : MonoBehaviour
 {
     private bool _interact = true;
+    public Canvas canvasHeartPing;
+    
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("닿았다");
@@ -14,9 +16,16 @@ public class GotoPersonalSession : MonoBehaviour
         {
             _interact = false;
             Debug.Log("눌렀다");
-            GotoPersonal(UserData.Instance.UserName);
+            canvasHeartPing.gameObject.SetActive(true);
         }
     }
+
+    public void GotoPersonalOnClick()
+    {
+        GotoPersonal(UserData.Instance.UserName);
+        canvasHeartPing.gameObject.SetActive(false);
+    }
+    
 
     private async void GotoPersonal(string userId = "TestId")
     {
