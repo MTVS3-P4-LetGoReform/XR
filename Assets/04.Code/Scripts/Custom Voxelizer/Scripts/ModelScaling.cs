@@ -3,22 +3,20 @@
 public class ModelScaling:MonoBehaviour
 {
     public int subdivisionLevel = 30;
-    public GameObject gameObject;
+    //public GameObject gameObject;
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
     private Bounds bounds;
     private Vector3 sourceMeshSize;
     public float scalingScale;
-    void Awake()
+
+    public void CalcModelScale(MeshRenderer modelMeshRenderer, MeshFilter modelMeshFilter)
     {
-        meshRenderer = gameObject.GetComponent<MeshRenderer>();
-        meshFilter = gameObject.GetComponent<MeshFilter>();
+        //Debug.Log($"ModelSclaing : meshObject- {meshObject}");
+        meshRenderer = modelMeshRenderer;
+        meshFilter = modelMeshFilter;
         bounds = meshRenderer.bounds;
         sourceMeshSize = bounds.size;
-    }
-
-    public void CalcModelScale()
-    {
         float maxBBoxSize = Mathf.Max(sourceMeshSize.x, sourceMeshSize.y, sourceMeshSize.z);
         scalingScale = subdivisionLevel / maxBBoxSize;
         Vector3 scaleFactor = new Vector3(scalingScale, scalingScale, scalingScale);

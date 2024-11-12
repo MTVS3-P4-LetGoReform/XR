@@ -1,0 +1,43 @@
+﻿Welcome to in3D SDK importer for Unity 
+
+This SDK aims to import avatars of users scanned with apps using in3D scanning technology. 
+
+Using this SDK you’ll be able to import avatars directly into your Unity Project, in Runtime, or as an asset. 
+
+If you are interested in implementing the scanning solution in your app, please apply to our developers’ program at https://in3d.io/#contacts.
+
+Please make sure on the following
+ 1. You have the latest version of our SDK importer downloaded from asset store
+ 2. Your Unity version is 2019 or higher 
+ 
+Importing Your First Avatar (Into Runtime) 
+ 1. Copy the access key of the user from the relevant in3D app
+ 2. In Assets->com.in3d.sdk.loaders->Samples->Scenes please open AvatarLoading_EmptyScene. 
+ 3. Press play to activate the scene 
+ 4. Copy the access key into the form field in the scene 
+ 5. Click Login
+ 6. All the avatars of the user are shown in the scene, click on the relevant avatar to import it
+
+Changing Avatar Animation in Runtime
+The avatars are rigged to be compatible with any Mixamo animation.
+By default, the avatars are imported with Dancing Animation. If you would like to change it in runtime, do the following. 
+ 1. Open the Hierarchy tab
+ 2. Click Avatar 
+ 3. On Inspector look for Glb Loader, Look for Controller and click on SimpleAnimator 
+ 4. In SimpleAnimator change the animation from “Hip Hop Dancing” to any other animation you want
+ 
+Import Your Avatar from Runtime into your assets 
+Once the access key has been entered you can import the avatars not just into runtime scene, but also into your project as saved assets. 
+This is how you can do it: 
+ 1. Run scene and import avatar into runtime 
+ 2. Open the Hierarchy tab
+ 3. Click Avatar 
+ 4. On Inspector look for Glb Loader Look for Avatar and double-click on Avatar info 
+ 5. Choose to download the avatar as GLB or FBX
+ Tip: You can change the avatar id directly from the inspector by changing the id field with the id of the desired avatar
+ 6. The avatar will be downloaded into Assets/ folder
+ 
+Bonus Scene
+We’ve added a bonus scene to illustrate how you can create ultra-personalized content with in3D avatars. 
+Under samples, open Macarena Scene. 
+

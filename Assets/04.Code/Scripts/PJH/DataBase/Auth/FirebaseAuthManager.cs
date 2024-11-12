@@ -135,7 +135,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             { "onlineStatus", false },
             { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
         };
-        RealtimeDatabase.UpdateUser(id, updates);
+        RealtimeDatabase.UpdateUser(id+"/", updates);
         
         _auth.SignOut();
         Debug.Log("로그아웃");

@@ -23,6 +23,23 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
         {
             var readyCheck = FindAnyObjectByType<ReadyCheck>();
             readyCheck.gameStartButton.gameObject.SetActive(true);
+
+            GameStateManager.Instance.Complete += Reword;
+        }
+    }
+
+    private void Reword(bool complete)
+    {
+        var rewordCanvas = FindAnyObjectByType<RewordCanvas>();
+        if (IsMasterClient)
+        {
+            rewordCanvas.masterCanvas.gameObject.SetActive(complete);
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            rewordCanvas.userCanvas.gameObject.SetActive(complete);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 

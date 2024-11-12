@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
+using System.IO;
+using GLTFast;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
+    public Action<bool> Complete;
     public WebApiData webApiData;
     private ModelgenerateController _modelgenerateController;
     private static GameStateManager _instance;
@@ -10,7 +14,7 @@ public class GameStateManager : MonoBehaviour
     public GameObject otherScreen;
     public GameObject guideObjects;
     public GameObject pedestral;
-    
+    public GameObject modelAreaObject;
     public bool isComplete = false;
 
     public int maxCnt = -1;
@@ -43,16 +47,17 @@ public class GameStateManager : MonoBehaviour
         else
         {
             _instance = this;
+            
         }
-    }
-    void Start()
-    {
+        LoadAndInstantiateGLB(webApiData.ModelName);
         _modelgenerateController = FindObjectOfType<ModelgenerateController>();
-        _modelgenerateController.GeneratePlayModel();
-        StartCoroutine(CompleteCoroutine());
-        // FIXME : 복셀화 끝나고 나서 멀티쪽 동기화 호출
+        
     }
-
+    
+    private void Start()
+    {
+        
+    }
     
 
     private IEnumerator CompleteCoroutine()
@@ -65,6 +70,7 @@ public class GameStateManager : MonoBehaviour
         yield return new WaitForSeconds(5f);
         Cursor.lockState = CursorLockMode.None;
         completeScreen.SetActive(true);
+        Complete?.Invoke(true);
     }
 
     public void DoCompleteCoroutine()
@@ -87,5 +93,43 @@ public class GameStateManager : MonoBehaviour
     public bool IsComplete()
     {
         return allCnt == maxCnt;
+    }
+    public async void LoadAndInstantiateGLB(string fName)
+    {
+        //string folderPath = Path.Combine(Application.persistentDataPath, "Models");
+        string filePath = Path.Combine(Application.persistentDataPath, fName);
+        //string filePath = Path.Combine(Application.dataPath, "DownloadedGLB", "958462d6cbd04f441aad81e88529b8a2.glb");
+        // 파일이 존재하는지 확인
+        if (File.Exists(filePath))
+        {
+            // glTFast를 이용해 GLB 파일을 로드
+            GltfImport gltfImport = new GltfImport();
+            var success = await gltfImport.Load(filePath); // 비동기 로드 처리
+
+            // 파일 로드에 성공하면 씬에 배치
+            if (success)
+            {
+                
+                //GameObject glbObject = new GameObject("GLBModel");
+                //glbObject.tag = "GLBModel";
+                //glbObject.transform.SetParent(modelAreaObject.transform);
+                //glbObject.transform.localPosition = Vector3.zero;
+                //await
+                await gltfImport.InstantiateMainSceneAsync(modelAreaObject.transform);
+                Debug.Log("GLB file instantiated in scene.");
+                GameObject generatedObject = modelAreaObject.transform.GetChild(modelAreaObject.transform.childCount - 1).gameObject;
+                _modelgenerateController.GeneratePlayModel(generatedObject);
+                StartCoroutine(CompleteCoroutine());
+                 //FIXME : 복셀화 끝나고 나서 멀티쪽 동기화 호출
+            }
+            else
+            {
+                Debug.LogError("Failed to load GLB file using glTFast.");
+            }
+        }
+        else
+        {
+            Debug.LogError("File does not exist: " + filePath);
+        }
     }
 }

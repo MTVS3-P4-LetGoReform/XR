@@ -8,7 +8,7 @@ public class ModelGen
     public ModelGenReq _modelGenReq;
     public ModelGenRes _modelGenRes;
     private WebApiData webApiData;
-
+    public UnityWebRequest request;
     public ModelGen(WebApiData webapi)
     {
         _modelGenReq = new ModelGenReq();
@@ -21,7 +21,7 @@ public class ModelGen
         _modelGenReq.image_filename = fname;
         _modelGenReq.model_id = modelId;
         webApiData.ModelId = modelId;
-        UnityWebRequest request = new UnityWebRequest( webApiData.Baseurl+webApiData.ModelGenPoint, "POST");
+        request = new UnityWebRequest( webApiData.Baseurl+webApiData.ModelGenPoint, "POST");
         string jsonData = JsonUtility.ToJson(_modelGenReq);
         byte[] jsonToSend = new UTF8Encoding().GetBytes(jsonData);
         request.uploadHandler = new UploadHandlerRaw(jsonToSend);
