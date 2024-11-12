@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using Firebase.Auth;
+using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -32,6 +33,7 @@ public class WebCommManager : MonoBehaviour
     
     private bool isGenerating = false;
     public DebugModeData debugModeData;
+    private NetworkRunner _networkRunner;
     private void Start()
     {
         if (UserData.Instance ==null)
@@ -54,6 +56,7 @@ public class WebCommManager : MonoBehaviour
 
         yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
         modelId = _imageGen._imageGenRes.id;
+        webApiData.ModelId = modelId;
         genImageNameList = _imageGen._imageGenRes.filenames;
 
         ImageDownload _imageDownload = new ImageDownload(webApiData);
@@ -159,8 +162,15 @@ public class WebCommManager : MonoBehaviour
         else
         {
             StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
-            _storageDatabase.DownModelPlaySessionDebug(webApiData.ModelName, _sessionUIManager).Forget();
+            _storageDatabase.DownModelPlaySession(webApiData.ModelName, _sessionUIManager).Forget();
         }
+
+    }
+
+    public void JoinWebComm(string filename)
+    {
+        StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
+        _storageDatabase.DownModel(filename);
 
     }
 }
