@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TestSouvenirController : MonoBehaviour
+public class JammoController : MonoBehaviour
 {
     public Canvas npcCanvasJammo;
     public Canvas marketCanvasSouvenir;
