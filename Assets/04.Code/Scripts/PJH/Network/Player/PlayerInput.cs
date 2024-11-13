@@ -41,6 +41,7 @@ public class PlayerInput : NetworkBehaviour
         
         if (Input.GetKeyDown(KeyCode.V))
         {
+            Debug.Log("V 키입력");
             Mic();
         }
 
@@ -89,11 +90,13 @@ public class PlayerInput : NetworkBehaviour
     {
         if (_micOn)
         {
+            Debug.Log("마이크 끔");
             MicMute?.Invoke(false);
             _micOn = false;
         }
         else
         {
+            Debug.Log("마이크 킴");
             MicMute?.Invoke(true);
             _micOn = true;
         }
