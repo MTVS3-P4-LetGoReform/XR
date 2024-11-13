@@ -2423,9 +2423,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6516922829812981263}
-        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
-        m_MethodName: PurchaseButtonOnClick
+      - m_Target: {fileID: 7646007572608824563}
+        m_TargetAssemblyTypeName: SouveniorShopController, Assembly-CSharp
+        m_MethodName: PurchasePicachu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3943,9 +3943,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6516922829812981263}
-        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
-        m_MethodName: StatueImgOnClick
+      - m_Target: {fileID: 7646007572608824563}
+        m_TargetAssemblyTypeName: SouveniorShopController, Assembly-CSharp
+        m_MethodName: PurchasePicachu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4227,7 +4227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &695689603591835845
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4325,6 +4325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   webApiData: {fileID: 11400000, guid: 887fdf7ab03dc5540a31c3b7882642dd, type: 2}
+  _statueInventoryDB: {fileID: 0}
 --- !u!1 &7693400849019706103
 GameObject:
   m_ObjectHideFlags: 0
