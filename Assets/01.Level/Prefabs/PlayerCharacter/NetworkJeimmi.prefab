@@ -1864,6 +1864,7 @@ MonoBehaviour:
   - {fileID: 8164162116590119351}
   - {fileID: 9146873745201987009}
   - {fileID: 6299909350327096304}
+  - {fileID: 6901297904319958150}
   - {fileID: 2551984064410210820}
   - {fileID: 4600864709853760540}
   - {fileID: 5971326974676284570}
@@ -18597,6 +18598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3275822571706019692}
   - component: {fileID: 1203361317300792670}
+  - component: {fileID: 6901297904319958150}
   m_Layer: 0
   m_Name: "\uC81C\uC774\uBBF8"
   m_TagString: Untagged
@@ -18632,7 +18634,7 @@ Animator:
   m_GameObject: {fileID: 8158163948332394670}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 520f9dbdb1690cc41ad507edabce53b0, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3fdc21d4765c8f447929f77b48e134bc, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -18644,6 +18646,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6901297904319958150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8158163948332394670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 1203361317300792670}
+  TotalWords: 1
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 00000000612d1f90c469f82fb2e1dedd17a53962dfb1dac07af53d7f
+  TriggerHashes: 00000000bcd2f0e5
 --- !u!1 &8164615260717921654
 GameObject:
   m_ObjectHideFlags: 0

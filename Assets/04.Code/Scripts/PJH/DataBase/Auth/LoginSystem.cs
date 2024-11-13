@@ -55,17 +55,18 @@ public class LoginSystem : MonoBehaviour
         var id = UserData.Instance.UserId;
         selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == ID);
         PlayerPrefs.SetInt($"select_{id}",selectedObjectIndex);
-        var b = PlayerPrefs.GetInt($"select_{id}", -1);
+       
         if (selectedObjectIndex < 0)
         {
             Debug.LogError($"No ID Found{ID}");
             return;
         }
         
-        Instantiate(characterDatabase.objectData[selectedObjectIndex].Prefab);
-        
+    }
+
+    public void GotoPlayScene()
+    {
         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
         SceneLoadManager.Instance.LoadScene(sceneName);
-      
     }
 }

@@ -1407,6 +1407,7 @@ MonoBehaviour:
   - {fileID: 2046941739697719844}
   - {fileID: 4442606478193737993}
   - {fileID: 2649937382634594573}
+  - {fileID: 5874722972713310595}
   - {fileID: 8396267710926069324}
   - {fileID: 1063923378753028393}
   - {fileID: 2269073172639809399}
@@ -12628,6 +12629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7006391205969838892}
   - component: {fileID: 1163405252005478926}
+  - component: {fileID: 5874722972713310595}
   m_Layer: 0
   m_Name: "\uB791\uC774"
   m_TagString: Untagged
@@ -12675,6 +12677,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5874722972713310595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5412984588702771347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 1163405252005478926}
+  TotalWords: 1
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 00000000612d1f90c469f82fb2e1dedd17a53962dfb1dac07af53d7f
+  TriggerHashes: 00000000bcd2f0e5
 --- !u!1 &5434771520617190461
 GameObject:
   m_ObjectHideFlags: 0
