@@ -10,6 +10,7 @@ public class KccTest : NetworkBehaviour
 
     private NetworkCharacterController networkCC;
 
+    [SerializeField]
     private Camera camera;
 
     [SerializeField]
@@ -20,6 +21,7 @@ public class KccTest : NetworkBehaviour
     private float mx = 0f;
 
     private bool _onChat = false;
+    private bool _jump;
     
     private void Awake()
     {
@@ -32,7 +34,7 @@ public class KccTest : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
-            camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+            camera = GetComponentInChildren<Camera>();
         }
 
         PlayerInput.OnChat += StopMoving;
@@ -59,7 +61,11 @@ public class KccTest : NetworkBehaviour
             _onChat =!_onChat;
             
         }
-        
+
+        if (Input.GetButtonDown("Jump") && networkCC.Grounded)
+        {
+            _jump = true;
+        }
     }
 
     public override void FixedUpdateNetwork()
@@ -71,9 +77,11 @@ public class KccTest : NetworkBehaviour
         
         PlayerMove();
         PlayerRotate();
-        PlayerJump();
-        
-        
+        if (_jump)
+        {
+            _jump = false;
+            PlayerJump();
+        }
     }
 
     private void PlayerMove()
@@ -110,9 +118,6 @@ public class KccTest : NetworkBehaviour
 
     private void PlayerJump()
     {
-        if (Input.GetButtonDown("Jump") && networkCC.Grounded)
-        {
-            networkCC.Velocity += Vector3.up * networkCC.jumpImpulse;
-        }
+        networkCC.Velocity += Vector3.up * networkCC.jumpImpulse;
     }
 }
