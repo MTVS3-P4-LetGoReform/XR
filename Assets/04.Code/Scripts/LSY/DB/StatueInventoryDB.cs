@@ -4,6 +4,7 @@ using System.IO;
 using GLTFast;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class StatueInventoryDB: MonoBehaviour
 {
@@ -23,12 +24,13 @@ public class StatueInventoryDB: MonoBehaviour
     private Quaternion originRotation;
     private Quaternion newPreviewPrefabRatate;
     public Camera playerCamera;
-
+    public Image targetImage;
     public GameObject statueInventoryCanvasObject;
     void Start()
     {
         StopPlacement();
         StartCoroutine(FindPlayerCamera());
+        SetGenImage();
     }
     
     void Update()
@@ -189,6 +191,7 @@ public class StatueInventoryDB: MonoBehaviour
                     Debug.Log($"StatueInventoryDB : pos - {pos}");
                     await gltfImport.InstantiateMainSceneAsync(glbObject.transform);
                     glbObject.transform.position = pos;
+                    glbObject.transform.localScale = new Vector3(3f, 3f, 3f);
                     //Debug.Log("GLB file instantiated in scene.");
                     var landObject = LandObjectConverter.ConvertToModelObject(glbObject);
                     LandManager.PlacedObjects[landObject.key] = glbObject;
@@ -263,6 +266,33 @@ public class StatueInventoryDB: MonoBehaviour
     public void OpenInventory()
     {
         statueInventoryCanvasObject.SetActive(true);
+    }
+
+    public void SetGenImage()
+    {
+        if(webApiData.ImageName != null){
+            ConvertSpriteFromPNG(targetImage, webApiData.ImageName);
+        }
+    }
+    
+    public void ConvertSpriteFromPNG(Image targetImage, string fName)
+    {
+        string folderPath = Path.Combine(Application.persistentDataPath, "Images");
+        string filePath = Path.Combine(folderPath, fName);
+
+        if (File.Exists(filePath))
+        {
+            byte[] fileData = File.ReadAllBytes(filePath);
+            // x
+            Texture2D texture = new Texture2D(2, 2);
+
+            if (texture.LoadImage(fileData))
+            {
+                Sprite sprite = Sprite.Create(texture,
+                    new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                targetImage.sprite = sprite;
+            }
+        }
     }
     
 }

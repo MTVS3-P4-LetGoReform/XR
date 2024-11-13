@@ -140,6 +140,7 @@ public class WebCommManager : MonoBehaviour
         ModelGen _modelGen = new ModelGen(webApiData);
         if (debugModeData.DebugMode == false)
         {
+            webApiData.ImageName = genImageNameList[selectedImageIndex];
             yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
             Debug.Log(_modelGen._modelGenRes.model_filename);
             if (_modelGen.request.result == UnityWebRequest.Result.Success)
