@@ -1,3 +1,4 @@
+using System;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -51,6 +52,16 @@ public class KccTest : NetworkBehaviour
     }
 
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            _onChat =!_onChat;
+            
+        }
+        
+    }
+
     public override void FixedUpdateNetwork()
     {
         if(!HasStateAuthority) return;
@@ -61,6 +72,8 @@ public class KccTest : NetworkBehaviour
         PlayerMove();
         PlayerRotate();
         PlayerJump();
+        
+        
     }
 
     private void PlayerMove()
@@ -85,14 +98,7 @@ public class KccTest : NetworkBehaviour
             animator.SetBool("IsWalking", true);
         }
 
-        if (Input.GetKey(KeyCode.Tab))
-        {
-            rotSpeed = 0;
-        }
-        else if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            rotSpeed = 200;
-        }
+        
     } 
 
     private void PlayerRotate()
