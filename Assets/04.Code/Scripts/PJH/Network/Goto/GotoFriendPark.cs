@@ -12,6 +12,10 @@ public class GotoFriendPark : MonoBehaviour
             GameMode = GameMode.Shared,
             //Scene = SceneRef.FromIndex(2),
             SessionName = userId,
+            SessionProperties = new Dictionary<string, SessionProperty>()
+            {
+                {"UserId", userId},
+            }
         };
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(args,3);
