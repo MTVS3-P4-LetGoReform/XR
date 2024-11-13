@@ -1906,6 +1906,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendListCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1835606731}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: set_enabled
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.Behaviour, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2369181778950999307, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5062717653079547654, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2014,6 +2042,11 @@ PrefabInstance:
 --- !u!224 &1835606730 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5062717653079547654, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
+  m_PrefabInstance: {fileID: 1835606729}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &1835606731 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7093564071366601669, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
   m_PrefabInstance: {fileID: 1835606729}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2093455851 stripped
