@@ -22,9 +22,10 @@ public class TestInteriorMode : MonoBehaviour
     private Coroutine currentCoroutine;
 
     private float rotateSpeed = 200f;
-
     
-
+    [SerializeField]
+    private Camera camera;
+    
     private Vector3 pos;
     public event Action OnClicked, OnExit; // Action 델리게이트를 사용하여 메소드 선언
 
@@ -38,7 +39,7 @@ public class TestInteriorMode : MonoBehaviour
 
     void Start()
     {
-        stateText.text = "InviteMode";
+        camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         StopPlacement();
     }
     
@@ -93,7 +94,7 @@ public class TestInteriorMode : MonoBehaviour
     {
         while (true)
         {
-            Ray ray =  new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+            Ray ray =  new Ray(camera.transform.position, camera.transform.forward);
             if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
             {
                 pos = Hit.point;
@@ -171,7 +172,7 @@ public class TestInteriorMode : MonoBehaviour
         
         
         
-        Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
         { 
             pos = Hit.point;
