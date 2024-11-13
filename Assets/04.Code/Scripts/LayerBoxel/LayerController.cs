@@ -65,9 +65,12 @@ public class LayerController : MonoBehaviour
             }
         }
     }
+
     public void AdvanceFloor()
     {
         Debug.Log("LayerController : AdvanceFloor()");
+        Debug.Log($"LayController : index{curIndex}");
+        
         keys = layeredBoxelSystem.GetKeys();
         curIndex++;
         if (curIndex < keys.Count)
@@ -146,8 +149,10 @@ public class LayerController : MonoBehaviour
     {
         foreach (GameObject voxel in curFloorObjects)
         {
-            RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
+            var obj = RunnerManager.Instance.runner.Spawn(blockData.BasicBlockPrefab,
                 voxel.transform.position, Quaternion.identity);
+            var nt = obj.GetComponent<NetworkTransform>();
+            nt.enabled = true;
         }
         
     }
