@@ -53,8 +53,7 @@ public class LayerController : MonoBehaviour
         if (keys != null)
         {
             progressPercent = (int)((float)(curIndex) / keys.Count *100);
-            Debug.Log(
-                $"LayerController : progressPercent - {progressPercent} curIndex - {curIndex} keys.Count - {keys.Count}");
+            //Debug.Log($"LayerController : progressPercent - {progressPercent} curIndex - {curIndex} keys.Count - {keys.Count}");
             progressText.text = $"{progressPercent} %";
             progressSlider.value = progressPercent/100f;
 

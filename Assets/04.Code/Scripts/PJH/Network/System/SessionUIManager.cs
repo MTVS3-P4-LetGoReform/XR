@@ -55,7 +55,7 @@ public class SessionUIManager : MonoBehaviour
     //
 
     // 세션 목록 UI 업데이트
-    public void UpdateSessionList(List<SessionInfo> sessionList)
+    public async void UpdateSessionList(List<SessionInfo> sessionList)
     {
         // 기존 목록 삭제 같은 목록이 겹치는걸 방지함.
         foreach (Transform child in sessionListParent)
@@ -70,44 +70,53 @@ public class SessionUIManager : MonoBehaviour
             {
                 return;
             }
-            
+
             string check = CheckSession(session);
             if (check != null)
             {
                 return;
             }
-            
+
             string imageName = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
             string folderPath = Path.Combine(Application.persistentDataPath, "Images");
             string url = Path.Combine(folderPath, imageName);
             webApiData.ImageName = imageName;
-            //목록 생성
-            GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
-            Image targetImage = sessionButton.GetComponentInChildren<Image>();
 
-            _storageDatabase.DownImage(webApiData.ImageName).Forget();
-            
+            // 목록 생성
+            GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
+            RoomInfo roomInfo = sessionButton.GetComponent<RoomInfo>();
+            Image targetImage = roomInfo.image;
+            await _storageDatabase.DownImage(webApiData.ImageName);
+
             if (File.Exists(url))
             {
                 byte[] fileData = File.ReadAllBytes(url);
-                // x
                 Texture2D texture = new Texture2D(2, 2);
 
                 if (texture.LoadImage(fileData))
                 {
-                    Sprite sprite = Sprite.Create(texture,
-                        new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                    targetImage.sprite = sprite;
+                    // roomInfo.image가 null이 아닌지 확인 후 스프라이트 설정
+                    if (targetImage != null)
+                    {
+                        Sprite sprite = Sprite.Create(texture,
+                            new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                        targetImage.sprite = sprite;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("roomInfo.image가 null입니다. 스프라이트를 설정할 수 없습니다.");
+                    }
                 }
             }
-            
-            TMP_Text sessionText = sessionButton.GetComponentInChildren<TMP_Text>();
-            sessionText.text = $"{session.Name} <br>{session.PlayerCount}/{session.MaxPlayers}";
-            
-            Button button = sessionButton.GetComponent<Button>();
+
+            roomInfo.roomName.text = session.Name;
+            roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+
+            Button button = roomInfo.button;
             button.onClick.AddListener(() => JoinPlaySession(session));
         }
     }
+
 
     private string CheckSession(SessionInfo session)
     {
