@@ -39,9 +39,9 @@ public class GameMasterContorller : NetworkBehaviour
     //     }
     // }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
     private void AdvanceFloorMasterRpc()
     {
         _layerController.AdvanceFloorMasterKey();
     }
-}
+}//
