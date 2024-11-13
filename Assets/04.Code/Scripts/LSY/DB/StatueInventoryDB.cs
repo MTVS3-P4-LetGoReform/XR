@@ -23,6 +23,8 @@ public class StatueInventoryDB: MonoBehaviour
     private Quaternion originRotation;
     private Quaternion newPreviewPrefabRatate;
     public Camera playerCamera;
+
+    public GameObject statueInventoryCanvasObject;
     void Start()
     {
         StopPlacement();
@@ -258,5 +260,9 @@ public class StatueInventoryDB: MonoBehaviour
         }
     }
 
+    public void OpenInventory()
+    {
+        statueInventoryCanvasObject.SetActive(true);
+    }
     
 }
