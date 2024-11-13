@@ -1266,7 +1266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uADC0\uC5EC\uC6B4 \uD53C\uCE74\uCE04"
+  m_text: "\uCD08\uB85D\uC0C9 \uAC15\uC544\uC9C0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -2423,6 +2423,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: PurchaseButtonOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 7646007572608824563}
         m_TargetAssemblyTypeName: SouveniorShopController, Assembly-CSharp
         m_MethodName: PurchasePicachu
@@ -3889,7 +3901,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a92b21a671588884cb3da2bb2369c46b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 720225b10d48cfb43a530cac7b8c36fa, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3943,9 +3955,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7646007572608824563}
-        m_TargetAssemblyTypeName: SouveniorShopController, Assembly-CSharp
-        m_MethodName: PurchasePicachu
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: StatueImgOnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4227,7 +4239,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &695689603591835845
 RectTransform:
   m_ObjectHideFlags: 0
