@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine.SceneManagement;
 
@@ -84,7 +85,7 @@ public class SessionUIManager : MonoBehaviour
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
             Image targetImage = sessionButton.GetComponentInChildren<Image>();
 
-            _storageDatabase.DownImage(webApiData.ImageName);
+            _storageDatabase.DownImage(webApiData.ImageName).Forget();
             
             if (File.Exists(url))
             {
@@ -156,13 +157,15 @@ public class SessionUIManager : MonoBehaviour
             SessionProperties = new Dictionary<string, SessionProperty>
             {
                 { "Prompt", sessionPromptInput.text },
-                { "ImageUrl", webApiData.ImageName },
-                {"ModelId", webApiData.ModelId},
-                {"ModelName", webApiData.ModelName}
+                { "ImageName", webApiData.ImageName },
+                { "ModelId", webApiData.ModelId },
+                { "ModelName", webApiData.ModelName }
             }
         };
 
         Debug.Log($"SessionUIManager : ModelId - {startArgs.SessionProperties["ModelId"]}");
+        Debug.Log($"SessionUIManager : ImageName - {startArgs.SessionProperties["ImageName"]}");
+        
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
@@ -192,43 +195,4 @@ public class SessionUIManager : MonoBehaviour
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
-    
-    public void ConvertSpriteFromPNG(Image targetImage, string fName)
-    {
-        string folderPath = Path.Combine(Application.persistentDataPath, "Images");
-        string filePath = Path.Combine(folderPath, fName);
-
-        if (File.Exists(filePath))
-        {
-            byte[] fileData = File.ReadAllBytes(filePath);
-            // x
-            Texture2D texture = new Texture2D(2, 2);
-
-            if (texture.LoadImage(fileData))
-            {
-                Sprite sprite = Sprite.Create(texture,
-                    new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                targetImage.sprite = sprite;
-            }
-        }
-    }
-    /*public void ActiveRoomList()
-    {
-        roomListPanel.SetActive(true);
-    }
-    
-    public void OffRoomList()
-    {
-        roomListPanel.SetActive(false);
-    }
-
-    public void ActiveCreateRoom()
-    {
-        createRoomPanel.SetActive(true);
-    }
-    
-    public void OffCreateRoom()
-    {
-        createRoomPanel.SetActive(false);
-    }*/
 }
