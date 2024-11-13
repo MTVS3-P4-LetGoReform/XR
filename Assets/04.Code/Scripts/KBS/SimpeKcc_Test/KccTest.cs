@@ -83,7 +83,16 @@ public class KccTest : NetworkBehaviour
         else
         {
             animator.SetBool("IsWalking", true);
-        } 
+        }
+
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            rotSpeed = 0;
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            rotSpeed = 200;
+        }
     } 
 
     private void PlayerRotate()

@@ -107,7 +107,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                         _name = user.name;
                         NickName?.Invoke(true);
                         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
-                        SceneLoadManager.Instance.LoadScene(sceneName);
+                       // SceneLoadManager.Instance.LoadScene(sceneName);
                     }
                     else
                     {

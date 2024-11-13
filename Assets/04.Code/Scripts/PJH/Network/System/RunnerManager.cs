@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Fusion;
+using Photon.Realtime;
 using Photon.Voice.Unity;
 using Unity.Mathematics;
 using UnityEngine;
@@ -149,16 +150,7 @@ public class RunnerManager : MonoBehaviour
       }
    }
    
-   //캐릭터 고르는 버튼에 적용시킬 임시 메소드
-   public void CharacterChoiceOnClick(int ID)
-   {
-      selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == ID);
-      if (selectedObjectIndex < 0)
-      {
-         Debug.LogError($"No ID Found{ID}");
-         return;
-      }
-   }
+   
 
    private async UniTask PlayerSpawn()
    {
@@ -177,16 +169,7 @@ public class RunnerManager : MonoBehaviour
             _currentSpawnPoint = publicParkSpawnPoint;
             break;
       }
-
-
-     
       
-     // var playerOp = 
-     //  runner.SpawnAsync(characterDatabase.objectData[selectedObjectIndex].Prefab,_currentSpawnPoint.position,quaternion.identity);
-     //  UI들어오면 위의 구문을 적용시키면 될듯(버튼에 등록된 ID 값과 SO에 등록되어 있는 ID값이 같은 항목을 스폰하는 코드)
-     
-     
-     
       var playerOp = runner.SpawnAsync(playerPrefab,_currentSpawnPoint.position,quaternion.identity);
       await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;

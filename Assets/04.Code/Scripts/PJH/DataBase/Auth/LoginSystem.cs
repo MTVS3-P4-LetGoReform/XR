@@ -13,7 +13,10 @@ public class LoginSystem : MonoBehaviour
     public TMP_InputField nickname;
 
     public TMP_Text outputText;
+    public Canvas canvasCharacterChoice;
 
+    [SerializeField] private ObjectDatabase characterDatabase;
+    [SerializeField] private int selectedObjectIndex = -1;
     private void Start()
     {
         FirebaseAuthManager.Instance.LoginState += OnChangedState;
@@ -39,10 +42,30 @@ public class LoginSystem : MonoBehaviour
     public void Login()
     {
         FirebaseAuthManager.Instance.Login(loginEmail.text,loginPassword.text);
+        canvasCharacterChoice.gameObject.SetActive(true);
     }
 
     public void LogOut()
     {
         FirebaseAuthManager.Instance.LogOut();
+    }
+    
+    public void CharacterChoiceOnClick(int ID)
+    {
+        var id = UserData.Instance.UserId;
+        selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == ID);
+        PlayerPrefs.SetInt($"select_{id}",selectedObjectIndex);
+        var b = PlayerPrefs.GetInt($"select_{id}", -1);
+        if (selectedObjectIndex < 0)
+        {
+            Debug.LogError($"No ID Found{ID}");
+            return;
+        }
+        
+        Instantiate(characterDatabase.objectData[selectedObjectIndex].Prefab);
+        
+        var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
+        SceneLoadManager.Instance.LoadScene(sceneName);
+      
     }
 }
