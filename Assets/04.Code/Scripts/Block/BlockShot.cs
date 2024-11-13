@@ -16,6 +16,7 @@ public class BlockShot : NetworkBehaviour
     private float currentGauge = 0f;
     private Animator animator;
     private bool isKeyPressed = false;
+    public AudioSource audioThrow;
     
     void Start()
     {
@@ -66,6 +67,7 @@ public class BlockShot : NetworkBehaviour
                 
                 if (blockData.BlockNumber > 0)
                 {
+                    audioThrow.Play();
                     blockData.BlockNumber -= 1;
                     blockCountText.text = $"{blockData.BlockNumber}";
                     Vector3 throwDirection = (camera.transform.forward * 20f) + (Vector3.up * 10f);

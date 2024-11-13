@@ -14,6 +14,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     public LayerMask BFLayerMask;
     public LayerMask PBLayerMask;
     public BlockData blockData;
+    public AudioSource audioDropBox;
     [SerializeField]
     private Camera camera;
     private RaycastHit Hit;
@@ -131,6 +132,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
         var spawnObject = RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
             pos, Quaternion.identity);
         spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
+        audioDropBox.Play();
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
