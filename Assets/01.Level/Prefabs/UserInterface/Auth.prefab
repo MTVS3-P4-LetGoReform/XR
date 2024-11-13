@@ -1575,7 +1575,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 22@email.com
+  m_Text: Kone@gmail.com
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -4675,8 +4675,8 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -4713,7 +4713,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: testpw
+  m_Text: 12345678
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -5609,6 +5609,7 @@ GameObject:
   - component: {fileID: 4641774019746155101}
   - component: {fileID: 6389388877008928164}
   - component: {fileID: 6820786979639999924}
+  - component: {fileID: 2035103951312807152}
   m_Layer: 5
   m_Name: Panel - SignUp
   m_TagString: Untagged
@@ -5703,6 +5704,22 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 50}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &2035103951312807152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377424696352909585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9ad61020016d8498b5fcd09ceb31c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputFields:
+  - {fileID: 1994674689975395317}
+  - {fileID: 724749269101992568}
+  - {fileID: 1555078238298471241}
 --- !u!1 &7524661994513889369
 GameObject:
   m_ObjectHideFlags: 0
@@ -6701,6 +6718,7 @@ GameObject:
   - component: {fileID: 3177619564342506104}
   - component: {fileID: 1934305452692313764}
   - component: {fileID: 8596967870454450329}
+  - component: {fileID: 5889664832003591299}
   m_Layer: 5
   m_Name: Panel - Login
   m_TagString: Untagged
@@ -6772,6 +6790,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5889664832003591299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508402210113089134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9ad61020016d8498b5fcd09ceb31c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputFields:
+  - {fileID: 2299451719912466706}
+  - {fileID: 8006400920060850072}
 --- !u!1 &8579815970583873190
 GameObject:
   m_ObjectHideFlags: 0
