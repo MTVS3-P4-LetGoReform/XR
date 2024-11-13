@@ -9,8 +9,6 @@ public class SessionUIManager : MonoBehaviour
 {
     public static SessionUIManager Instance { get; private set; }
     
-    public GameObject roomListPanel;
-    public GameObject createRoomPanel;
     
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPromptInput;
@@ -18,17 +16,7 @@ public class SessionUIManager : MonoBehaviour
     public Transform sessionListParent;
     public GameObject sessionPrefab;
     
-    public Button create;
-    public Button join;
     
-    public Button roomListBack;
-    
-    public Button createRoomBack;
-    public Button createRoomRecreate;
-    public Button createRoomStart;
-
-    public GameObject test;
-
     public WebApiData webApiData;
     public WebCommManager _webCommManager;
     
@@ -47,12 +35,12 @@ public class SessionUIManager : MonoBehaviour
     
     private void Start()
     {
-        create.onClick.AddListener(ActiveCreateRoom);
+        /*create.onClick.AddListener(ActiveCreateRoom);
         join.onClick.AddListener(ActiveRoomList);
         
         roomListBack.onClick.AddListener(OffRoomList);
         
-        createRoomBack.onClick.AddListener(OffCreateRoom);
+        createRoomBack.onClick.AddListener(OffCreateRoom);*/
         //createRoomRecreate.onClick.AddListener(ImageCraft);
         //createRoomStart.onClick.AddListener(CreatePlaySession);
     }
@@ -182,7 +170,7 @@ public class SessionUIManager : MonoBehaviour
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
     
-    public void ActiveRoomList()
+    /*public void ActiveRoomList()
     {
         roomListPanel.SetActive(true);
     }
@@ -200,5 +188,5 @@ public class SessionUIManager : MonoBehaviour
     public void OffCreateRoom()
     {
         createRoomPanel.SetActive(false);
-    }
+    }*/
 }

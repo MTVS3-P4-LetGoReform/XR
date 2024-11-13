@@ -51,7 +51,8 @@ public class WebCommManager : MonoBehaviour
         StartCoroutine(ImageGenDown());
     }
     private IEnumerator ImageGenDown()
-    { 
+    {
+        yield return null;
         ImageGen _imageGen = new ImageGen(webApiData);
 
         yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
