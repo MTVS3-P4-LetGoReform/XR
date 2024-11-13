@@ -2,14 +2,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.IO;
 using Fusion;
 using UnityEngine.SceneManagement;
 
 public class SessionUIManager : MonoBehaviour
 {
     public static SessionUIManager Instance { get; private set; }
-    
-    
+
+    public StorageDatabase _storageDatabase;
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPromptInput;
     
@@ -43,6 +44,7 @@ public class SessionUIManager : MonoBehaviour
         createRoomBack.onClick.AddListener(OffCreateRoom);*/
         //createRoomRecreate.onClick.AddListener(ImageCraft);
         //createRoomStart.onClick.AddListener(CreatePlaySession);
+        _storageDatabase = new StorageDatabase(webApiData);
     }
 
     // private void ImageCraft()
@@ -74,10 +76,30 @@ public class SessionUIManager : MonoBehaviour
                 return;
             }
             
-            string url = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
-            
+            string imageName = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
+            string folderPath = Path.Combine(Application.persistentDataPath, "Images");
+            string url = Path.Combine(folderPath, imageName);
+            webApiData.ImageName = imageName;
             //목록 생성
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
+            Image targetImage = sessionButton.GetComponentInChildren<Image>();
+
+            _storageDatabase.DownImage(webApiData.ImageName);
+            
+            if (File.Exists(url))
+            {
+                byte[] fileData = File.ReadAllBytes(url);
+                // x
+                Texture2D texture = new Texture2D(2, 2);
+
+                if (texture.LoadImage(fileData))
+                {
+                    Sprite sprite = Sprite.Create(texture,
+                        new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    targetImage.sprite = sprite;
+                }
+            }
+            
             TMP_Text sessionText = sessionButton.GetComponentInChildren<TMP_Text>();
             sessionText.text = $"{session.Name} <br>{session.PlayerCount}/{session.MaxPlayers}";
             
@@ -102,17 +124,18 @@ public class SessionUIManager : MonoBehaviour
     }
     private string GetImage(SessionInfo session)
     {
-        string ImageUrl = "";
-        if (session.Properties.TryGetValue("ImageUrl", out var sessionDescription))
+        string ImageName = "";
+        
+        if (session.Properties.TryGetValue("ImageName", out var sessionDescription))
         {
-            ImageUrl = sessionDescription;
+            ImageName = sessionDescription;
         }
         else
         {
             Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
         }
-        Debug.Log("결괏값: " + ImageUrl);
-        return ImageUrl;
+        Debug.Log("결괏값: " + ImageName);
+        return ImageName;
     }
     public async void CreatePlaySession()
     {
@@ -133,7 +156,7 @@ public class SessionUIManager : MonoBehaviour
             SessionProperties = new Dictionary<string, SessionProperty>
             {
                 { "Prompt", sessionPromptInput.text },
-                { "ImageUrl", sessionPromptInput.text },
+                { "ImageUrl", webApiData.ImageName },
                 {"ModelId", webApiData.ModelId},
                 {"ModelName", webApiData.ModelName}
             }
@@ -170,6 +193,25 @@ public class SessionUIManager : MonoBehaviour
         await RunnerManager.Instance.RunnerStart(startArgs,2);
     }
     
+    public void ConvertSpriteFromPNG(Image targetImage, string fName)
+    {
+        string folderPath = Path.Combine(Application.persistentDataPath, "Images");
+        string filePath = Path.Combine(folderPath, fName);
+
+        if (File.Exists(filePath))
+        {
+            byte[] fileData = File.ReadAllBytes(filePath);
+            // x
+            Texture2D texture = new Texture2D(2, 2);
+
+            if (texture.LoadImage(fileData))
+            {
+                Sprite sprite = Sprite.Create(texture,
+                    new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                targetImage.sprite = sprite;
+            }
+        }
+    }
     /*public void ActiveRoomList()
     {
         roomListPanel.SetActive(true);
