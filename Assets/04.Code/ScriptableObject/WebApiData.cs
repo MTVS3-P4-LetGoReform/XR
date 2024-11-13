@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WebApiScriptableObject", menuName = "Scriptable Objects/WebApiScriptableObject", order = 1)]
@@ -17,6 +18,14 @@ public class WebApiData : ScriptableObject
         get { return modelId; }
     }
 
+    [SerializeField] private string imageName;
+
+    public string ImageName
+    {
+        get { return imageName; }
+        set { imageName = value; }
+    }
+    
     [SerializeField] private string modelName;
 
     public string ModelName
