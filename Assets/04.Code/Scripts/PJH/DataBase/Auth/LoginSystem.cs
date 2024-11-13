@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using GLTFast.Schema;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +16,11 @@ public class LoginSystem : MonoBehaviour
 
     public TMP_Text outputText;
     public Canvas canvasCharacterChoice;
+    
+    public CanvasGroup canvasGroup;
+    public float duration = 1f;
+    public GameObject imageBlackboard;
+    public GameObject imageMain;
 
     [SerializeField] private ObjectDatabase characterDatabase;
     [SerializeField] private int selectedObjectIndex = -1;
@@ -22,6 +29,8 @@ public class LoginSystem : MonoBehaviour
         FirebaseAuthManager.Instance.LoginState += OnChangedState;
         FirebaseAuthManager.Instance.Init();
         InitializeFirebase();
+
+        StartCoroutine(FadeIn());
     }
 
     private void OnChangedState(bool sign)
@@ -68,5 +77,25 @@ public class LoginSystem : MonoBehaviour
     {
         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
         SceneLoadManager.Instance.LoadScene(sceneName);
+    }
+    
+    private IEnumerator FadeIn()
+    {
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Clamp01(elapsed / duration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = 1f; // 마지막에 alpha를 1로 고정
+
+        if (canvasGroup.alpha >= 1f)
+        {
+            imageBlackboard.gameObject.SetActive(false);
+            imageMain.gameObject.SetActive(false);
+        }
     }
 }
