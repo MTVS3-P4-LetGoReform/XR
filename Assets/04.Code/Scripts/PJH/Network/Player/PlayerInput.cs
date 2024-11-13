@@ -19,6 +19,9 @@ public class PlayerInput : NetworkBehaviour
     
     public static Action<bool> OnMessenger;
     private bool _onMessenger;
+
+    public static Action<bool> OnTapPressed;
+    private bool _onTapPressed;
     
     private void Update()
     {
@@ -28,6 +31,11 @@ public class PlayerInput : NetworkBehaviour
             {
                 Chat();
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Chat();
         }
 
         if (Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex == 1)

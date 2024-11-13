@@ -69,8 +69,6 @@ public class KccCameraTest : NetworkBehaviour
         if (_onList)
             return;
         
-        mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
-
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
 
         mouseY = Mathf.Clamp(mouseY, -45f, 45f);
@@ -78,38 +76,28 @@ public class KccCameraTest : NetworkBehaviour
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         ChangeCamPosition();
-        MousePointController();
+        
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            _onChat = !_onChat;
+            if (_onChat)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            
+            isTapKeyPressed = !isTapKeyPressed;
+            //Cursor.lockState = CursorLockMode.None;
+        }
+        
         
     }
-
-    private void MousePointController()
-    {
-        if (Input.GetKey(KeyCode.Tab))
-        {
-            isTapKeyPressed = true;
-            rotationSpeed = 0f;
-            
-        }
-
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            isTapKeyPressed = false;
-            rotationSpeed = 5f;
-            
-        }
-
-        if (isTapKeyPressed)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
     
-
+    
     private void ChangeCamPosition()
     {
         if (Input.GetKeyDown(KeyCode.LeftShift))
