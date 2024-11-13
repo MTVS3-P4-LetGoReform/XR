@@ -26,7 +26,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	void Start()
 	{
 		PlayerInput.OnChat += Chating;
-		inputField.onEndEdit.AddListener(Input_OnEndEdit);
+		inputField.onSubmit.AddListener(Input_OnEndEdit);
 		
 		Application.runInBackground = true;
 
@@ -136,6 +136,11 @@ public class ChatController : MonoBehaviour, IChatClientListener
 	void Update()
 	{
 		_chatClient.Service();
+	}
+
+	public void Input_OnValueChanged(string text)
+	{
+		Debug.Log(text);
 	}
 
 	public void Input_OnEndEdit(string text)
