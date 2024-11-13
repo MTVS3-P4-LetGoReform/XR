@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class KccTest : NetworkBehaviour
 {
+
+    public AudioSource audioWalking;
+    
+    
     private Animator animator;
     private NetworkMecanimAnimator NetworkMecanimAnimator;
 
@@ -100,10 +104,17 @@ public class KccTest : NetworkBehaviour
         if (Mathf.Approximately(h, 0f) && Mathf.Approximately(v, 0f))
         {
             animator.SetBool("IsWalking", false);
+            audioWalking.Stop();
         }
         else
         {
             animator.SetBool("IsWalking", true);
+            
+            if (!audioWalking.isPlaying)
+            {
+                audioWalking.Play();
+                audioWalking.loop = true;
+            }
         }
 
         

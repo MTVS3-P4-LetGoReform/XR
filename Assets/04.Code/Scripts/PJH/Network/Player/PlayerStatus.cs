@@ -19,7 +19,7 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
         
         IsMasterClient = Runner.IsSharedModeMasterClient;
         Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
-
+        
        
         
         if (SceneManager.GetActiveScene().buildIndex == 2)
@@ -33,6 +33,9 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
                 readyCheck.gameStartButton.gameObject.SetActive(true);
                 GameStateManager.Instance.Complete += Reword;
             }
+
+            BlockMakerController blockMakerController = FindAnyObjectByType<BlockMakerController>();
+            blockMakerController.playerTransform = gameObject.transform;
         }
         
         if (SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 3)

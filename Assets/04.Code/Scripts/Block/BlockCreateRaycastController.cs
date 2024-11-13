@@ -22,11 +22,15 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
     private ModelPlacementChecker _modelPlacementChecker;
 
-    void Start()
+    public override void Spawned()
     {
+        if (!HasStateAuthority)
+        {
+            return;
+        }
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
         BasicBlockParent = GameObject.Find("BasicBlockParent");
-        camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+        //camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
     }
 
@@ -132,7 +136,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
         var spawnObject = RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
             pos, Quaternion.identity);
         spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
-        audioDropBox.Play();
+       
+        //audioDropBox.Play(); // 2인이상 플레이시 null값  한번 더 확인 필요
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]

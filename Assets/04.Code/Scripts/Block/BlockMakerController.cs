@@ -32,7 +32,7 @@ public class BlockMakerController : MonoBehaviour
         blockMakeGauge.maxValue = 20;
         
         
-        StartCoroutine(FindPlayer());
+        //StartCoroutine(FindPlayer());
     }
     
     void LateUpdate()
