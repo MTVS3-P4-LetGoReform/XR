@@ -78,8 +78,8 @@ public class SessionUIManager : MonoBehaviour
             }
 
             string imageName = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
-            string folderPath = Path.Combine(Application.persistentDataPath, "Images");
-            string url = Path.Combine(folderPath, imageName);
+            string folderPath = Path.Combine(Application.persistentDataPath); // +"/"+ "Images"
+            string url = Path.Combine(folderPath+"/"+ imageName);
             webApiData.ImageName = imageName;
 
             // 목록 생성
