@@ -1,21 +1,17 @@
 using UnityEngine;
 
-public class SoundController : MonoBehaviour
+public class BgmPlayer : MonoBehaviour
 {
-    public  AudioSource bgmAudioSource;
-    
+    public AudioSource audioSourceBGM;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        audioSourceBGM.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            bgmAudioSource.Stop();
-        }
+        
     }
 }

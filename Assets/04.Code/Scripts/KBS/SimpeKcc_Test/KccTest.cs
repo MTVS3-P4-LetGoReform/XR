@@ -10,6 +10,7 @@ public class KccTest : NetworkBehaviour
 
     private NetworkCharacterController networkCC;
 
+    [SerializeField]
     private Camera camera;
 
     [SerializeField]
@@ -32,7 +33,7 @@ public class KccTest : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
-            camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+            camera = GetComponentInChildren<Camera>();
         }
 
         PlayerInput.OnChat += StopMoving;
