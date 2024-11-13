@@ -19,12 +19,6 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
     public void Init()
     {
         _auth = FirebaseAuth.DefaultInstance;
-        // 임시 처리
-        if (_auth.CurrentUser != null)
-        {
-            LogOut();
-        }
-
         _auth.StateChanged += OnChanged;
     }
     
