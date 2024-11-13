@@ -13,6 +13,9 @@ public class GameMasterContorller : NetworkBehaviour
     }
     void Update()
     {
+        if (!HasStateAuthority)
+            return;
+        
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             // GameStateManager.Instance.isComplete = true;
