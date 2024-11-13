@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using Photon.Voice.Unity;
@@ -9,6 +10,7 @@ using Random = Unity.Mathematics.Random;
 
 public class RunnerManager : MonoBehaviour
 {
+   public Action IsSpawned;
    public static RunnerManager Instance { get; private set; }
    
    public NetworkPrefabRef playerPrefab; 
@@ -189,6 +191,7 @@ public class RunnerManager : MonoBehaviour
       await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
+      IsSpawned?.Invoke();
    }
 
    private async UniTask SharedGameDataSpawn()
