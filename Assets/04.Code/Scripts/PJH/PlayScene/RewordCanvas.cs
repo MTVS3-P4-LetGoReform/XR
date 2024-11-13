@@ -22,10 +22,10 @@ public class RewordCanvas : MonoBehaviour
         masterRewordButton.onClick.AddListener(MasterReword);
         userRewordButton.onClick.AddListener(UserReword);
         _storageDatabase = new StorageDatabase(webApiData);
-        RunnerManager.Instance.IsSpawned += SetReword;
+        GameStateManager.Instance.Complete += SetReword;
     }
 
-    private void SetReword()
+    private void SetReword(bool reword)
     {
         _sessionInfo = RunnerManager.Instance.runner.SessionInfo;
         string imageName = GetImage(_sessionInfo);
