@@ -268,6 +268,11 @@ public class StatueInventoryDB: MonoBehaviour
         statueInventoryCanvasObject.SetActive(true);
     }
 
+    public void CloseInventory()
+    {
+        statueInventoryCanvasObject.SetActive(false);
+    }
+
     public void SetGenImage()
     {
         if(webApiData.ImageName != null){
