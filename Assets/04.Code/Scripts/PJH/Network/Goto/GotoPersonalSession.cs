@@ -27,7 +27,7 @@ public class GotoPersonalSession : MonoBehaviour
     }
     
 
-    private async void GotoPersonal(string userId = "TestId")
+    private async void GotoPersonal(string userId)
     {
         Debug.Log("userid: "+ userId);
         var args = new StartGameArgs

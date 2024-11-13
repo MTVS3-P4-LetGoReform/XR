@@ -9,9 +9,10 @@ public class LandManager : MonoBehaviour
 
     private void Start()
     {
-        if (UserData.Instance != null)
+        var properties = RunnerManager.Instance.runner.SessionInfo.Properties;
+        if (properties.TryGetValue("UserId", out var sessionProperty))
         {
-            userId = UserData.Instance.UserId;
+            userId = sessionProperty;
         }
 
         RunnerManager.Instance.IsSpawned += AfterSpawn;
