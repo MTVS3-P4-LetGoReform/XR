@@ -1945,6 +1945,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   playerCamera: {fileID: 0}
+  targetImage: {fileID: 0}
   statueInventoryCanvasObject: {fileID: 1488146516}
 --- !u!224 &190521520
 RectTransform:
@@ -19028,17 +19029,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2d94cc38c28a044183806167eb82ff7, type: 3}
---- !u!114 &1915288370 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6516922829812981263, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-  m_PrefabInstance: {fileID: 4129765072671571948}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 256a68357d03d444485b6264e6a17ed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1929025499
 GameObject:
   m_ObjectHideFlags: 0
@@ -28943,161 +28933,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1915288370}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StatueImgClose
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SouvenirMarketController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072549111798944980, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1915288370}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: FinishPurchaseButtonOnClick
-      objectReference: {fileID: 0}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SouvenirMarketController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3620891530132114933, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 3849870809806347638, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_Name
-      value: PurchaseButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 6516922829812981263, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: canvasSouvenir
-      value: 
-      objectReference: {fileID: 456108812}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1915288370}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ConfirmPurchaseButtonOnClick
-      objectReference: {fileID: 0}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SouvenirMarketController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7249139853593699348, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7555758179843593411, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
       propertyPath: m_Name
       value: SouvenirMarketCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7555758179843593411, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1915288370}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StatueImgOnClick
-      objectReference: {fileID: 0}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SouvenirMarketController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8303654261470203752, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1915288370}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PurchaseButtonOnClick
-      objectReference: {fileID: 0}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SouvenirMarketController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 9160763268982214325, guid: deee2f7b0f12bba4c8c5095df639cc39, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -33091,6 +32929,7 @@ MonoBehaviour:
   stateText: {fileID: 1321372295}
   interiorCanvas: {fileID: 6990136411480574595}
   newPreviewPrefab: {fileID: 0}
+  camera: {fileID: 0}
   objectDatabase: {fileID: 11400000, guid: b3da83efa350eac438c7f64cb2ca5f84, type: 2}
   BFLayerMask:
     serializedVersion: 2
