@@ -27,11 +27,10 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
             ReadyCheck readyCheck = FindAnyObjectByType<ReadyCheck>();
             readyCheck.readyCanvas.enabled = true;
             readyCheck.progressInfo.SetActive(true);
-            
+            GameStateManager.Instance.Complete += Reword;
             if (IsMasterClient)
             {
                 readyCheck.gameStartButton.gameObject.SetActive(true);
-                GameStateManager.Instance.Complete += Reword;
             }
 
             BlockMakerController blockMakerController = FindAnyObjectByType<BlockMakerController>();

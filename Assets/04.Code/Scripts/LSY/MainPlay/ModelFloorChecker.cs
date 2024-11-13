@@ -33,6 +33,10 @@ public class ModelFloorChecker : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        if (other == null)
+        {
+            return;
+        }
         //Debug.Log("TriggerEnter");
         if (other.CompareTag("Block"))
         {

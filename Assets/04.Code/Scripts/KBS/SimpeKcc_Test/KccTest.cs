@@ -45,9 +45,6 @@ public class KccTest : NetworkBehaviour
         PlayerInput.OnMessenger += StopMoving;
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            var readyCheck = FindAnyObjectByType<ReadyCheck>();
-            readyCheck.gameStartButton.gameObject.SetActive(true);
-
             GameStateManager.Instance.Complete += StopMoving;
         }
     }
