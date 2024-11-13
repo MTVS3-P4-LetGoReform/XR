@@ -36,9 +36,6 @@ public class KccCameraTest : NetworkBehaviour
         
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            var readyCheck = FindAnyObjectByType<ReadyCheck>();
-            readyCheck.gameStartButton.gameObject.SetActive(true);
-
             GameStateManager.Instance.Complete += CameraLock;
         }
     }
