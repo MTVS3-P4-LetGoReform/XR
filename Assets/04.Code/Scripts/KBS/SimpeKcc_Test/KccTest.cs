@@ -69,6 +69,7 @@ public class KccTest : NetworkBehaviour
         if (Input.GetButtonDown("Jump") && networkCC.Grounded)
         {
             _jump = true;
+            animator.SetTrigger("IsJumping");
         }
     }
 
