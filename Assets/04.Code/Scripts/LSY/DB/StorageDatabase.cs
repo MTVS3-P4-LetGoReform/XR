@@ -32,7 +32,7 @@ public class StorageDatabase
     
     public async UniTask DownImage(string imageName)
     {
-        isstorage_ref = storage_ref.Child("Images" + "/" + imageName);
+        isstorage_ref = storage_ref.Child("images" + "/" + imageName);
         Debug.Log("StorageDatabase : isstorage_ref - "+ isstorage_ref);
         local_url = Application.persistentDataPath + "/" + imageName;
         Debug.Log(string.Format("{0}", local_url));
