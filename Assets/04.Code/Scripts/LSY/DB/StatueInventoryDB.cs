@@ -26,6 +26,8 @@ public class StatueInventoryDB: MonoBehaviour
     public Camera playerCamera;
     public Image targetImage;
     public GameObject statueInventoryCanvasObject;
+
+    
     void Start()
     {
         StopPlacement();
