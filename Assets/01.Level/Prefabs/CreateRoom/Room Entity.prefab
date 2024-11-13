@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8413227568891764054}
   - component: {fileID: 9214100017201237149}
   - component: {fileID: 1944860550787296192}
+  - component: {fileID: 5198000322747962636}
   m_Layer: 5
   m_Name: Room Entity
   m_TagString: Untagged
@@ -122,6 +123,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5198000322747962636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11585015875974404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4f2d72e105a0844926889b9fbf627d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 6687191594458433252}
+  roomName: {fileID: 4581645978082218721}
+  count: {fileID: 6740923593969149675}
+  button: {fileID: 1944860550787296192}
 --- !u!1 &3066097381849659144
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +152,7 @@ GameObject:
   - component: {fileID: 6687191594458433252}
   m_Layer: 5
   m_Name: Image - Prompt
-  m_TagString: Untagged
+  m_TagString: ModelImage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
