@@ -20,10 +20,11 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
         IsMasterClient = Runner.IsSharedModeMasterClient;
         Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
 
-        ReadyCheck readyCheck = FindAnyObjectByType<ReadyCheck>();
+       
         
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
+            ReadyCheck readyCheck = FindAnyObjectByType<ReadyCheck>();
             readyCheck.readyCanvas.enabled = true;
             readyCheck.progressInfo.SetActive(true);
             
