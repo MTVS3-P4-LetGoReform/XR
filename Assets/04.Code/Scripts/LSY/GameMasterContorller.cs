@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameMasterContorller : NetworkBehaviour
 {
@@ -13,6 +14,9 @@ public class GameMasterContorller : NetworkBehaviour
     }
     void Update()
     {
+        if (SceneManager.GetActiveScene().buildIndex != 2)
+            return;
+
         if (!HasStateAuthority)
             return;
         

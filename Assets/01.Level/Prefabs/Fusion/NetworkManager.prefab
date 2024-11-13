@@ -178,6 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2190803315656337143}
   - component: {fileID: 7976901669387956217}
+  - component: {fileID: 8666884295876220814}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -217,11 +218,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab:
-    RawGuidValue: c1ee892efb68e574eaf7ac6a17fb1444
+    RawGuidValue: 3db7d161c9fd21f4395f3289f7ae3546
   sharedGameDataPrefab:
     RawGuidValue: d157ef94f8f67e649800c63911073ad5
   networkRunnerPrefab: {fileID: 7203470109444097339, guid: 09cea7c00ba86b642910fa121ff7edd9, type: 3}
   runner: {fileID: 0}
+  characterDatabase: {fileID: 11400000, guid: 7cce2b80203c92045baec34556e89942, type: 2}
   publicParkSpawnPoint: {fileID: 59368274814920724}
   playSpawnPoint: {fileID: 6707395185443857177}
   personalSpawnPoint: {fileID: 2974644773253591730}
+--- !u!114 &8666884295876220814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180133041420146929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538de44f0d281a84383e23cfb49eb2e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
