@@ -12,7 +12,7 @@ public class BlockShot : NetworkBehaviour
     public Slider chargeGauge;
     public int increaseSpeed = 2;
     public BlockData blockData;
-    private Camera camera;
+    public Camera camera;
     private float currentGauge = 0f;
     private Animator animator;
     private bool isKeyPressed = false;
@@ -22,7 +22,7 @@ public class BlockShot : NetworkBehaviour
     {
         Debug.Log(blockData.BlockNumber);
         animator = GetComponentInChildren<Animator>();
-        camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+        
 
     }
     
