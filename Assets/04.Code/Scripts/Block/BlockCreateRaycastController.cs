@@ -89,6 +89,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
                         blockCountText.text = $"{blockData.BlockNumber}";
                         Debug.Log("TestBlockCreateRayCastController : Valid Place!");
                         CreateBlockRpc(pos);
+                        audioDropBox.Play();
                     }
                     else
                     {
@@ -137,7 +138,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
             pos, Quaternion.identity);
         //spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
        
-        audioDropBox.Play();
+       
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
