@@ -135,19 +135,18 @@ public class BlockCreateRaycastController : NetworkBehaviour
     {
         var spawnObject = RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
             pos, Quaternion.identity);
-        spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
+        //spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
        
-        //audioDropBox.Play(); // 2인이상 플레이시 null값  한번 더 확인 필요
+        audioDropBox.Play();
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void DeleteBlockRpc(NetworkObject networkObject)
     {
-        if (networkObject == null)
+        if (networkObject != null)
         {
-            return;
+            RunnerManager.Instance.runner.Despawn(networkObject);
         }
-        RunnerManager.Instance.runner.Despawn(networkObject);
     }
     
     /*private void OnDrawGizmos()
