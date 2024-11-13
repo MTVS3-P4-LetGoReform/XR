@@ -10,7 +10,7 @@ public class OutlineRenderer
     // {
     //     //meshFilter = GetComponent<MeshFilter>();
     //     if (meshFilter != null)
-    //     {
+    //     {    
     //         // Mesh 데이터를 기반으로 외곽선을 그리는 메쉬 생성
     //         outlineMesh = CreateOutlineMesh(meshFilter.mesh);
     //         
@@ -86,6 +86,8 @@ public class OutlineRenderer
 
         MeshRenderer mr = outlineObject.AddComponent<MeshRenderer>();
         mr.material = mat;
+
+        DrawOutlineWithLineRenderer(mf.mesh, voxel, mat, 0.01f);
     }
 
     // Edge 구조체: 두 버텍스를 저장하는 간단한 구조체
@@ -117,5 +119,27 @@ public class OutlineRenderer
             Edge other = (Edge)obj;
             return VertexIndex1 == other.VertexIndex1 && VertexIndex2 == other.VertexIndex2;
         }
+    }
+    
+    public void DrawOutlineWithLineRenderer(Mesh outlineMesh, GameObject voxel, Material mat, float lineWidth)
+    {
+        Vector3[] vertices = outlineMesh.vertices;
+
+        // 외곽선을 그릴 새 GameObject를 생성
+        GameObject outlineObject = new GameObject("OutlineRenderer");
+        outlineObject.transform.SetParent(voxel.transform, false);
+
+        LineRenderer lineRenderer = outlineObject.AddComponent<LineRenderer>();
+        lineRenderer.positionCount = vertices.Length;
+        lineRenderer.SetPositions(vertices);
+
+        // 라인 렌더러의 속성 설정
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
+        lineRenderer.loop = false;
+        lineRenderer.material = mat;
+
+        // 외곽선이 끊어지지 않도록 추가 설정
+        lineRenderer.useWorldSpace = false;
     }
 }

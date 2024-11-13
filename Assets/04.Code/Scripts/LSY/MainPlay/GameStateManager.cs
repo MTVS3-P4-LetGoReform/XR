@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
     public GameObject modelAreaObject;
     public bool isComplete = false;
 
-    public int maxCnt = -1;
+    public int maxCnt = int.MaxValue;
     public int allCnt = 0;
     
     public static GameStateManager Instance

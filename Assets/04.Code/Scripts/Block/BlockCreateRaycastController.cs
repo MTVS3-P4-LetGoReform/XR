@@ -128,8 +128,9 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
     {
-        RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
+        var spawnObject = RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
             pos, Quaternion.identity);
+        spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
