@@ -7,10 +7,12 @@ public class GameMasterContorller : NetworkBehaviour
     //private GameObject voxelizedObjects;
     //public GameObject parentObject;
     private LayerController _layerController;
+    public PlayerStatus _playerStatus;
 
     void Start()
     {
         _layerController = FindObjectOfType<LayerController>();
+        _playerStatus = FindObjectOfType<PlayerStatus>();
     }
     void Update()
     {
@@ -26,6 +28,11 @@ public class GameMasterContorller : NetworkBehaviour
             // orgVoxels.SetActive(false);
             // SetComplete();
             AdvanceFloorMasterRpc();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            
         }
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +24,19 @@ public class RewordCanvas : MonoBehaviour
         userRewordButton.onClick.AddListener(UserReword);
         _storageDatabase = new StorageDatabase(webApiData);
         GameStateManager.Instance.Complete += SetReword;
+        Test().Forget();
     }
 
+
+    private async UniTask Test()
+    {   
+        await UniTask.Delay(10000);
+        Debug.Log("10초지남");
+        _sessionInfo = RunnerManager.Instance.runner.SessionInfo;
+        string imageName = GetImage(_sessionInfo);
+        LoadImage(imageName);
+    }
+    
     private void SetReword(bool reword)
     {
         _sessionInfo = RunnerManager.Instance.runner.SessionInfo;
@@ -38,6 +50,7 @@ public class RewordCanvas : MonoBehaviour
         
         Cursor.lockState = CursorLockMode.Locked;
         
+        _sessionInfo = RunnerManager.Instance.runner.SessionInfo;
         string modelId = GetModelId(_sessionInfo);
         
         
@@ -50,7 +63,7 @@ public class RewordCanvas : MonoBehaviour
     {
         string ModelId = "";
         
-        if (session.Properties.TryGetValue("ImageName", out var sessionDescription))
+        if (session.Properties.TryGetValue("ModelId", out var sessionDescription))
         {
             ModelId = sessionDescription;
         }
@@ -80,7 +93,7 @@ public class RewordCanvas : MonoBehaviour
     
     private async void LoadImage(string imageName)
     {
-        string folderPath = Path.Combine(Application.persistentDataPath, "Images");
+        string folderPath = Path.Combine(Application.persistentDataPath);
         string url = Path.Combine(folderPath, imageName);
         webApiData.ImageName = imageName;
 

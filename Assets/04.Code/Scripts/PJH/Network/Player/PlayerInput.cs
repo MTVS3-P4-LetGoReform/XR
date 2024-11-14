@@ -22,9 +22,20 @@ public class PlayerInput : NetworkBehaviour
 
     public static Action<bool> OnTapPressed;
     private bool _onTapPressed;
-    
+
+    public PlayerStatus _playerStatus;
+
+    public override void Spawned()
+    {
+        _playerStatus = GetComponentInParent<PlayerStatus>();
+    }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            _playerStatus.Reword(true);
+        }
+        
         if (Input.GetKeyDown(KeyCode.Return))
         {
             if (OnChat != null)

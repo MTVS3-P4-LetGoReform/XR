@@ -45,7 +45,7 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
         }
     }
 
-    private void Reword(bool complete)
+    public void Reword(bool complete)
     {
         var rewordCanvas = FindAnyObjectByType<RewordCanvas>();
         if (IsMasterClient)
