@@ -47,6 +47,11 @@ public class WebCommManager : MonoBehaviour
     // 초기 이미지 생성
     public void DoImageGenDown()
     {
+        // 디버그 모드 시 통신하지 않음.
+        if (debugModeData == true)
+        {
+            return;
+        }
         prompt = promptInput.text;
         StartCoroutine(ImageGenDown());
     }
