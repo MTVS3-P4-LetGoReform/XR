@@ -18,11 +18,12 @@ public class RewordCanvas : MonoBehaviour
     private WebApiData webApiData;
     private StorageDatabase _storageDatabase;
     private SessionInfo _sessionInfo;
+    public DebugModeData debugModeData;
     private void Start()
     {
         masterRewordButton.onClick.AddListener(MasterReword);
         userRewordButton.onClick.AddListener(UserReword);
-        _storageDatabase = new StorageDatabase(webApiData);
+        _storageDatabase = new StorageDatabase(webApiData, debugModeData);
         GameStateManager.Instance.Complete += SetReword;
         Test().Forget();
     }
