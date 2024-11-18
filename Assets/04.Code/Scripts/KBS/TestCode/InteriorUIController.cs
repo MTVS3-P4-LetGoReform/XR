@@ -29,7 +29,7 @@ public class InteriorUIController : MonoBehaviour
     
     
 
-    private void Update()
+  /*  private void Update()
     {
         if (Input.GetKey(KeyCode.Tab))
         {
@@ -50,5 +50,5 @@ public class InteriorUIController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
-    }
+    } */
 }
