@@ -34,22 +34,11 @@ public class RewordCanvas : MonoBehaviour
         userRewordButton.onClick.AddListener(UserRewordHandler);
         
         _storageDatabase = new StorageDatabase(webApiData, debugModeData);
-
-           
-        await LoadSessionInfo();
         
-        GameStateManager.Instance.Complete += SetReword;
+        await LoadSessionInfo();
     }
 
-    private async void MasterRewordHandler()
-    {
-        await MasterReword();
-    }
-
-    private async void UserRewordHandler()
-    {
-        await UserReword();
-    }
+    #region ImageLoad
 
     private async UniTask LoadSessionInfo()
     {
@@ -60,21 +49,63 @@ public class RewordCanvas : MonoBehaviour
         {
             Debug.LogError("SessionInfo가 초기화되지 않았습니다.");
         }
-    }
-
-    private void SetReword(bool reword)
-    {
-        _sessionInfo = RunnerManager.Instance.runner.SessionInfo;
-        if (_sessionInfo == null)
-        {
-            Debug.LogError("SessionInfo가 초기화되지 않았습니다.");
-            return;
-        }
-
-        string imageName = GetImage(_sessionInfo);
+        
+        string imageName = GetImageName(_sessionInfo);
         LoadImage(imageName).Forget(); // 비동기 메서드를 기다릴 필요가 없으면 Forget 사용
     }
+    
+    private string GetImageName(SessionInfo session)
+    {
+        string imageName = "";
+        if (session.Properties.TryGetValue("ImageName", out var sessionImageName))
+        {
+            imageName = sessionImageName;
+        }
+        else
+        {
+            Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
+        }
 
+        return imageName;
+    }
+
+    private async UniTask LoadImage(string imageName)
+    {
+        try
+        {
+            string url = Path.Combine(Application.persistentDataPath,"images",imageName);
+            
+            webApiData.ImageName = imageName;
+
+            // 이미지 다운로드
+            await _storageDatabase.DownImage(webApiData.ImageName);
+            
+            if (!File.Exists(url))
+            {
+                Debug.LogWarning($"파일이 존재하지 않습니다: {url}");
+            }
+            await UpdateImage(url);
+            
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"이미지 로드 중 오류 발생: {ex.Message}");
+        }
+        
+    }
+
+    #endregion
+    
+    private async void MasterRewordHandler()
+    {
+        await MasterReword();
+    }
+
+    private async void UserRewordHandler()
+    {
+        await UserReword();
+    }
+    
     private async UniTask MasterReword()
     {
         try
@@ -118,47 +149,7 @@ public class RewordCanvas : MonoBehaviour
         return modelId;
     }
 
-    private string GetImage(SessionInfo session)
-    {
-        string imageName = "";
-        if (session.Properties.TryGetValue("ImageName", out var sessionImageName))
-        {
-            imageName = sessionImageName;
-        }
-        else
-        {
-            Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
-        }
-
-        return imageName;
-    }
-
-    private async UniTask LoadImage(string imageName)
-    {
-        try
-        {
-            string url = Path.Combine(Application.persistentDataPath,"images",imageName);
-
-            // WebApiData 업데이트 (필요한 경우 로컬 변수로 처리)
-            webApiData.ImageName = imageName;
-
-            // 이미지 다운로드
-            await _storageDatabase.DownImage(webApiData.ImageName);
-
-            await ReadImage(url);
-            if (!File.Exists(url))
-            {
-                Debug.LogWarning($"파일이 존재하지 않습니다: {url}");
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"이미지 로드 중 오류 발생: {ex.Message}");
-        }
-        
-    }
-
-    private async UniTask ReadImage(string url)
+    private async UniTask UpdateImage(string url)
     {
         byte[] fileData = await File.ReadAllBytesAsync(url);
         Texture2D texture = new Texture2D(2, 2);
