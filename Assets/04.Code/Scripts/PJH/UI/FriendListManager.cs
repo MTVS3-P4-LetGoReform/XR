@@ -26,11 +26,11 @@ public class FriendListManager : MonoBehaviour
         PlayerInput.OnMessenger -= OpenMessenger; // 이벤트 구독 해제
     }
 
-    private void OpenMessenger(bool open)
+    private void OpenMessenger(bool isActive)
     {
         if (friendListCanvas != null)
         {
-            friendListCanvas.enabled = open;
+            friendListCanvas.enabled = isActive;
         }
         else
         {
