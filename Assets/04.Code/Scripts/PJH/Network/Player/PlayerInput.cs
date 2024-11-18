@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class PlayerInput : NetworkBehaviour
 {
+    public static event Action<bool> OnMouse;
     public static event Action<bool> OnChat;
     public static event Action<bool> MicMute;
     public static event Action<bool> OnPlayerReady;
     public static event Action<bool> OnGameStart;
     public static event Action<bool> OnMessenger;
 
+    private bool _mouseOn = false;
     private bool _chatOn = false;
     private bool _micOn = false;
     private bool _onReady = false;
@@ -45,8 +47,14 @@ public class PlayerInput : NetworkBehaviour
         {
             ToggleChat();
         }
+        
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleMouse();
+        }
     }
 
+   
     private void HandleSceneSpecificInput()
     {
         string sceneName = SceneManager.GetActiveScene().name;
@@ -55,7 +63,7 @@ public class PlayerInput : NetworkBehaviour
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                Debug.Log("P 키 입력");
+                //Debug.Log("P 키 입력");
                 ToggleMessenger();
             }
         }
@@ -63,24 +71,30 @@ public class PlayerInput : NetworkBehaviour
         {
             if (Input.GetKeyDown(KeyCode.V))
             {
-                Debug.Log("V 키 입력");
+                //Debug.Log("V 키 입력");
                 ToggleMic();
             }
 
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                Debug.Log("F1 키 입력");
+                //Debug.Log("F1 키 입력");
                 ToggleReady();
             }
 
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                Debug.Log("F2 키 입력");
+                //Debug.Log("F2 키 입력");
                 ToggleGameStart();
             }
         }
     }
-
+    
+    private void ToggleMouse()
+    {
+        _mouseOn = !_mouseOn;
+        OnMouse?.Invoke(_mouseOn);
+    }
+    
     private void ToggleChat()
     {
         _chatOn = !_chatOn;
