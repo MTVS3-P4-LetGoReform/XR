@@ -137,7 +137,7 @@ public class RewordCanvas : MonoBehaviour
     {
         try
         {
-            string url = Path.Combine(Application.persistentDataPath, imageName);
+            string url = Path.Combine(Application.persistentDataPath,"images",imageName);
 
             // WebApiData 업데이트 (필요한 경우 로컬 변수로 처리)
             webApiData.ImageName = imageName;

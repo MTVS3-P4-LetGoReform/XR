@@ -97,7 +97,7 @@ public class GameStateManager : MonoBehaviour
     public async void LoadAndInstantiateGLB(string fName)
     {
         //string folderPath = Path.Combine(Application.persistentDataPath, "Models");
-        string filePath = Path.Combine(Application.persistentDataPath, fName);
+        string filePath = Path.Combine(Application.persistentDataPath,"Models",fName);
         //string filePath = Path.Combine(Application.dataPath, "DownloadedGLB", "958462d6cbd04f441aad81e88529b8a2.glb");
         // 파일이 존재하는지 확인
         if (File.Exists(filePath))
