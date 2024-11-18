@@ -47,6 +47,11 @@ public class WebCommManager : MonoBehaviour
     // 초기 이미지 생성
     public void DoImageGenDown()
     {
+        // 디버그 모드 시 통신하지 않음.
+        if (debugModeData == true)
+        {
+            return;
+        }
         prompt = promptInput.text;
         StartCoroutine(ImageGenDown());
     }
@@ -139,8 +144,10 @@ public class WebCommManager : MonoBehaviour
     public IEnumerator ModelGenDown()
     {
         ModelGen _modelGen = new ModelGen(webApiData);
+        
         if (debugModeData.DebugMode == false)
         {
+            
             webApiData.ImageName = genImageNameList[selectedImageIndex];
             yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
             Debug.Log(_modelGen._modelGenRes.model_filename);
@@ -153,17 +160,16 @@ public class WebCommManager : MonoBehaviour
                 // _modelDown.LoadAndInstantiateGLB(modelName);
                 //FIXME : 가이드라인 생성으로 추후 변경
 
-                StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
-                Debug.Log(3);
-
-                _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager)
+                
+            }
+            StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+            _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager)
                     .Forget();
                 Debug.Log(4);
-            }
         }
         else
         {
-            StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
+            StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
             _storageDatabase.DownModelPlaySession(webApiData.ModelName, _sessionUIManager).Forget();
         }
 
@@ -171,7 +177,7 @@ public class WebCommManager : MonoBehaviour
 
     public void JoinWebComm(string filename)
     {
-        StorageDatabase _storageDatabase = new StorageDatabase(webApiData);
+        StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
         _storageDatabase.DownModel(filename);
 
     }

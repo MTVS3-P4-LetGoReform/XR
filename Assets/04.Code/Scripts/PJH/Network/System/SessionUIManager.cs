@@ -21,6 +21,7 @@ public class SessionUIManager : MonoBehaviour
     
     public WebApiData webApiData;
     public WebCommManager _webCommManager;
+    public DebugModeData _debugmodeData;
     
    
     private void Awake()
@@ -45,7 +46,7 @@ public class SessionUIManager : MonoBehaviour
         createRoomBack.onClick.AddListener(OffCreateRoom);*/
         //createRoomRecreate.onClick.AddListener(ImageCraft);
         //createRoomStart.onClick.AddListener(CreatePlaySession);
-        _storageDatabase = new StorageDatabase(webApiData);
+        _storageDatabase = new StorageDatabase(webApiData, _debugmodeData);
     }
 
     // private void ImageCraft()
