@@ -48,7 +48,7 @@ public class WebCommManager : MonoBehaviour
     public void DoImageGenDown()
     {
         // 디버그 모드 시 통신하지 않음.
-        if (debugModeData == true)
+        if (debugModeData.DebugMode == true)
         {
             return;
         }
