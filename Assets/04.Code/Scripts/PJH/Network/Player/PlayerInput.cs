@@ -53,7 +53,7 @@ public class PlayerInput : NetworkBehaviour
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        if (sceneName == "mainSceneName")
+        if (sceneName == mainSceneName)
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
@@ -61,7 +61,7 @@ public class PlayerInput : NetworkBehaviour
                 OnMessenger?.Invoke(true); // Messenger 활성화
             }
         }
-        else if (sceneName == "GameScene")
+        else if (sceneName == gameSceneName)
         {
             if (Input.GetKeyDown(KeyCode.V))
             {
