@@ -39,7 +39,7 @@ public class StorageDatabase
     
     public async UniTask DownImage(string imageName)
     {
-        if (_debugModeData == true)
+        if (_debugModeData.DebugMode == true)
         {
             return;
         }

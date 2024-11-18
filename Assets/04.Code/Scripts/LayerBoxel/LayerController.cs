@@ -114,34 +114,34 @@ public class LayerController : MonoBehaviour
         }
     }
     
-    public void AdvanceFloorBtn()
-    {
-        keys = layeredBoxelSystem.GetKeys();
-        curIndex++;
-        if (curIndex == 0)
-        {
-            layeredBoxelSystem.DeactivateAll();
-        }
-        else
-        {
-            foreach (GameObject obj in curGuideObjects)
-            {
-                DestroyImmediate(obj);
-            }
-            curGuideObjects.Clear();
-        }
-        
-        curFloorObjects = layeredBoxelSystem.GetFloorObjects(keys[curIndex]);
-        //FIXME : 중복으로 계속 생기는 문제 해결
-        GameObject guideObject = new GameObject("Gudieline");
-        
-        //MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
-        foreach (GameObject voxel in curFloorObjects)
-        {
-            DrawGuide(voxel, guideObject);
-        }
-        guideObject.SetActive(false);
-    }
+    // public void AdvanceFloorBtn()
+    // {
+    //     keys = layeredBoxelSystem.GetKeys();
+    //     curIndex++;
+    //     if (curIndex == 0)
+    //     {
+    //         layeredBoxelSystem.DeactivateAll();
+    //     }
+    //     else
+    //     {
+    //         foreach (GameObject obj in curGuideObjects)
+    //         {
+    //             DestroyImmediate(obj);
+    //         }
+    //         curGuideObjects.Clear();
+    //     }
+    //     
+    //     curFloorObjects = layeredBoxelSystem.GetFloorObjects(keys[curIndex]);
+    //     //FIXME : 중복으로 계속 생기는 문제 해결
+    //     GameObject guideObject = new GameObject("Gudieline");
+    //     
+    //     //MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
+    //     foreach (GameObject voxel in curFloorObjects)
+    //     {
+    //         DrawGuide(voxel, guideObject);
+    //     }
+    //     guideObject.SetActive(false);
+    // }
 
     //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void AdvanceFloorMasterKey()
