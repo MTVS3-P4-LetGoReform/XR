@@ -1,9 +1,7 @@
-using System;
 using UnityEngine;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 using TMPro;
-using Unity.VisualScripting;
 
 public class ChatController : MonoBehaviour, IChatClientListener
 {

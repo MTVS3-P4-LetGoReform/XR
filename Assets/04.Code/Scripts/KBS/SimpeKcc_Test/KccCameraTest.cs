@@ -2,6 +2,7 @@ using Fusion;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class KccCameraTest : NetworkBehaviour
 {
@@ -14,15 +15,13 @@ public class KccCameraTest : NetworkBehaviour
     [SerializeField]
     private float positionLerpSpeed = 10f;
 
-    private Quaternion cameraLockedRotation;
+    private Quaternion _cameraLockedRotation;
     
     private float mouseX = 0f;
     private float mouseY = 0f;
-
-    private bool _onChat = false;
-    private bool _onList = false;
-    private bool isLocked = false;
-    private bool isTapKeyPressed = false;
+    
+    private bool _isLocked = false;
+    private const string PlaySceneName = "Alpha_PlayScene";
     
     void Start()
     {
@@ -33,37 +32,32 @@ public class KccCameraTest : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         PlayerInput.OnChat += CameraLock;
         PlayerInput.OnMessenger += CameraLock;
-        
-        if (SceneManager.GetActiveScene().buildIndex == 2)
+        PlayerInput.OnMouse += CameraLock;
+        if (SceneManager.GetActiveScene().name == PlaySceneName)
         {
             GameStateManager.Instance.Complete += CameraLock;
         }
     }
 
-    private void CameraLock(bool onChat)
+    private void CameraLock(bool isActive)
     {
-        if (!onChat)
+        if (!isActive)
         {
             rotationSpeed = 5f;
-            _onList = false;
-            _onChat = false;
+            _isLocked = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
             rotationSpeed = 0f;
-            _onList = true;
-            _onChat = true;
+            _isLocked = true;
             Cursor.lockState = CursorLockMode.None;
         }
     }
 
     private void Update()
     {
-        if (_onChat)
-            return;
-        
-        if (_onList)
+        if (_isLocked)
             return;
         
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
@@ -73,25 +67,6 @@ public class KccCameraTest : NetworkBehaviour
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         ChangeCamPosition();
-        
-
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            _onChat = !_onChat;
-            if (_onChat)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            
-            isTapKeyPressed = !isTapKeyPressed;
-            //Cursor.lockState = CursorLockMode.None;
-        }
-        
-        
     }
     
     

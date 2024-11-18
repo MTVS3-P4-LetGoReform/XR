@@ -23,9 +23,11 @@ public class KccTest : NetworkBehaviour
     private float rotSpeed = 200f;
 
     private float mx = 0f;
-
-    private bool _onChat = false;
+    
     private bool _jump;
+    private bool _isStop = false;
+    
+    private const string PlayScene = "Alpha_PlayScene";
     
     private void Awake()
     {
@@ -43,26 +45,22 @@ public class KccTest : NetworkBehaviour
 
         PlayerInput.OnChat += StopMoving;
         PlayerInput.OnMessenger += StopMoving;
-        if (SceneManager.GetActiveScene().buildIndex == 2)
+        PlayerInput.OnMouse += StopMoving;
+        
+        if (SceneManager.GetActiveScene().name == PlayScene)
         {
             GameStateManager.Instance.Complete += StopMoving;
         }
     }
 
-    private void StopMoving(bool onChat)
+    private void StopMoving(bool isActive)
     {
-        _onChat = onChat;
+        _isStop = isActive;
     }
 
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            _onChat =!_onChat;
-            
-        }
-
         if (Input.GetButtonDown("Jump") && networkCC.Grounded)
         {
             _jump = true;
@@ -74,7 +72,9 @@ public class KccTest : NetworkBehaviour
     {
         if(!HasStateAuthority) return;
 
-        if (_onChat)
+        networkCC.Move(Vector3.zero);
+        
+        if (_isStop)
             return;
         
         PlayerMove();
