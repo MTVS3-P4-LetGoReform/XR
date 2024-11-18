@@ -20,7 +20,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     private RaycastHit Hit;
     private GameObject BasicBlockParent;
     [SerializeField] private Camera userCamera;
-    [SerializeField] private GameObject newUserCamera;
+    
 
     private ModelPlacementChecker _modelPlacementChecker;
 
@@ -32,8 +32,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
         BasicBlockParent = GameObject.Find("BasicBlockParent");
-        NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
         
+        NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
     }
 
     private void Awake()
@@ -44,7 +44,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
     private void Start()
     {
-        StartCoroutine(FindUserCamera());
+        
+       
     }
 
     void Update()
@@ -139,24 +140,6 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
     }
     
-    private IEnumerator FindUserCamera()
-    {
-        newUserCamera = null;
-
-        while (newUserCamera == null)
-        {
-            newUserCamera = GameObject.FindWithTag("PlayerCamera");
-
-            if (newUserCamera == null)
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-            else
-            {
-                userCamera = newUserCamera.GetComponent<Camera>();
-            }
-        }
-    }
     
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

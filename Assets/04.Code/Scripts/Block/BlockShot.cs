@@ -20,14 +20,14 @@ public class BlockShot : NetworkBehaviour
     public AudioSource audioThrow;
     
     [SerializeField] private Camera userCamera;
-    [SerializeField] private GameObject newUserCamera;
+    
     
     void Start()
     {
         Debug.Log(blockData.BlockNumber);
         //animator = GetComponentInChildren<Animator>();
-        StartCoroutine(FindUserCamera());
-        StartCoroutine(FindShotPoint());
+        
+       
     }
     
     void Update()
@@ -85,45 +85,6 @@ public class BlockShot : NetworkBehaviour
             }
         }
     }
-    
-    private IEnumerator FindUserCamera()
-    {
-        newUserCamera = null;
-
-        while (newUserCamera == null)
-        {
-            newUserCamera = GameObject.FindWithTag("PlayerCamera");
-
-            if (newUserCamera == null)
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-            else
-            {
-                userCamera = newUserCamera.GetComponent<Camera>();
-            }
-        }
-    }
-    
-    
-    private IEnumerator FindShotPoint()
-    {
-        GameObject playerObject = null;
-
-        while (playerObject == null)
-        {
-            playerObject = GameObject.FindWithTag("BlockShotPoint");
-
-            if (playerObject == null)
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-        }
-
-        blockShotPoint = playerObject.transform;
-        
-    }
-    
     
     private async UniTask ThrowRpc(Vector3 force)
     {
