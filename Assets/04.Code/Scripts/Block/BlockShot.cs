@@ -1,3 +1,4 @@
+using System.Collections;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using TMPro;
@@ -12,18 +13,21 @@ public class BlockShot : NetworkBehaviour
     public Slider chargeGauge;
     public int increaseSpeed = 2;
     public BlockData blockData;
-    public Camera camera;
+    
     private float currentGauge = 0f;
     private Animator animator;
     private bool isKeyPressed = false;
     public AudioSource audioThrow;
     
+    [SerializeField] private Camera userCamera;
+    
+    
     void Start()
     {
         Debug.Log(blockData.BlockNumber);
-        animator = GetComponentInChildren<Animator>();
+        //animator = GetComponentInChildren<Animator>();
         
-
+       
     }
     
     void Update()
@@ -70,7 +74,7 @@ public class BlockShot : NetworkBehaviour
                     audioThrow.Play();
                     blockData.BlockNumber -= 1;
                     blockCountText.text = $"{blockData.BlockNumber}";
-                    Vector3 throwDirection = (camera.transform.forward * 20f) + (Vector3.up * 10f);
+                    Vector3 throwDirection = (userCamera.transform.forward * 20f) + (Vector3.up * 10f);
                     Vector3 force = throwDirection * currentGauge;
                     ThrowRpc(force);
                 }
@@ -91,6 +95,6 @@ public class BlockShot : NetworkBehaviour
         
         rB.AddForce(force, ForceMode.Impulse);
 
-        animator.SetTrigger("IsThrowing");
+       // animator.SetTrigger("IsThrowing");
     }
 }
