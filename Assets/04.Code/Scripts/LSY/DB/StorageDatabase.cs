@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Firebase.Storage;
 using Application = UnityEngine.Device.Application;
@@ -29,9 +30,9 @@ public class StorageDatabase
         {
             return;
         }
-        isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
+        isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint).Child(modelName);
         Debug.Log("StorageDatabase : isstorage_ref - "+ isstorage_ref);
-        local_url = Application.persistentDataPath + "/" + modelName;
+        local_url = Path.Combine(Application.persistentDataPath, modelName);
         Debug.Log(string.Format("{0}", local_url));
         await isstorage_ref.GetFileAsync(local_url);
     }
