@@ -78,38 +78,16 @@ public class SessionUIManager : MonoBehaviour
                 return;
             }
 
-            string imageName = GetImage(session); // 추후 AI 이미지를 불러올때 프롬프트를 사용해서 불러오기 URL 가져와서 이미지 출력
-            string folderPath = Path.Combine(Application.persistentDataPath); // +"/"+ "Images"
-            string url = Path.Combine(folderPath+"/"+ imageName);
-            webApiData.ImageName = imageName;
-
+            string url = GetImageUrl(session);
+            
             // 목록 생성
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
             RoomInfo roomInfo = sessionButton.GetComponent<RoomInfo>();
             Image targetImage = roomInfo.image;
+            
             await _storageDatabase.DownImage(webApiData.ImageName);
 
-            if (File.Exists(url))
-            {
-                byte[] fileData = File.ReadAllBytes(url);
-                Texture2D texture = new Texture2D(2, 2);
-
-                if (texture.LoadImage(fileData))
-                {
-                    // roomInfo.image가 null이 아닌지 확인 후 스프라이트 설정
-                    if (targetImage != null)
-                    {
-                        Sprite sprite = Sprite.Create(texture,
-                            new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                        targetImage.sprite = sprite;
-                        Debug.Log(targetImage.sprite.name);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("roomInfo.image가 null입니다. 스프라이트를 설정할 수 없습니다.");
-                    }
-                }
-            }
+            UpdateImage(url, targetImage);
 
             roomInfo.roomName.text = session.Name;
             roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
@@ -134,21 +112,49 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + userId);
         return userId;
     }
-    private string GetImage(SessionInfo session)
+    private string GetImageUrl(SessionInfo session)
     {
-        string ImageName = "";
+        string imageName = "";
         
         if (session.Properties.TryGetValue("ImageName", out var sessionDescription))
         {
-            ImageName = sessionDescription;
+            imageName = sessionDescription;
         }
         else
         {
             Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
         }
-        Debug.Log("결괏값: " + ImageName);
-        return ImageName;
+        Debug.Log("결괏값: " + imageName);
+        string url = Path.Combine(Application.persistentDataPath,"Images",imageName);
+        webApiData.ImageName = imageName;
+        return url;
     }
+
+    private void UpdateImage(string url,Image targetImage)
+    {
+        if (File.Exists(url))
+        {
+            byte[] fileData = File.ReadAllBytes(url);
+            Texture2D texture = new Texture2D(2, 2);
+
+            if (texture.LoadImage(fileData))
+            {
+                // roomInfo.image가 null이 아닌지 확인 후 스프라이트 설정
+                if (targetImage != null)
+                {
+                    Sprite sprite = Sprite.Create(texture,
+                        new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    targetImage.sprite = sprite;
+                    Debug.Log(targetImage.sprite.name);
+                }
+                else
+                {
+                    Debug.LogWarning("roomInfo.image가 null입니다. 스프라이트를 설정할 수 없습니다.");
+                }
+            }
+        }
+    }
+    
     public async void CreatePlaySession()
     {
         Debug.Log("SeissionUIManager : CreatePlaySession()");
