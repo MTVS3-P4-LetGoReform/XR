@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
 using Fusion;
@@ -15,10 +16,11 @@ public class BlockCreateRaycastController : NetworkBehaviour
     public LayerMask PBLayerMask;
     public BlockData blockData;
     public AudioSource audioDropBox;
-    [SerializeField]
-    private Camera camera;
+    
     private RaycastHit Hit;
     private GameObject BasicBlockParent;
+    [SerializeField] private Camera userCamera;
+    [SerializeField] private GameObject newUserCamera;
 
     private ModelPlacementChecker _modelPlacementChecker;
 
@@ -30,14 +32,19 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
         BasicBlockParent = GameObject.Find("BasicBlockParent");
-        //camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
+        
     }
 
     private void Awake()
     {
         BFLayerMask = LayerMask.GetMask("Block", "Floor");
         PBLayerMask = LayerMask.GetMask("PhysicsBlock");
+    }
+
+    private void Start()
+    {
+        StartCoroutine(FindUserCamera());
     }
 
     void Update()
@@ -54,9 +61,10 @@ public class BlockCreateRaycastController : NetworkBehaviour
             return;
         }
 
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
         {
+            
             Vector3 pos = Hit.point;
 
             pos = new Vector3(
@@ -130,6 +138,26 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
 
     }
+    
+    private IEnumerator FindUserCamera()
+    {
+        newUserCamera = null;
+
+        while (newUserCamera == null)
+        {
+            newUserCamera = GameObject.FindWithTag("PlayerCamera");
+
+            if (newUserCamera == null)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+            else
+            {
+                userCamera = newUserCamera.GetComponent<Camera>();
+            }
+        }
+    }
+    
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
@@ -150,17 +178,6 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
     }
     
-    /*private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(camera.transform.position, camera.transform.forward * 99999);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(Hit.point, 0.05f);
-        
-        Gizmos.DrawRay(Hit.point, Hit.normal);
-    }*/
-
     IEnumerator NoBlockTextSet()
     {
         noBlockText.gameObject.SetActive(true);

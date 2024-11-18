@@ -36,7 +36,7 @@ public class TestInteriorMode : MonoBehaviour
 
     private bool isHammer;
     [SerializeField] private LayerMask BFLayerMask;
-    [SerializeField] public LayerMask PBLayerMask; //추후 특정 사물위에는 특정 사물이 올라가도록 layer정리 예정
+    
 
     void Start()
     {
