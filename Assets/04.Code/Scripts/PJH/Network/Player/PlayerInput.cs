@@ -5,147 +5,114 @@ using UnityEngine.SceneManagement;
 
 public class PlayerInput : NetworkBehaviour
 {
-    public static Action<bool>OnChat;
+    public static event Action<bool> OnChat;
+    public static event Action<bool> MicMute;
+    public static event Action<bool> OnPlayerReady;
+    public static event Action<bool> OnGameStart;
+    public static event Action<bool> OnMessenger;
+
     private bool _chatOn = false;
-    
-    public static Action<bool> MicMute;
     private bool _micOn = false;
+    private bool _onReady = false;
+    private bool _onGameStart = false;
+    private bool _onMessenger = false;
 
-    public static Action<bool> OnPlayerReady;
-    private bool _onReady;
-    
-    public static Action<bool> OnGameStart;
-    private bool _onGameStart;
-    
-    public static Action<bool> OnMessenger;
-    private bool _onMessenger;
-
-    public static Action<bool> OnTapPressed;
-    private bool _onTapPressed;
-
-    public PlayerStatus _playerStatus;
+    public PlayerStatus PlayerStatus { get; private set; }
 
     public override void Spawned()
     {
-        _playerStatus = GetComponentInParent<PlayerStatus>();
+        PlayerStatus = GetComponentInParent<PlayerStatus>();
+        if (PlayerStatus == null)
+        {
+            Debug.LogError("PlayerStatus가 부모 객체에 없습니다.");
+        }
     }
+
     private void Update()
+    {
+        HandleGeneralInput();
+        HandleSceneSpecificInput();
+    }
+
+    private void HandleGeneralInput()
     {
         if (Input.GetKeyDown(KeyCode.Equals))
         {
-            _playerStatus.Reword(true);
+            PlayerStatus?.Reword(true);
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (OnChat != null)
+            ToggleChat();
+        }
+    }
+
+    private void HandleSceneSpecificInput()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        if (sceneName == "MessengerScene")
+        {
+            if (Input.GetKeyDown(KeyCode.P))
             {
-                Chat();
+                Debug.Log("P 키 입력");
+                ToggleMessenger();
             }
         }
+        else if (sceneName == "GameScene")
+        {
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                Debug.Log("V 키 입력");
+                ToggleMic();
+            }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            Chat();
-        }
+            if (Input.GetKeyDown(KeyCode.F1))
+            {
+                Debug.Log("F1 키 입력");
+                ToggleReady();
+            }
 
-        if (Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            Debug.Log("P 키입력");
-            Messenger();
-        }
-        
-        if (SceneManager.GetActiveScene().buildIndex != 2)
-            return;
-        
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Debug.Log("V 키입력");
-            Mic();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            Debug.Log("F1 키입력");
-            Ready();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            Debug.Log("F2 키입력");
-            StartGame();
-        }
-    }
-    
-    private void Messenger()
-    {
-        if (_onMessenger)
-        {
-            OnMessenger?.Invoke(false);
-            _onMessenger = false;
-        }
-        else
-        {
-            OnMessenger?.Invoke(true);
-            _onMessenger = true;
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                Debug.Log("F2 키 입력");
+                ToggleGameStart();
+            }
         }
     }
 
-    private void Chat()
+    private void ToggleChat()
     {
-        if (_chatOn)
-        {
-            OnChat?.Invoke(false);
-            _chatOn = false;
-        }
-        else
-        {
-            OnChat?.Invoke(true);
-            _chatOn = true;
-        }
+        _chatOn = !_chatOn;
+        OnChat?.Invoke(_chatOn);
+        Debug.Log(_chatOn ? "채팅 활성화" : "채팅 비활성화");
     }
 
-    private void Mic()
+    private void ToggleMessenger()
     {
-        if (_micOn)
-        {
-            Debug.Log("마이크 끔");
-            MicMute?.Invoke(false);
-            _micOn = false;
-        }
-        else
-        {
-            Debug.Log("마이크 킴");
-            MicMute?.Invoke(true);
-            _micOn = true;
-        }
+        _onMessenger = !_onMessenger;
+        OnMessenger?.Invoke(_onMessenger);
+        Debug.Log(_onMessenger ? "메신저 활성화" : "메신저 비활성화");
     }
 
-    private void Ready()
+    private void ToggleMic()
     {
-        if (_onReady)
-        {
-            OnPlayerReady?.Invoke(false);
-            _onReady = false;
-        }
-        else
-        {
-            OnPlayerReady?.Invoke(true);
-            _onReady = true;
-        }
+        _micOn = !_micOn;
+        MicMute?.Invoke(_micOn);
+        Debug.Log(_micOn ? "마이크 킴" : "마이크 끔");
     }
 
-    private void StartGame()
+    private void ToggleReady()
     {
-        if (_onGameStart)
-        {
-            OnGameStart?.Invoke(false);
-            _onGameStart = false;
-        }
-        else
-        {
-            OnGameStart?.Invoke(true);
-            _onGameStart = true;
-        }
+        _onReady = !_onReady;
+        OnPlayerReady?.Invoke(_onReady);
+        Debug.Log(_onReady ? "준비 상태 활성화" : "준비 상태 비활성화");
+    }
+
+    private void ToggleGameStart()
+    {
+        _onGameStart = !_onGameStart;
+        OnGameStart?.Invoke(_onGameStart);
+        Debug.Log(_onGameStart ? "게임 시작" : "게임 시작 취소");
     }
 }
