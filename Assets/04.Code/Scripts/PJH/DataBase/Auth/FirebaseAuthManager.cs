@@ -19,12 +19,6 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
     public void Init()
     {
         _auth = FirebaseAuth.DefaultInstance;
-        // 임시 처리
-        if (_auth.CurrentUser != null)
-        {
-            LogOut();
-        }
-
         _auth.StateChanged += OnChanged;
     }
     
@@ -107,7 +101,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                         _name = user.name;
                         NickName?.Invoke(true);
                         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
-                        SceneLoadManager.Instance.LoadScene(sceneName);
+                       // SceneLoadManager.Instance.LoadScene(sceneName);
                     }
                     else
                     {

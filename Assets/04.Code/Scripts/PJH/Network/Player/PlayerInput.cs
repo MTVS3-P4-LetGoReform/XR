@@ -17,8 +17,25 @@ public class PlayerInput : NetworkBehaviour
     public static Action<bool> OnGameStart;
     private bool _onGameStart;
     
+    public static Action<bool> OnMessenger;
+    private bool _onMessenger;
+
+    public static Action<bool> OnTapPressed;
+    private bool _onTapPressed;
+
+    public PlayerStatus _playerStatus;
+
+    public override void Spawned()
+    {
+        _playerStatus = GetComponentInParent<PlayerStatus>();
+    }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            _playerStatus.Reword(true);
+        }
+        
         if (Input.GetKeyDown(KeyCode.Return))
         {
             if (OnChat != null)
@@ -27,24 +44,50 @@ public class PlayerInput : NetworkBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Chat();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            Debug.Log("P 키입력");
+            Messenger();
+        }
+        
         if (SceneManager.GetActiveScene().buildIndex != 2)
             return;
         
-        if (Input.GetKeyDown(KeyCode.V) )
+        if (Input.GetKeyDown(KeyCode.V))
         {
+            Debug.Log("V 키입력");
             Mic();
         }
 
-        if (Input.GetKeyDown(KeyCode.F1) && SceneManager.GetActiveScene().buildIndex == 2)
+        if (Input.GetKeyDown(KeyCode.F1))
         {
             Debug.Log("F1 키입력");
             Ready();
         }
 
-        if (Input.GetKeyDown(KeyCode.F2) && SceneManager.GetActiveScene().buildIndex == 2)
+        if (Input.GetKeyDown(KeyCode.F2))
         {
             Debug.Log("F2 키입력");
             StartGame();
+        }
+    }
+    
+    private void Messenger()
+    {
+        if (_onMessenger)
+        {
+            OnMessenger?.Invoke(false);
+            _onMessenger = false;
+        }
+        else
+        {
+            OnMessenger?.Invoke(true);
+            _onMessenger = true;
         }
     }
 
@@ -66,11 +109,13 @@ public class PlayerInput : NetworkBehaviour
     {
         if (_micOn)
         {
+            Debug.Log("마이크 끔");
             MicMute?.Invoke(false);
             _micOn = false;
         }
         else
         {
+            Debug.Log("마이크 킴");
             MicMute?.Invoke(true);
             _micOn = true;
         }

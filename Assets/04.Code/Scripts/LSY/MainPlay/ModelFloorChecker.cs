@@ -33,14 +33,18 @@ public class ModelFloorChecker : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("TriggerEnter");
+        if (other == null)
+        {
+            return;
+        }
+        //Debug.Log("TriggerEnter");
         if (other.CompareTag("Block"))
         {
             Debug.Log("ModelFloorChecker : Block Place Trigger");
             voxels.Add(other.gameObject);
             cnt++;
         }
-
+    
         if (cnt >= maxCnt)
         {
             Vector3 scaleFactor = new Vector3(10.0f, 10.0f, 10.0f);
@@ -49,10 +53,10 @@ public class ModelFloorChecker : MonoBehaviour
                 MeshFilter targetFilter = voxels[i].GetComponent<MeshFilter>();
                 MeshRenderer sourceRenderer = _layerController.curFloorObjects[i].GetComponent<MeshRenderer>();
                 MeshRenderer targetRenderer = voxels[i].GetComponent<MeshRenderer>();
-
+    
                 targetRenderer.materials = sourceRenderer.materials;  // material 전체 배열 복사
                 targetFilter.sharedMesh = _layerController.curFloorObjects[i].GetComponent<MeshFilter>().sharedMesh;
-
+    
                 // Mesh mesh = Instantiate(targetFilter.mesh);
                 // Vector3[] vertices = mesh.vertices;
                 //
@@ -79,7 +83,7 @@ public class ModelFloorChecker : MonoBehaviour
             _layerController.AdvanceFloor();
             //ResetVoxelPos();
             //cnt = 0;
-
+    
             // foreach (GameObject obj in _layerController.curFloorObjects)
             // {
             //     AddVoxelPos(obj.transform.position);

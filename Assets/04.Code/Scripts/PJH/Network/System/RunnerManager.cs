@@ -1,13 +1,17 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Fusion;
+using Photon.Realtime;
 using Photon.Voice.Unity;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Random = Unity.Mathematics.Random;
 
 public class RunnerManager : MonoBehaviour
 {
+   public Action IsSpawned;
    public static RunnerManager Instance { get; private set; }
    
    public NetworkPrefabRef playerPrefab; 
@@ -19,6 +23,11 @@ public class RunnerManager : MonoBehaviour
    private NetworkObject _spawnedPlayer;
    private NetworkObject _sharedGameData;
    private Transform _currentSpawnPoint;
+
+   [SerializeField] 
+   private ObjectDatabase characterDatabase;
+
+   private int selectedObjectIndex = -1;
    
    #region SpawnPoint
    [SerializeField] private Transform publicParkSpawnPoint;
@@ -140,6 +149,8 @@ public class RunnerManager : MonoBehaviour
          Debug.LogError($"세션 생성에 실패했습니다.: {result.ShutdownReason}");
       }
    }
+   
+   
 
    private async UniTask PlayerSpawn()
    {
@@ -158,11 +169,15 @@ public class RunnerManager : MonoBehaviour
             _currentSpawnPoint = publicParkSpawnPoint;
             break;
       }
+
+      var id = UserData.Instance.UserId;
+      var b = PlayerPrefs.GetInt($"select_{id}", -1);
       
-      var playerOp = runner.SpawnAsync(playerPrefab,_currentSpawnPoint.position,quaternion.identity);
+      var playerOp = runner.SpawnAsync(characterDatabase.objectData[b].Prefab,_currentSpawnPoint.position,quaternion.identity);
       await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
+      IsSpawned?.Invoke();
    }
 
    private async UniTask SharedGameDataSpawn()

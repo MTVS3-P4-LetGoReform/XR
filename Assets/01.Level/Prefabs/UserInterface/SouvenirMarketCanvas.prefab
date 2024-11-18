@@ -263,7 +263,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC00\uACA9"
+  m_text: "\uAC00\uACA9 : 100C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -564,7 +564,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC0C1\uD488 \uC774\uB984"
+  m_text: "\uD770 \uAC15\uC544\uC9C0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -1266,7 +1266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC0C1\uD488 \uC774\uB984"
+  m_text: "\uCD08\uB85D\uC0C9 \uAC15\uC544\uC9C0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -1638,7 +1638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 256a68357d03d444485b6264e6a17ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  souvenirMarket: {fileID: 7947605824853955325}
+  canvasSouvenir: {fileID: 251761774202769695}
   imageGoodsPage: {fileID: 5123616608681496741}
   imagePurchase: {fileID: 3015883480085799972}
   imageEndPurchase: {fileID: 1601631409024452826}
@@ -2231,7 +2231,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC00\uACA9"
+  m_text: "\uAC00\uACA9 : 100C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -2315,7 +2315,7 @@ GameObject:
   - component: {fileID: 8661184927365651455}
   - component: {fileID: 9160763268982214325}
   m_Layer: 5
-  m_Name: Button
+  m_Name: PurchaseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2422,7 +2422,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8661184927365651455}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: PurchaseButtonOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7646007572608824563}
+        m_TargetAssemblyTypeName: SouveniorShopController, Assembly-CSharp
+        m_MethodName: PurchasePicachu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4305165548404527485
 GameObject:
   m_ObjectHideFlags: 0
@@ -2678,7 +2702,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3287058205093222008}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: StatueImgClose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5152493274026543436
 GameObject:
   m_ObjectHideFlags: 0
@@ -2745,7 +2781,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: aab96304b8adab149b1fdff5ef441153, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7b48bd6a1651a894e9cb4de640d553fc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3136,7 +3172,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC00\uACA9"
+  m_text: "\uAC00\uACA9 : 100C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -3272,7 +3308,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC00\uACA9"
+  m_text: "\uAC00\uACA9 : 100C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -3408,7 +3444,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC0C1\uD488 \uC774\uB984"
+  m_text: "\uCE58\uC988 \uACE0\uC591\uC774"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -3745,7 +3781,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: aab96304b8adab149b1fdff5ef441153, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 25d12e717e73dee4e977e78bd65b36d0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3865,7 +3901,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: aab96304b8adab149b1fdff5ef441153, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 720225b10d48cfb43a530cac7b8c36fa, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3918,7 +3954,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8473131559594121109}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: StatueImgOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7376644188557169226
 GameObject:
   m_ObjectHideFlags: 0
@@ -3985,7 +4033,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: aab96304b8adab149b1fdff5ef441153, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0fa5ccbe74924b24f9fd92d714733623, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4184,6 +4232,7 @@ GameObject:
   - component: {fileID: 251761774202769695}
   - component: {fileID: 6503863581229121218}
   - component: {fileID: 3040901659899377538}
+  - component: {fileID: 7646007572608824563}
   m_Layer: 5
   m_Name: SouvenirMarketCanvas
   m_TagString: Untagged
@@ -4275,6 +4324,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7646007572608824563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7555758179843593411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0514aecf9e492bad4fd78e951a347b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webApiData: {fileID: 11400000, guid: 887fdf7ab03dc5540a31c3b7882642dd, type: 2}
+  _statueInventoryDB: {fileID: 0}
 --- !u!1 &7693400849019706103
 GameObject:
   m_ObjectHideFlags: 0
@@ -4476,7 +4539,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC0C1\uD488 \uC774\uB984"
+  m_text: "\uD1A0\uB07C \uC18C\uB140"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -4667,7 +4730,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2871142609092937896}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: FinishPurchaseButtonOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7893161529768758082
 GameObject:
   m_ObjectHideFlags: 0
@@ -4865,7 +4940,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5860109301394308968}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6516922829812981263}
+        m_TargetAssemblyTypeName: SouvenirMarketController, Assembly-CSharp
+        m_MethodName: ConfirmPurchaseButtonOnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8916210655636514288
 GameObject:
   m_ObjectHideFlags: 0

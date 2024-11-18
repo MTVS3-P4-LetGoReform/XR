@@ -14,6 +14,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     public LayerMask BFLayerMask;
     public LayerMask PBLayerMask;
     public BlockData blockData;
+    public AudioSource audioDropBox;
     [SerializeField]
     private Camera camera;
     private RaycastHit Hit;
@@ -21,11 +22,15 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
     private ModelPlacementChecker _modelPlacementChecker;
 
-    void Start()
+    public override void Spawned()
     {
+        if (!HasStateAuthority)
+        {
+            return;
+        }
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
         BasicBlockParent = GameObject.Find("BasicBlockParent");
-        camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+        //camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
     }
 
@@ -84,6 +89,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
                         blockCountText.text = $"{blockData.BlockNumber}";
                         Debug.Log("TestBlockCreateRayCastController : Valid Place!");
                         CreateBlockRpc(pos);
+                        audioDropBox.Play();
                     }
                     else
                     {
@@ -128,18 +134,20 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
     {
-        RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
+        var spawnObject = RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
             pos, Quaternion.identity);
+        //spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
+       
+       
     }
 
     [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
     private void DeleteBlockRpc(NetworkObject networkObject)
     {
-        if (networkObject == null)
+        if (networkObject != null)
         {
-            return;
+            RunnerManager.Instance.runner.Despawn(networkObject);
         }
-        RunnerManager.Instance.runner.Despawn(networkObject);
     }
     
     /*private void OnDrawGizmos()

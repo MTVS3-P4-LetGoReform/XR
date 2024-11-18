@@ -1,14 +1,20 @@
+using System;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class KccTest : NetworkBehaviour
 {
+
+    public AudioSource audioWalking;
+    
+    
     private Animator animator;
     private NetworkMecanimAnimator NetworkMecanimAnimator;
 
     private NetworkCharacterController networkCC;
 
+    [SerializeField]
     private Camera camera;
 
     [SerializeField]
@@ -19,6 +25,7 @@ public class KccTest : NetworkBehaviour
     private float mx = 0f;
 
     private bool _onChat = false;
+    private bool _jump;
     
     private void Awake()
     {
@@ -31,15 +38,13 @@ public class KccTest : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
-            camera = GameObject.FindWithTag("PlayerCamera").GetComponent<Camera>();
+            camera = GetComponentInChildren<Camera>();
         }
 
         PlayerInput.OnChat += StopMoving;
+        PlayerInput.OnMessenger += StopMoving;
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            var readyCheck = FindAnyObjectByType<ReadyCheck>();
-            readyCheck.gameStartButton.gameObject.SetActive(true);
-
             GameStateManager.Instance.Complete += StopMoving;
         }
     }
@@ -50,6 +55,21 @@ public class KccTest : NetworkBehaviour
     }
 
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            _onChat =!_onChat;
+            
+        }
+
+        if (Input.GetButtonDown("Jump") && networkCC.Grounded)
+        {
+            _jump = true;
+            NetworkMecanimAnimator.SetTrigger("IsJumping");
+        }
+    }
+
     public override void FixedUpdateNetwork()
     {
         if(!HasStateAuthority) return;
@@ -59,7 +79,11 @@ public class KccTest : NetworkBehaviour
         
         PlayerMove();
         PlayerRotate();
-        PlayerJump();
+        if (_jump)
+        {
+            _jump = false;
+            PlayerJump();
+        }
     }
 
     private void PlayerMove()
@@ -78,11 +102,20 @@ public class KccTest : NetworkBehaviour
         if (Mathf.Approximately(h, 0f) && Mathf.Approximately(v, 0f))
         {
             animator.SetBool("IsWalking", false);
+            audioWalking.Stop();
         }
         else
         {
             animator.SetBool("IsWalking", true);
-        } 
+            
+            if (!audioWalking.isPlaying)
+            {
+                audioWalking.Play();
+                audioWalking.loop = true;
+            }
+        }
+
+        
     } 
 
     private void PlayerRotate()
@@ -94,9 +127,6 @@ public class KccTest : NetworkBehaviour
 
     private void PlayerJump()
     {
-        if (Input.GetButtonDown("Jump") && networkCC.Grounded)
-        {
-            networkCC.Velocity += Vector3.up * networkCC.jumpImpulse;
-        }
+        networkCC.Velocity += Vector3.up * networkCC.jumpImpulse;
     }
 }

@@ -20,6 +20,7 @@ public class KccCameraTest : NetworkBehaviour
     private float mouseY = 0f;
 
     private bool _onChat = false;
+    private bool _onList = false;
     private bool isLocked = false;
     private bool isTapKeyPressed = false;
     
@@ -31,12 +32,10 @@ public class KccCameraTest : NetworkBehaviour
         }
         Cursor.lockState = CursorLockMode.Locked;
         PlayerInput.OnChat += CameraLock;
+        PlayerInput.OnMessenger += CameraLock;
         
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
-            var readyCheck = FindAnyObjectByType<ReadyCheck>();
-            readyCheck.gameStartButton.gameObject.SetActive(true);
-
             GameStateManager.Instance.Complete += CameraLock;
         }
     }
@@ -46,12 +45,14 @@ public class KccCameraTest : NetworkBehaviour
         if (!onChat)
         {
             rotationSpeed = 5f;
+            _onList = false;
             _onChat = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
             rotationSpeed = 0f;
+            _onList = true;
             _onChat = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -62,46 +63,38 @@ public class KccCameraTest : NetworkBehaviour
         if (_onChat)
             return;
         
-        mouseX += Input.GetAxis("Mouse X") * rotationSpeed;
+        if (_onList)
+            return;
+        
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
 
         mouseY = Mathf.Clamp(mouseY, -45f, 45f);
+        
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         ChangeCamPosition();
-        MousePointController();
+        
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            _onChat = !_onChat;
+            if (_onChat)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            
+            isTapKeyPressed = !isTapKeyPressed;
+            //Cursor.lockState = CursorLockMode.None;
+        }
+        
         
     }
-
-    private void MousePointController()
-    {
-        if (Input.GetKey(KeyCode.Tab))
-        {
-            isTapKeyPressed = true;
-            rotationSpeed = 0f;
-            
-        }
-
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            isTapKeyPressed = false;
-            rotationSpeed = 5f;
-            
-        }
-
-        if (isTapKeyPressed)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
-
     
-
+    
     private void ChangeCamPosition()
     {
         if (Input.GetKeyDown(KeyCode.LeftShift))

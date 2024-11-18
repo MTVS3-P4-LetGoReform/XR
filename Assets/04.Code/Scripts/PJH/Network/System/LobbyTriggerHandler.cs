@@ -16,7 +16,7 @@ public class LobbyTriggerHandler : MonoBehaviour
         }
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (sessionCanvas.enabled &&_canInteract && Input.GetKeyDown(KeyCode.Escape))
         {
@@ -24,7 +24,7 @@ public class LobbyTriggerHandler : MonoBehaviour
             JoinPublicSessionTrigger();
             _canInteract = true;
         }
-    }
+    }*/
 
     private async void JoinLobbyTrigger()
     {

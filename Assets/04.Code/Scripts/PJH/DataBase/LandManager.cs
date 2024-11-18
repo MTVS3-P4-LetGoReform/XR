@@ -9,25 +9,20 @@ public class LandManager : MonoBehaviour
 
     private void Start()
     {
-        if (UserData.Instance != null)
+        var properties = RunnerManager.Instance.runner.SessionInfo.Properties;
+        if (properties.TryGetValue("UserId", out var sessionProperty))
         {
-            userId = UserData.Instance.UserId;
+            userId = sessionProperty;
         }
-        
+
+        RunnerManager.Instance.IsSpawned += AfterSpawn;
+    }
+
+    private void AfterSpawn()
+    {
         RealtimeDatabase.ListenForUserLandChanges(userId, UpdateLandObjects, exception => Debug.LogError("실시간 데이터 수신 오류: " + exception.Message));
     }
-
-    private void PlaceLandObject(LandObject landObject)
-    {
-        var index = landObject.objectIndex;
-        GameObject obj = Instantiate(prefab.objectData[index].Prefab);
-
-        obj.transform.position = landObject.position.ToVector3();
-        obj.transform.eulerAngles = landObject.rotation.ToVector3();
-        obj.transform.localScale = landObject.scale.ToVector3();
-
-        PlacedObjects[landObject.key] = obj;
-    }
+    
 
     private void UpdateLandObjects(UserLand updatedUserLand)
     {
@@ -86,5 +81,22 @@ public class LandManager : MonoBehaviour
                 }
             }
         }
+    }
+    
+    private void PlaceLandObject(LandObject landObject)
+    {
+        var index = landObject.objectIndex;
+        if (index < 0 || index >= prefab.objectData.Count)
+        {
+            Debug.LogError($"인덱스 {index}가 범위를 벗어났습니다. prefab.objectData의 크기: {prefab.objectData.Count}");
+            return;
+        }
+        GameObject obj = Instantiate(prefab.objectData[index].Prefab);
+
+        obj.transform.position = landObject.position.ToVector3();
+        obj.transform.eulerAngles = landObject.rotation.ToVector3();
+        obj.transform.localScale = landObject.scale.ToVector3();
+
+        PlacedObjects[landObject.key] = obj;
     }
 }

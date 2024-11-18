@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5489897892972730933}
   - component: {fileID: 7061256054529461111}
   - component: {fileID: -333028386059747394}
+  - component: {fileID: 7968454697779198478}
   m_Layer: 7
   m_Name: BasicBlock
   m_TagString: Block
@@ -125,4 +126,21 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 7968454697779198478}
+--- !u!114 &7968454697779198478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617484009809533024}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
