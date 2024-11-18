@@ -34,7 +34,7 @@ public class ModelFloorChecker : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         if (other == null)
-        {
+        {   
             return;
         }
         //Debug.Log("TriggerEnter");
@@ -45,7 +45,7 @@ public class ModelFloorChecker : MonoBehaviour
             cnt++;
         }
     
-        if (cnt >= maxCnt)
+        if (cnt == maxCnt)
         {
             Vector3 scaleFactor = new Vector3(10.0f, 10.0f, 10.0f);
             for (int i = 0; i < maxCnt; i++)
