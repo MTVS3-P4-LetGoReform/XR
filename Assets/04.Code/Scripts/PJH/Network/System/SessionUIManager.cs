@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using Fusion;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class SessionUIManager : MonoBehaviour
@@ -84,7 +85,8 @@ public class SessionUIManager : MonoBehaviour
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
             RoomInfo roomInfo = sessionButton.GetComponent<RoomInfo>();
             Image targetImage = roomInfo.image;
-            
+
+            await UniTask.Yield();
             await _storageDatabase.DownImage(webApiData.ImageName);
 
             UpdateImage(url, targetImage);
@@ -130,30 +132,33 @@ public class SessionUIManager : MonoBehaviour
         return url;
     }
 
-    private void UpdateImage(string url,Image targetImage)
+    private async UniTaskVoid UpdateImage(string url, Image targetImage)
     {
-        if (File.Exists(url))
+        if (targetImage == null)
         {
-            byte[] fileData = File.ReadAllBytes(url);
-            Texture2D texture = new Texture2D(2, 2);
-
-            if (texture.LoadImage(fileData))
-            {
-                // roomInfo.image가 null이 아닌지 확인 후 스프라이트 설정
-                if (targetImage != null)
-                {
-                    Sprite sprite = Sprite.Create(texture,
-                        new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                    targetImage.sprite = sprite;
-                    Debug.Log(targetImage.sprite.name);
-                }
-                else
-                {
-                    Debug.LogWarning("roomInfo.image가 null입니다. 스프라이트를 설정할 수 없습니다.");
-                }
-            }
+            Debug.LogWarning("targetImage가 null입니다. 스프라이트를 설정할 수 없습니다.");
+            return;
         }
+        
+        if (!File.Exists(url))
+        {
+            Debug.LogWarning("경로에 이미지 파일이 존재하지 않습니다.");
+            return;
+        }
+
+        var req = UnityWebRequestTexture.GetTexture(url);
+        await req.SendWebRequest();
+        var texture = DownloadHandlerTexture.GetContent(req);
+        
+        var sprite = Sprite.Create(texture,
+            new Rect(0, 0, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f));
+        sprite.name = Path.GetFileName(url);
+        targetImage.sprite = sprite;
+
+        Debug.Log($"스프라이트 설정 완료: {sprite.name}");
     }
+
     
     public async void CreatePlaySession()
     {

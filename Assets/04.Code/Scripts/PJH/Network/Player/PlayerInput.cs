@@ -19,6 +19,9 @@ public class PlayerInput : NetworkBehaviour
     private bool _onGameStart = false;
     private bool _onMessenger = false;
 
+    private const string ParkScene = "Alpha_PublicParkScene";
+    private const string GameScene = "Alpha_PlayScene";
+    
     public PlayerStatus PlayerStatus { get; private set; }
 
     public override void Spawned()
@@ -38,10 +41,7 @@ public class PlayerInput : NetworkBehaviour
 
     private void HandleGeneralInput()
     {
-        if (Input.GetKeyDown(KeyCode.Equals))
-        {
-            PlayerStatus?.Reword(true);
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -59,33 +59,40 @@ public class PlayerInput : NetworkBehaviour
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        if (sceneName == "MessengerScene")
+        if (sceneName == ParkScene)
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                //Debug.Log("P 키 입력");
+                Debug.Log("P 키 입력");
                 ToggleMessenger();
             }
         }
-        else if (sceneName == "GameScene")
+        else if (sceneName == GameScene)
         {
             if (Input.GetKeyDown(KeyCode.V))
             {
-                //Debug.Log("V 키 입력");
+                Debug.Log("V 키 입력");
                 ToggleMic();
             }
 
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                //Debug.Log("F1 키 입력");
+                Debug.Log("F1 키 입력");
                 ToggleReady();
             }
 
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                //Debug.Log("F2 키 입력");
+                Debug.Log("F2 키 입력");
                 ToggleGameStart();
             }
+//#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.Equals))
+            {
+                Debug.Log("= 키 입력, 보상 제공");
+                PlayerStatus?.Reword(true);
+            }
+//#endif
         }
     }
     
