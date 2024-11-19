@@ -73,6 +73,7 @@ public class LayerController : MonoBehaviour
         
         keys = layeredBoxelSystem.GetKeys();
         curIndex++;
+        Debug.Log($"LayerController : curIndex - {curIndex}");
         if (curIndex < keys.Count)
         {
             if (curIndex == 0)
@@ -84,17 +85,19 @@ public class LayerController : MonoBehaviour
             {
                 foreach (GameObject obj in curGuideObjects)
                 {
+                    Debug.Log("LayerController : Advance Floor Destory Guide objects");
                     Destroy(obj);
                 }
 
                 curGuideObjects.Clear();
+                Debug.Log($"LayerController : cuGuideObjects.Clear() {curGuideObjects} ");
             }
             
             curLayerdata = layeredBoxelSystem.GetLayerData(keys[curIndex]);
             //FIXME : 중복으로 계속 생기는 문제 해결
             GameObject guideObject = new GameObject("Gudieline");
 
-            MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
+            //MeshFilter meshFilter = guideObject.AddComponent<MeshFilter>();
             _modelFloorChecker.cnt = 0;
             _modelFloorChecker.ResetVoxelPos();
             int index = 0;
@@ -156,6 +159,7 @@ public class LayerController : MonoBehaviour
             {
                 continue;
             }
+            Debug.Log("LayerController : AdvanceFloorMasterKey()");
             var obj = RunnerManager.Instance.runner.Spawn(blockData.BasicBlockPrefab,
                 voxel.transform.position, Quaternion.identity);
             var nt = obj.GetComponent<NetworkTransform>();

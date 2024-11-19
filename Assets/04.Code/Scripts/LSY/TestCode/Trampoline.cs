@@ -10,14 +10,17 @@ public class Trampoline : MonoBehaviour
     public Animator anim;
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trampline other naem : " + other, other.gameObject);
-        if (anim.GetBool("isBounce") == false)
+        if (other.CompareTag("Player"))
         {
-            anim.SetBool("isBounce", true);
-            Debug.Log("Trampoline : OncollisionEnter");
-            networkCC = other.gameObject.GetComponent<NetworkCharacterController>();
-            networkCC.Velocity += Vector3.up * jumpHeight;
-            anim.SetBool("isBounce", false);
+            Debug.Log("Trampline other naem : " + other, other.gameObject);
+            if (anim.GetBool("isBounce") == false)
+            {
+                anim.SetBool("isBounce", true);
+                Debug.Log("Trampoline : OncollisionEnter");
+                networkCC = other.gameObject.GetComponent<NetworkCharacterController>();
+                networkCC.Velocity += Vector3.up * jumpHeight;
+                anim.SetBool("isBounce", false);
+            }
         }
     }
 }

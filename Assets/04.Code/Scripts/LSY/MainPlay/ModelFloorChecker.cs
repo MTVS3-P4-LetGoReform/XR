@@ -33,6 +33,7 @@ public class ModelFloorChecker : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        Debug.Log("ModelFloorChecker : maxCnt - "+maxCnt);
         if (other == null)
         {   
             return;
@@ -51,6 +52,7 @@ public class ModelFloorChecker : MonoBehaviour
     
         if (cnt == maxCnt)
         {
+            Debug.Log("ModelFloorChecker : Floor is full!");
             //Vector3 scaleFactor = new Vector3(10.0f, 10.0f, 10.0f);
             for (int i = 0; i < MainPlayConstants.maxLayeredVoxelNum; i++)
             {
