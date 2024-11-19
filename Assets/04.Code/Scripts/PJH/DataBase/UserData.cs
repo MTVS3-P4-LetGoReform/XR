@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class UserData : MonoBehaviourSingleton<UserData>
 {
-    public string UserName = "testName";
+    public string UserName;
     public string UserId;
     
     
     private void Start()
     {
+        FirebaseAuthManager.Instance.Init();
         FirebaseAuthManager.Instance.LoginState += OnChangedState;
-        FirebaseAuthManager.Instance.NickName += OnchangedNickName;
+        FirebaseAuthManager.Instance.NickName += OnChangedNickName;
+        Debug.Log("이벤트 연결 완료");
     }
     
     
@@ -21,8 +23,9 @@ public class UserData : MonoBehaviourSingleton<UserData>
         
     }
 
-    private void OnchangedNickName(bool sign)
+    private void OnChangedNickName(string username)
     {
-        UserName = FirebaseAuthManager.Instance.UserName;
+        UserName = username;
+        Debug.Log("유저 데이터 : " + username);
     }
 }
