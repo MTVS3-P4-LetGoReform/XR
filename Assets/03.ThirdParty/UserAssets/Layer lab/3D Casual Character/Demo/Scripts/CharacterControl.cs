@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Layer_lab._3D_Casual_Character
@@ -16,7 +18,13 @@ namespace Layer_lab._3D_Casual_Character
             Instance = this;
             textAnimationName.text = "Stand_Idle1";
             animator = GetComponentInChildren<Animator>();
-            CharacterBase = GetComponentInChildren<CharacterBase>();
+           // CharacterBase = GetComponentInChildren<CharacterBase>();
+           
+        }
+
+        private void Start()
+        {
+            StartCoroutine(FindPlayer());
         }
 
         public void PlayAnimation(AnimationClip clip)
@@ -36,6 +44,24 @@ namespace Layer_lab._3D_Casual_Character
         {
             yield return new WaitForSeconds(duration);
             textAnimationName.text = "Stand_Idle1";
+        }
+        
+        private IEnumerator FindPlayer()
+        {
+            GameObject playerObject = null;
+
+            while (playerObject == null)
+            {
+                playerObject = GameObject.FindWithTag("Player");
+
+                if (playerObject == null)
+                {
+                    yield return new WaitForSeconds(0.5f);
+                }
+            }
+            
+            CharacterBase = playerObject.GetComponentInChildren<CharacterBase>();
+        
         }
     }
 }

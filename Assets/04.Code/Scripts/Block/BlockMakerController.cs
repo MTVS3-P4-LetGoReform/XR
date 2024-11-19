@@ -27,7 +27,7 @@ public class BlockMakerController : MonoBehaviour
             pressText.gameObject.SetActive(false);
         }
         
-        tMoveCon = GetComponent<TestMoveController>();
+         //tMoveCon = GetComponent<TestMoveController>();
         
         blockMakeGauge.maxValue = 20;
         

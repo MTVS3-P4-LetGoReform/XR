@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Fusion;
 using UnityEditor;
+
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,6 +25,7 @@ namespace Layer_lab._3D_Casual_Character
     
     public class CharacterBase : MonoBehaviour
     {
+       
         public List<GameObject> PartsBody { get; set; } = new();
         public List<GameObject> PartsHair { get; set; } = new();
         public List<GameObject> PartsFace { get; set; } = new();
@@ -41,7 +43,7 @@ namespace Layer_lab._3D_Casual_Character
         {
             SetRoot();
         }
-
+            
 
         public void SavePrefab()
         {
@@ -63,10 +65,10 @@ namespace Layer_lab._3D_Casual_Character
             Destroy(instanceObject);
             AssetDatabase.Refresh();
             #endif
-
-            //NetworkMecanimAnimator nMA = gameObject.AddComponent<NetworkMecanimAnimator>();
             
-        }
+            
+        } 
+        
         
         public void SetRandom()
         {
@@ -112,7 +114,7 @@ namespace Layer_lab._3D_Casual_Character
                             
                     }
                 }
-            }
+            } 
             
             
             
@@ -129,8 +131,8 @@ namespace Layer_lab._3D_Casual_Character
                 if (g.name.Contains($"{PartsType.Shoes}")) foreach (Transform child in g.transform) PartsShoes.Add(child.gameObject);
                 if (g.name.Contains($"{PartsType.Glove}")) foreach (Transform child in g.transform) PartsGlove.Add(child.gameObject);
              
-            }
-        }
+            } 
+        } 
 
 
         private bool IsEquipGlove { get; set; }

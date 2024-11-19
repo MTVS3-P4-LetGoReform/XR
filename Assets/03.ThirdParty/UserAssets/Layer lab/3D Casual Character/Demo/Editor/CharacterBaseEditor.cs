@@ -19,7 +19,7 @@ namespace Layer_lab._3D_Casual_Character
             }
 
             if (GUILayout.Button("SavePrefab"))
-            {
+            { 
                 character.SavePrefab();
             }
         }
