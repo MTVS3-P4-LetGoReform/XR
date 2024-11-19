@@ -9,7 +9,7 @@ public class LayeredBoxelSystem : MonoBehaviour
 {
     public GameObject parentObject;
     private GameObject boxelizedObject;
-    private SortedDictionary<float, List<GameObject>> voxelList;
+    private SortedDictionary<float, LayerData> voxelList;
     //Dictionary<float, List<GameObject>>
     // scaling 관련
 
@@ -23,7 +23,7 @@ public class LayeredBoxelSystem : MonoBehaviour
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
         GameStateManager.Instance.maxCnt = boxelizedObject.transform.childCount;
         Debug.Log("LayeredBoxelSystem : 총 복셀 수 - "+ GameStateManager.Instance.allCnt);
-        voxelList = new SortedDictionary<float, List<GameObject>>();
+        voxelList = new SortedDictionary<float, LayerData>();
         Vector3 pos;
         foreach (Transform child in boxelizedObject.transform)
         {
@@ -50,10 +50,10 @@ public class LayeredBoxelSystem : MonoBehaviour
     //
     //     PrintVoxels();
     // }
-    public  SortedDictionary<float, List<GameObject>> Layering()
+    public  SortedDictionary<float, LayerData> Layering()
     {
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
-        voxelList = new SortedDictionary<float, List<GameObject>>();
+        voxelList = new SortedDictionary<float, LayerData>();
         foreach (Transform child in boxelizedObject.transform)
         {
             AddVoxel(child.position.y, child.gameObject);
@@ -68,17 +68,23 @@ public class LayeredBoxelSystem : MonoBehaviour
         if (voxelList.ContainsKey(key)== false)
         {
             Debug.Log("key : "+key);
-            voxelList[key] = new List<GameObject>();
+            voxelList[key] = new LayerData();
+            
         }
 
-        voxelList[key].Add(voxel);
+        float x = voxel.transform.position.x + 15f;
+        float z = voxel.transform.position.z + 15f;
+        x = Mathf.Floor(x);
+        z = Mathf.Floor(z);
+        voxelList[key].voxels[(int)x, (int)z] = voxel;
+        voxelList[key].maxCnt += 1;
     }
 
     public void PrintVoxels()
     {
         foreach (var pair in voxelList)
         {
-            Debug.Log($"Key : {pair.Key}, counts : {pair.Value.Count}");
+            Debug.Log($"Key : {pair.Key}, counts : {pair.Value.maxCnt}");
         }
     }
 
@@ -95,7 +101,7 @@ public class LayeredBoxelSystem : MonoBehaviour
         return voxelList.Keys.ToList();
     }
 
-    public List<GameObject> GetFloorObjects(float key)
+    public LayerData GetLayerData(float key)
     {
         return voxelList[key];
     }

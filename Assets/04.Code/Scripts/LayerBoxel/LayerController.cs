@@ -17,7 +17,7 @@ public class LayerController : MonoBehaviour
     private List<float> keys;
     private int curIndex = -1;
     private int progressPercent = 0;
-    public List<GameObject> curFloorObjects;
+    public LayerData curLayerdata;
     private List<GameObject> curGuideObjects;
     private OutlineRenderer outlineRenderer;
 
@@ -33,6 +33,7 @@ public class LayerController : MonoBehaviour
         layeredBoxelSystem = FindObjectOfType<LayeredBoxelSystem>();
         ModelScaling = FindObjectOfType<ModelScaling>();
         _modelFloorChecker = FindObjectOfType<ModelFloorChecker>();
+        curLayerdata = new LayerData();
     }
 
     // public void Update()
@@ -88,8 +89,8 @@ public class LayerController : MonoBehaviour
 
                 curGuideObjects.Clear();
             }
-
-            curFloorObjects = layeredBoxelSystem.GetFloorObjects(keys[curIndex]);
+            
+            curLayerdata = layeredBoxelSystem.GetLayerData(keys[curIndex]);
             //FIXME : 중복으로 계속 생기는 문제 해결
             GameObject guideObject = new GameObject("Gudieline");
 
@@ -97,14 +98,17 @@ public class LayerController : MonoBehaviour
             _modelFloorChecker.cnt = 0;
             _modelFloorChecker.ResetVoxelPos();
             int index = 0;
-            foreach (GameObject voxel in curFloorObjects)
+            foreach (GameObject voxel in curLayerdata.voxels)
             {
-                
+                if (voxel == null)
+                {
+                    continue;
+                }
                 DrawGuide(voxel, guideObject);
                 _modelFloorChecker.AddVoxelPos(voxel.transform.position);
             }
 
-            _modelFloorChecker.maxCnt = curFloorObjects.Count;
+            _modelFloorChecker.maxCnt = curLayerdata.maxCnt;
 
             guideObject.SetActive(false);
             Vector3 pPos = pedestal.transform.position;
@@ -146,8 +150,12 @@ public class LayerController : MonoBehaviour
     //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void AdvanceFloorMasterKey()
     {
-        foreach (GameObject voxel in curFloorObjects)
+        foreach (GameObject voxel in curLayerdata.voxels)
         {
+            if (voxel == null)
+            {
+                continue;
+            }
             var obj = RunnerManager.Instance.runner.Spawn(blockData.BasicBlockPrefab,
                 voxel.transform.position, Quaternion.identity);
             var nt = obj.GetComponent<NetworkTransform>();
