@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Fusion;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -45,7 +46,7 @@ namespace Layer_lab._3D_Casual_Character
         public void SavePrefab()
         {
             #if UNITY_EDITOR
-            string localPath = "Assets/Layer lab/3D Props Casual Character Pack1/Prefabs/"+ gameObject.name +".prefab";
+            string localPath = "Assets/03.ThirdParty/UserAssets/Layer lab/3D Casual Character/Prefabs/"+ gameObject.name +".prefab";
             bool isPrefabSuccess;
 
             GameObject instanceObject = Instantiate(gameObject);
@@ -62,6 +63,9 @@ namespace Layer_lab._3D_Casual_Character
             Destroy(instanceObject);
             AssetDatabase.Refresh();
             #endif
+
+            //NetworkMecanimAnimator nMA = gameObject.AddComponent<NetworkMecanimAnimator>();
+            
         }
         
         public void SetRandom()
