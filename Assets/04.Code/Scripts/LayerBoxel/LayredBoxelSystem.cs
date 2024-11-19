@@ -9,7 +9,7 @@ public class LayeredBoxelSystem : MonoBehaviour
 {
     public GameObject parentObject;
     private GameObject boxelizedObject;
-    private Dictionary<float, List<GameObject>> voxelList;
+    private SortedDictionary<float, List<GameObject>> voxelList;
     //Dictionary<float, List<GameObject>>
     // scaling 관련
 
@@ -23,7 +23,7 @@ public class LayeredBoxelSystem : MonoBehaviour
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
         GameStateManager.Instance.maxCnt = boxelizedObject.transform.childCount;
         Debug.Log("LayeredBoxelSystem : 총 복셀 수 - "+ GameStateManager.Instance.allCnt);
-        voxelList = new Dictionary<float, List<GameObject>>();
+        voxelList = new SortedDictionary<float, List<GameObject>>();
         Vector3 pos;
         foreach (Transform child in boxelizedObject.transform)
         {
@@ -34,26 +34,26 @@ public class LayeredBoxelSystem : MonoBehaviour
             AddVoxel(child.position.y, child.gameObject);
         }
     }
-    public void LayeringBtn()
+    // public void LayeringBtn()
+    // {
+    //     boxelizedObject = parentObject.transform.GetChild(0).gameObject;
+    //     voxelList = new Dictionary<float, List<GameObject>>();
+    //     //Vector3 pos;
+    //     foreach (Transform child in boxelizedObject.transform)
+    //     {
+    //         // pos = new Vector3(Mathf.Floor(child.position.x), Mathf.Floor(child.position.y),
+    //         //     Mathf.Floor(child.position.z));
+    //         // pos += Vector3.one * 0.5f;
+    //         // child.position = pos;
+    //         AddVoxel(child.position.y, child.gameObject);
+    //     }
+    //
+    //     PrintVoxels();
+    // }
+    public  SortedDictionary<float, List<GameObject>> Layering()
     {
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
-        voxelList = new Dictionary<float, List<GameObject>>();
-        //Vector3 pos;
-        foreach (Transform child in boxelizedObject.transform)
-        {
-            // pos = new Vector3(Mathf.Floor(child.position.x), Mathf.Floor(child.position.y),
-            //     Mathf.Floor(child.position.z));
-            // pos += Vector3.one * 0.5f;
-            // child.position = pos;
-            AddVoxel(child.position.y, child.gameObject);
-        }
-
-        PrintVoxels();
-    }
-    public  Dictionary<float, List<GameObject>> Layering()
-    {
-        boxelizedObject = parentObject.transform.GetChild(0).gameObject;
-        voxelList = new Dictionary<float, List<GameObject>>();
+        voxelList = new SortedDictionary<float, List<GameObject>>();
         foreach (Transform child in boxelizedObject.transform)
         {
             AddVoxel(child.position.y, child.gameObject);
@@ -67,6 +67,7 @@ public class LayeredBoxelSystem : MonoBehaviour
     {
         if (voxelList.ContainsKey(key)== false)
         {
+            Debug.Log("key : "+key);
             voxelList[key] = new List<GameObject>();
         }
 
