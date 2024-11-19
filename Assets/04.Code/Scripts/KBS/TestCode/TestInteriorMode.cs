@@ -35,8 +35,8 @@ public class TestInteriorMode : MonoBehaviour
     private int selectedObjectIndex = -1;
 
     private bool isHammer;
-    [SerializeField] private LayerMask BFLayerMask;
-    [SerializeField] public LayerMask PBLayerMask; //추후 특정 사물위에는 특정 사물이 올라가도록 layer정리 예정
+    [SerializeField] private LayerMask IPLayerMask;
+    
 
     void Start()
     {
@@ -97,7 +97,7 @@ public class TestInteriorMode : MonoBehaviour
         while (true)
         {
             Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
-            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
+            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
             {
                 pos = Hit.point;
 
@@ -176,7 +176,7 @@ public class TestInteriorMode : MonoBehaviour
 
 
         Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
-        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
         {
             pos = Hit.point;
 

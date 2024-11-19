@@ -16,7 +16,7 @@ public class BlockMakerController : MonoBehaviour
     public TMP_Text pressText;
     public Slider blockMakeGauge;
     public BlockData blockData;
-    public List<BlockData> blockDataList;
+    
     
     void Start()
     {
