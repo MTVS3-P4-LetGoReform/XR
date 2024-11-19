@@ -23,10 +23,10 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.3
+  m_AmbientIntensity: 0
   m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.40658593, g: 0.6405221, b: 0.9169811, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 33ab377b49aa14f6fae6e5bac230a5d4, type: 2}
+  m_SubtractiveShadowColor: {r: 0.2258366, g: 0.27279508, b: 0.3301887, a: 1}
+  m_SkyboxMaterial: {fileID: 2100000, guid: ab675e6698bde46fd87143fb0d7580cb, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -348,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 1635287934}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: -7.111265, y: 29.213938, z: 0.31707048}
+  m_LocalPosition: {x: 1908, y: 37.94, z: 1121}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -385,6 +385,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1610357786043299909, guid: 123f02d93a05ea94f9202f8142c703ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 19.47
+      objectReference: {fileID: 0}
     - target: {fileID: 3658122138504172903, guid: 123f02d93a05ea94f9202f8142c703ca, type: 3}
       propertyPath: m_Name
       value: ground4
@@ -432,6 +436,10 @@ PrefabInstance:
     - target: {fileID: 6618248254924445258, guid: 123f02d93a05ea94f9202f8142c703ca, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7389484915639334522, guid: 123f02d93a05ea94f9202f8142c703ca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 19.09
       objectReference: {fileID: 0}
     - target: {fileID: 8193274469022746452, guid: 123f02d93a05ea94f9202f8142c703ca, type: 3}
       propertyPath: m_LocalPosition.x
