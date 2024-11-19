@@ -38,8 +38,12 @@ public class ModelPlacementChecker : MonoBehaviour
 
     public bool CheckValidation(Vector3 pos)
     {
-        foreach (GameObject voxel in _layerController.curFloorObjects)
+        foreach (GameObject voxel in _layerController.curLayerdata.voxels)
         {
+            if (voxel == null)
+            {
+                continue;
+            }
             if (voxel.transform.position == pos)
             {
                 // cnt++;
