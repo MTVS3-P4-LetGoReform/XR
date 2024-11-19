@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using GLTFast.Schema;
 using TMPro;
 using UnityEngine;
@@ -26,9 +27,11 @@ public class LoginSystem : MonoBehaviour
     [SerializeField] private int selectedObjectIndex = -1;
     private void Start()
     {
-        FirebaseAuthManager.Instance.LoginState += OnChangedState;
-        FirebaseAuthManager.Instance.Init();
         InitializeFirebase();
+        FirebaseAuthManager.Instance.Init();
+        
+        FirebaseAuthManager.Instance.LoginState += OnChangedState;
+        FirebaseAuthManager.Instance.LoginState += CanvasOn;
 
         StartCoroutine(FadeIn());
     }
@@ -51,32 +54,39 @@ public class LoginSystem : MonoBehaviour
     public void Login()
     {
         FirebaseAuthManager.Instance.Login(loginEmail.text,loginPassword.text);
-        canvasCharacterChoice.gameObject.SetActive(true);
     }
 
     public void LogOut()
     {
         FirebaseAuthManager.Instance.LogOut();
     }
+
+    private void CanvasOn(bool isActive)
+    {
+        canvasCharacterChoice.gameObject.SetActive(isActive);
+    }
     
     public void CharacterChoiceOnClick(int ID)
     {
         var id = UserData.Instance.UserId;
-        selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == ID);
-        PlayerPrefs.SetInt($"select_{id}",selectedObjectIndex);
-       
-        if (selectedObjectIndex < 0)
+        if (ID < 0)
         {
             Debug.LogError($"No ID Found{ID}");
             return;
         }
+
+        if (id == null)
+            return;
         
+        selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == ID);
+        PlayerPrefs.SetInt($"select_{id}",selectedObjectIndex);
+        Debug.Log($"select_{id}, selectedObjectIndex : "+selectedObjectIndex);
     }
 
-    public void GotoPlayScene()
+    public async void GotoPlayScene()
     {
         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
-        SceneLoadManager.Instance.LoadScene(sceneName);
+        await SceneLoadManager.Instance.LoadScene(sceneName);
     }
     
     private IEnumerator FadeIn()

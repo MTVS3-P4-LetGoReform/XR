@@ -21,6 +21,13 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
         Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
         
        
+        if (SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 3)
+        {
+            UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
+            userInfo.canvas.enabled = true;
+            userInfo.username.text = UserData.Instance.UserName;
+            Debug.Log("이름 변경 : "+ UserData.Instance.UserName);
+        }
         
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
@@ -35,13 +42,6 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
 
             BlockMakerController blockMakerController = FindAnyObjectByType<BlockMakerController>();
             blockMakerController.playerTransform = gameObject.transform;
-        }
-        
-        if (SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 3)
-        {
-            UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
-            userInfo.canvas.enabled = true;
-            userInfo.username.text = UserData.Instance.UserName;
         }
     }
 

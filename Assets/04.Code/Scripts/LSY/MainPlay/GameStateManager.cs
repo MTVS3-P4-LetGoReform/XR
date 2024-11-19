@@ -16,7 +16,7 @@ public class GameStateManager : MonoBehaviour
     public GameObject pedestral;
     public GameObject modelAreaObject;
     public bool isComplete = false;
-
+    public DebugModeData _debugModeData;
     public int maxCnt = int.MaxValue;
     public int allCnt = 0;
     
