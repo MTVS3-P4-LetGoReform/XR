@@ -29,6 +29,7 @@ public class WebCommManager : MonoBehaviour
     
     public Button createRoomStart;
     public Button ImageGenBtn;
+    public Button ImageRengenBtn;
     private SessionUIManager _sessionUIManager;
     
     private bool isGenerating = false;
@@ -42,6 +43,7 @@ public class WebCommManager : MonoBehaviour
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
         ImageGenBtn.onClick.AddListener(DoImageGenDown);
+        ImageRengenBtn.onClick.AddListener(DoImageRegen);
         
         genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
         genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
@@ -78,16 +80,16 @@ public class WebCommManager : MonoBehaviour
     }
     
     // 이미지 재생성
-    public void DoRequestImageRegen()
+    public void DoImageRegen()
     {
         StartCoroutine(RequestImageGen(selectedImageIndex));
     }
     private IEnumerator RequestImageGen(int idx)
     { 
-        ImageGen _imageGen = new ImageGen(webApiData);
+        ImageRegen _imageRegen = new ImageRegen(webApiData);
 
-        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId));
-        genImageNameList[idx] = _imageGen._imageGenRes.filenames[0];
+        yield return StartCoroutine(_imageRegen.RequestImageRegen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId, webApiData.ModelId));
+        genImageNameList[idx] = _imageRegen._imageRegenRes.filenames[0];
         ImageDownload _imageDownload = new ImageDownload(webApiData);
         yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[idx]));
         ConvertSpriteFromPNG(genImageList[idx].GetComponent<Image>(), genImageNameList[idx]);

@@ -32,7 +32,7 @@ public class ModelgenerateController : MonoBehaviour
         _cMeshVoxelizerWindow.Voxelize(modelMeshFilter.gameObject);
         Debug.Log("Layering");
         _layeredBoxelSystem.DoLayering(modelObject);
-        Debug.Log("AdvanceFloor");
+        _layeredBoxelSystem.DeactivateAll();
     }
 
     public void AdvanceLayer()
