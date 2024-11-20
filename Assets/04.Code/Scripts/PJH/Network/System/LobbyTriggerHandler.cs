@@ -9,7 +9,6 @@ public class LobbyTriggerHandler : MonoBehaviour
     public Transform viewPoint;
     public Button[] closeButton;
     
-    //private Transform _originalCameraTransform; // 원래 카메라 위치를 저장할 변수
     private bool _canInteract = true;
     private bool _isTrigger = false;
     private NetworkObject _playerNetworkObject;
@@ -17,7 +16,7 @@ public class LobbyTriggerHandler : MonoBehaviour
 
     private const float TransitionSpeed = 2f; // 카메라 이동 속도
     private bool _isCameraTransitioning = false;
-    private bool _isReturningToOriginal = false; // 원래 시점으로 돌아가는지 여부
+    
 
     private void Start()
     {
@@ -27,6 +26,7 @@ public class LobbyTriggerHandler : MonoBehaviour
         }
     }
 
+    //플레이어가 영역내 접근 시
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && _canInteract)
@@ -47,6 +47,7 @@ public class LobbyTriggerHandler : MonoBehaviour
         }
     }
 
+    //플레이어가 영역에서 벗어났을 때
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -100,7 +101,6 @@ public class LobbyTriggerHandler : MonoBehaviour
 
     private void ReturnPlayerCameraToOriginal()
     {
-        _isReturningToOriginal = true; // 원래 시점으로 돌아가기 시작
         PlayerInput.PlayerLockCamera(false); 
     }
 
