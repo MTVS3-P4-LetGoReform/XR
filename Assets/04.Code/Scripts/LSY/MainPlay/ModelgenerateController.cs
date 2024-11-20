@@ -33,6 +33,10 @@ public class ModelgenerateController : MonoBehaviour
         Debug.Log("Layering");
         _layeredBoxelSystem.DoLayering(modelObject);
         Debug.Log("AdvanceFloor");
+    }
+
+    public void AdvanceLayer()
+    {
         _layerController.AdvanceFloor();
     }
 }
