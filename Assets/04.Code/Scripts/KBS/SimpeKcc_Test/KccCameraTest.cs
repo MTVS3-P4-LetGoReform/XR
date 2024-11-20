@@ -55,14 +55,14 @@ public class KccCameraTest : NetworkBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (_isLocked)
             return;
         
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
 
-        mouseY = Mathf.Clamp(mouseY, -45f, 45f);
+        mouseY = Mathf.Clamp(mouseY, -45f, 30f);
         
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
@@ -77,21 +77,31 @@ public class KccCameraTest : NetworkBehaviour
             togglePov = !togglePov;
         }
 
+        Vector3 targetPosition;
+
         // 시점에 따라 카메라 위치를 전환
         if (togglePov)
         {
             // 1인칭 시점으로 전환
             //Debug.Log("Switching to First Person");
-            transform.position = Vector3.Lerp(transform.position, FpCameraPoint.position,
-                Time.deltaTime * positionLerpSpeed);
+           /* transform.position = Vector3.Lerp(transform.position, FpCameraPoint.position,
+                Time.deltaTime * positionLerpSpeed); */
+
+           targetPosition = FpCameraPoint.position;
         }
         else
         {
             // 3인칭 시점으로 전환
             //Debug.Log("Switching to Third Person");
-            transform.position = Vector3.Lerp(transform.position, TpCameraPoint.position,
-                Time.deltaTime * positionLerpSpeed);
+            /* transform.position = Vector3.Lerp(transform.position, TpCameraPoint.position,
+                Time.deltaTime * positionLerpSpeed); */
+            targetPosition = TpCameraPoint.position;
+            
+            float adjustedHeight = Mathf.Lerp(0.5f, 1.5f, (-mouseY + 45f) / 75f); // 회전 각도에 따라 카메라 높이 조정
+            targetPosition.y -= adjustedHeight;
         }
+        
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * positionLerpSpeed);
     }
 }
 
