@@ -187,6 +187,7 @@ public class RunnerManager : MonoBehaviour
       _sharedGameData = sharedGameDataOp.Object;
       _sharedGameData.name = $"Player: {_sharedGameData.Id}";
    }
+   
    private void InstantiateRunner()
    {
       var recorder = GameObject.FindAnyObjectByType<Recorder>(FindObjectsInactive.Include);
