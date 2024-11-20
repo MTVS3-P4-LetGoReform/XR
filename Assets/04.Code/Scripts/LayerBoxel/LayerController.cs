@@ -76,22 +76,14 @@ public class LayerController : MonoBehaviour
         Debug.Log($"LayerController : curIndex - {curIndex}");
         if (curIndex < keys.Count)
         {
-            if (curIndex == 0)
+            foreach (GameObject obj in curGuideObjects)
             {
-                layeredBoxelSystem.DeactivateAll();
+                Debug.Log("LayerController : Advance Floor Destory Guide objects");
+                Destroy(obj);
             }
 
-            else
-            {
-                foreach (GameObject obj in curGuideObjects)
-                {
-                    Debug.Log("LayerController : Advance Floor Destory Guide objects");
-                    Destroy(obj);
-                }
-
-                curGuideObjects.Clear();
-                Debug.Log($"LayerController : cuGuideObjects.Clear() {curGuideObjects} ");
-            }
+            curGuideObjects.Clear();
+            Debug.Log($"LayerController : cuGuideObjects.Clear() {curGuideObjects} ");
             
             curLayerdata = layeredBoxelSystem.GetLayerData(keys[curIndex]);
             //FIXME : 중복으로 계속 생기는 문제 해결
