@@ -120,7 +120,6 @@ public class GameStateManager : MonoBehaviour
                 GameObject generatedObject = modelAreaObject.transform.GetChild(modelAreaObject.transform.childCount - 1).gameObject;
                 _modelgenerateController.GeneratePlayModel(generatedObject);
                 StartCoroutine(CompleteCoroutine());
-                 //FIXME : 복셀화 끝나고 나서 멀티쪽 동기화 호출
             }
             else
             {
@@ -131,5 +130,10 @@ public class GameStateManager : MonoBehaviour
         {
             Debug.LogError("File does not exist: " + filePath);
         }
+    }
+
+    public void StartGameProcess()
+    {
+        _modelgenerateController.AdvanceLayer(); 
     }
 }

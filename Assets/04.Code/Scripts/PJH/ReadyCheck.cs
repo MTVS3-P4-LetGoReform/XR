@@ -11,6 +11,8 @@ public class ReadyCheck : MonoBehaviour
     public GameObject progressInfo;
     public TMP_Text readyText; 
     public Button gameStartButton;
+
+    public GameStateManager _gameStateManager;
     
     private void Start()
     {
@@ -34,6 +36,7 @@ public class ReadyCheck : MonoBehaviour
     public void StartGame(bool status)
     {
         SharedGameData.Instance.GameStartRpc();
+        GameStateManager.Instance.StartGameProcess();
     }
     
     private async UniTask Check()
