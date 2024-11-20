@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using MVoxelizer.Util;
 using UnityEngine;
 
@@ -448,9 +449,11 @@ public struct C_MVTriangleData
             this.triangleStep = triangleStep;
 
             // 삼각형 세 정 점 좌표
-            p0 = m_source.mesh.vertices[m_source.mesh.triangles[index]];
-            p1 = m_source.mesh.vertices[m_source.mesh.triangles[index + 1]];
-            p2 = m_source.mesh.vertices[m_source.mesh.triangles[index + 2]];
+            ///// m_source.mesh.vertices 캐싱
+            var vertices = m_source.mesh.vertices;
+            p0 = vertices[m_source.mesh.triangles[index]];
+            p1 = vertices[m_source.mesh.triangles[index + 1]];
+            p2 = vertices[m_source.mesh.triangles[index + 2]];
             // if (applyScaling)
             // {
             //     p0.x *= m_source.transform.lossyScale.x;
@@ -497,15 +500,16 @@ public struct C_MVTriangleData
                     float h = 0.0f;
                     while (h <= bound.extents.y)
                     {
-                        Vector3 rayPoint1 = center + new Vector3(0.0f,  h,  w);
-                        Vector3 rayPoint2 = center + new Vector3(0.0f, -h,  w);
-                        Vector3 rayPoint3 = center + new Vector3(0.0f, -h, -w);
-                        Vector3 rayPoint4 = center + new Vector3(0.0f,  h, -w);
+                        ///// 임시 변수 사용 제거
+                        // Vector3 rayPoint1 = center + new Vector3(0.0f,  h,  w);
+                        // Vector3 rayPoint2 = center + new Vector3(0.0f, -h,  w);
+                        // Vector3 rayPoint3 = center + new Vector3(0.0f, -h, -w);
+                        // Vector3 rayPoint4 = center + new Vector3(0.0f,  h, -w);
 
-                        CheckRay(rayPoint1, rayDir);
-                        CheckRay(rayPoint2, rayDir);
-                        CheckRay(rayPoint3, rayDir);
-                        CheckRay(rayPoint4, rayDir);
+                        CheckRay(center + new Vector3(0.0f,  h,  w), rayDir);
+                        CheckRay(center + new Vector3(0.0f, -h,  w), rayDir);
+                        CheckRay(center + new Vector3(0.0f, -h, -w), rayDir);
+                        CheckRay(center + new Vector3(0.0f,  h, -w), rayDir);
 
                         h += triangleStep;
                     }
@@ -522,15 +526,16 @@ public struct C_MVTriangleData
                     float h = 0.0f;
                     while (h <= bound.extents.z)
                     {
-                        Vector3 rayPoint1 = center + new Vector3( w, 0.0f,  h);
-                        Vector3 rayPoint2 = center + new Vector3(-w, 0.0f,  h);
-                        Vector3 rayPoint3 = center + new Vector3(-w, 0.0f, -h);
-                        Vector3 rayPoint4 = center + new Vector3( w, 0.0f, -h);
+                        ///// 임시 변수 사용 제거
+                        // Vector3 rayPoint1 = center + new Vector3( w, 0.0f,  h);
+                        // Vector3 rayPoint2 = center + new Vector3(-w, 0.0f,  h);
+                        // Vector3 rayPoint3 = center + new Vector3(-w, 0.0f, -h);
+                        // Vector3 rayPoint4 = center + new Vector3( w, 0.0f, -h);
 
-                        CheckRay(rayPoint1, rayDir);
-                        CheckRay(rayPoint2, rayDir);
-                        CheckRay(rayPoint3, rayDir);
-                        CheckRay(rayPoint4, rayDir);
+                        CheckRay(center + new Vector3( w, 0.0f,  h), rayDir);
+                        CheckRay(center + new Vector3(-w, 0.0f,  h), rayDir);
+                        CheckRay(center + new Vector3(-w, 0.0f, -h), rayDir);
+                        CheckRay(center + new Vector3( w, 0.0f, -h), rayDir);
 
                         h += triangleStep;
                     }
@@ -547,15 +552,16 @@ public struct C_MVTriangleData
                     float h = 0.0f;
                     while (h <= bound.extents.y)
                     {
-                        Vector3 rayPoint1 = center + new Vector3( w,  h, 0.0f);
-                        Vector3 rayPoint2 = center + new Vector3(-w,  h, 0.0f);
-                        Vector3 rayPoint3 = center + new Vector3(-w, -h, 0.0f);
-                        Vector3 rayPoint4 = center + new Vector3( w, -h, 0.0f);
+                        ///// 임시 변수 사용 제거
+                        // Vector3 rayPoint1 = center + new Vector3( w,  h, 0.0f);
+                        // Vector3 rayPoint2 = center + new Vector3(-w,  h, 0.0f);
+                        // Vector3 rayPoint3 = center + new Vector3(-w, -h, 0.0f);
+                        // Vector3 rayPoint4 = center + new Vector3( w, -h, 0.0f);
 
-                        CheckRay(rayPoint1, rayDir);
-                        CheckRay(rayPoint2, rayDir);
-                        CheckRay(rayPoint3, rayDir);
-                        CheckRay(rayPoint4, rayDir);
+                        CheckRay(center + new Vector3( w,  h, 0.0f), rayDir);
+                        CheckRay(center + new Vector3(-w,  h, 0.0f), rayDir);
+                        CheckRay(center + new Vector3(-w, -h, 0.0f), rayDir);
+                        CheckRay(center + new Vector3( w, -h, 0.0f), rayDir);
 
                         h += triangleStep;
                     }
@@ -563,15 +569,26 @@ public struct C_MVTriangleData
                 }
             }
         }
-
+        
+        /////
+        private static Vector3 CrossProduct(Vector3 a, Vector3 b)
+        {
+            return new Vector3(
+                a.y * b.z - a.z * b.y,
+                a.z * b.x - a.x * b.z,
+                a.x * b.y - a.y * b.x
+            );
+        }
+        
         // 특정 점에서 시작하는 광선이 삼각형과 교차ㅎ하는지 확인
         void CheckRay(Vector3 rayPoint, Vector3 rayDir)
         {
             //  교차 여부 판단
             if (C_MVMathLib.LineIntersectsTriangle(rayPoint, rayDir, normal, p0, p1, p2, out Vector3 p))
             {
+                ///// Vector3.Cross -> CrossProduct
                 // 교차하는 경우 교차점 p와 그 비율 ratio 계산
-                Vector3 ratio = new Vector3(Vector3.Cross((p - p1), v12).magnitude, Vector3.Cross((p - p2), v20).magnitude, Vector3.Cross((p - p0), v01).magnitude);
+                Vector3 ratio = new Vector3(CrossProduct((p - p1), v12).magnitude, CrossProduct((p - p2), v20).magnitude, CrossProduct((p - p0), v01).magnitude);
                 // 교차점 p가 어느 그리드 좌표에 해당하는지 확인 후, 맞는 voxel을 찾음.
                 CheckPoint(p, ratio);
             }
@@ -585,16 +602,17 @@ public struct C_MVTriangleData
             //만약 voxelDict에 이미 존재하는 voxel이 있으면 그 값 업데이트 없으면 새로운 voxel 생성해서 딕셔너리에 추가
             if (voxelDict.TryGetValue(pos, out voxel))
             {
-                Vector3 v = p - voxelDict[pos].centerPos;
-                if (v.sqrMagnitude < voxelDict[pos].vertPos.sqrMagnitude)
+                ///// voxelDict[pos] -> voxel
+                Vector3 v = p - voxel.centerPos;
+                if (v.sqrMagnitude < voxel.vertPos.sqrMagnitude)
                 {
-                    voxelDict[pos].vertPos = v;
-                    voxelDict[pos].ratio = ratio;
-                    voxelDict[pos].index = index;
-                    voxelDict[pos].subMesh = subMesh;
+                    voxel.vertPos = v;
+                    voxel.ratio = ratio;
+                    voxel.index = index;
+                    voxel.subMesh = subMesh;
                 }
-                voxelDict[pos].sampleCount++;
-                voxelDict[pos].UpdateNormal(normal);
+                voxel.sampleCount++;
+                voxel.UpdateNormal(normal);
             }
             else
             {
@@ -655,12 +673,14 @@ public class C_MVResult
         normals.Add(voxelMesh.normals[v + 2]);
         normals.Add(voxelMesh.normals[v + 3]);
         // voxelMesh 에서 삼각형 인덱스 6개를 갖ㅕ와 서브 메시의 삼각형 리스트에 추가.
-        triangles[voxel.subMesh].Add(voxelMesh.triangles[t + 0] + index);
-        triangles[voxel.subMesh].Add(voxelMesh.triangles[t + 1] + index);
-        triangles[voxel.subMesh].Add(voxelMesh.triangles[t + 2] + index);
-        triangles[voxel.subMesh].Add(voxelMesh.triangles[t + 3] + index);
-        triangles[voxel.subMesh].Add(voxelMesh.triangles[t + 4] + index);
-        triangles[voxel.subMesh].Add(voxelMesh.triangles[t + 5] + index);
+        ///// triangles[voxel.subMesh] -> tri
+        var tri = triangles[voxel.subMesh]; 
+        tri.Add(voxelMesh.triangles[t + 0] + index);
+        tri.Add(voxelMesh.triangles[t + 1] + index);
+        tri.Add(voxelMesh.triangles[t + 2] + index);
+        tri.Add(voxelMesh.triangles[t + 3] + index);
+        tri.Add(voxelMesh.triangles[t + 4] + index);
+        tri.Add(voxelMesh.triangles[t + 5] + index);
         // 추가된 정점의 개수를 더함.
         voxel.verticeCount += 4;
     }

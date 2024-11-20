@@ -182,7 +182,9 @@ public class C_MeshVoxelizer : MonoBehaviour
         // 서브메시의 수를 확인해서 각 서브메시에서 삼각형으 ㅣ시작 인덱스와 끝 인덱스를 구함.
         for (int subMesh = 0; subMesh < m_source.mesh.subMeshCount; ++subMesh)
         {
+            // 특정 서브 메시에 대한 인덱스 버퍼의 시작 위치 반환
             int start = (int)m_source.mesh.GetIndexStart(subMesh);
+            // 
             int end = start + (int)m_source.mesh.GetIndexCount(subMesh);
             // 서브 메시 내 삼각형 순회
             for (int i = start; i < end; i += 3)

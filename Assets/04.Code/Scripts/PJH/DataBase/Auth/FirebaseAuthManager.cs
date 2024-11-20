@@ -7,14 +7,15 @@ using System.Collections.Generic;
 public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
 { 
     public string UserId => _user.UserId;
-    public string UserName => _name;
     
     public Action<bool> LoginState;
-    public Action<bool> NickName;
+    public Action<string> NickName;
+    
+    public Action<string> OnLoginResult;
+    public Action<string> OnSignUpResult;
     
     private FirebaseAuth _auth;
     private FirebaseUser _user;
-    private string _name;
     
     public void Init()
     {
@@ -53,11 +54,13 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             if (task.IsCanceled)
             {
                 Debug.LogError("회원가입 취소");
+                OnSignUpResult.Invoke("회원가입이 취소되었습니다.");
                 return;
             }
             if (task.IsFaulted)
             {
                 Debug.LogError("회원가입 실패" + task.Exception);
+                OnSignUpResult.Invoke("회원가입에 실패했습니다." + task.Exception);
                 return;
             }
             
@@ -69,6 +72,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                 onSuccess: () => Debug.Log("사용자 정보 저장 완료"),
                 onFailure: (exception) => Debug.LogError("사용자 정보 저장 실패: " + exception.Message));
             
+            OnSignUpResult.Invoke("회원가입 완료");
         });
     }
 
@@ -82,11 +86,13 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             if (task.IsCanceled)
             {
                 Debug.LogError("로그인 취소");
+                OnLoginResult.Invoke("로그인이 취소되었습니다.");
                 return;
             }
             if (task.IsFaulted)
             {
                 Debug.LogError("로그인 실패");
+                OnLoginResult.Invoke("로그인에 실패했습니다.");
                 return;
             }
 
@@ -98,15 +104,15 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                     if (user != null)
                     {
                         Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
-                        _name = user.name;
-                        NickName?.Invoke(true);
-                        var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
-                       // SceneLoadManager.Instance.LoadScene(sceneName);
+                        NickName?.Invoke(user.name);
+                        OnLoginResult.Invoke("로그인 성공");
                     }
                     else
                     {
+                        NickName?.Invoke("알 수 없는 사용자");
                         Debug.Log("사용자 데이터를 찾을 수 없습니다.");
-                        NickName?.Invoke(false);
+                        OnLoginResult.Invoke("이메일 또는 비밀번호를 잘못되었습니다.");
+                        
                     }
                 },
                 onFailure: (exception) => Debug.LogError("사용자 데이터 로드 실패: " + exception.Message));
@@ -129,7 +135,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
             { "onlineStatus", false },
             { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
         };
-        RealtimeDatabase.UpdateUser(id+"/", updates);
+        RealtimeDatabase.UpdateUser(id + "/", updates);
         
         _auth.SignOut();
         Debug.Log("로그아웃");

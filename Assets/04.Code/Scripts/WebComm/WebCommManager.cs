@@ -8,14 +8,14 @@ using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class WebCommManager : MonoBehaviour
 {
     public WebApiData webApiData;
     public TMP_Text promptInput;
-    public List<Image> imageRenderers;
-    
+    public List<GameObject> genImageList;
     private string prompt;
     public string[] genImageNameList;
     public int selectedImageIndex;
@@ -42,13 +42,17 @@ public class WebCommManager : MonoBehaviour
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
         ImageGenBtn.onClick.AddListener(DoImageGenDown);
+        
+        genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
+        genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
+        genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
     }
 
     // 초기 이미지 생성
     public void DoImageGenDown()
     {
         // 디버그 모드 시 통신하지 않음.
-        if (debugModeData == true)
+        if (debugModeData.DebugMode == true)
         {
             return;
         }
@@ -69,7 +73,7 @@ public class WebCommManager : MonoBehaviour
         for (int i = 0; i < GenImageNum; i++)
         {
             yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
-            ConvertSpriteFromPNG(imageRenderers[i], genImageNameList[i]);
+            ConvertSpriteFromPNG(genImageList[i].GetComponent<Image>(), genImageNameList[i]);
         }
     }
     
@@ -86,20 +90,23 @@ public class WebCommManager : MonoBehaviour
         genImageNameList[idx] = _imageGen._imageGenRes.filenames[0];
         ImageDownload _imageDownload = new ImageDownload(webApiData);
         yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[idx]));
-        ConvertSpriteFromPNG(imageRenderers[idx], genImageNameList[idx]);
+        ConvertSpriteFromPNG(genImageList[idx].GetComponent<Image>(), genImageNameList[idx]);
     }
 
     public void SetIndex0()
     {
         selectedImageIndex = 0;
+        Debug.Log("index 0");
     }
     public void SetIndex1()
     {
         selectedImageIndex = 1;
+        Debug.Log("index 1");
     }
     public void SetIndex2()
     {
         selectedImageIndex = 2;
+        Debug.Log("index 2");
     }
     
     // Convert Png to Sprite and allocate Sprite to targetSpriteRenderer 

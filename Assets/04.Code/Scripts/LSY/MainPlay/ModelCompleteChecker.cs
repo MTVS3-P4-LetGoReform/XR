@@ -6,8 +6,9 @@ public class ModelCompleteChecker : MonoBehaviour
     {
         if (GameStateManager.Instance.IsComplete())
         {
-            Debug.Log("ModelCompleteChecker : Game Completed");
+            //Debug.Log("ModelCompleteChecker : Game Completed");
             GameStateManager.Instance.DoCompleteCoroutine();
+            Destroy(gameObject);
         }
     }
     
@@ -15,7 +16,7 @@ public class ModelCompleteChecker : MonoBehaviour
     {
         if (other.CompareTag("Block"))
         {
-            Debug.Log("ModelCompleteChecker : Block Place Trigger");
+            //Debug.Log("ModelCompleteChecker : Block Place Trigger");
             GameStateManager.Instance.AddCnt(1);
         }
     }

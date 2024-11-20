@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Firebase.Storage;
 using Application = UnityEngine.Device.Application;
@@ -29,23 +30,32 @@ public class StorageDatabase
         {
             return;
         }
-        isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
+        isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint).Child(modelName);
         Debug.Log("StorageDatabase : isstorage_ref - "+ isstorage_ref);
-        local_url = Application.persistentDataPath + "/" + modelName;
+        local_url = Path.Combine(Application.persistentDataPath,"Models", modelName);
+        if (!File.Exists(local_url))
+        {
+            Debug.LogWarning("이미 파일이 존재합니다. 파일명 :" + local_url);
+        }
         Debug.Log(string.Format("{0}", local_url));
         await isstorage_ref.GetFileAsync(local_url);
     }
     
     public async UniTask DownImage(string imageName)
     {
-        if (_debugModeData == true)
+        if (_debugModeData.DebugMode == true)
         {
             return;
         }
-        isstorage_ref = storage_ref.Child("images" + "/" + imageName);
+        isstorage_ref = storage_ref.Child("images").Child(imageName);
         Debug.Log("StorageDatabase : isstorage_ref - "+ isstorage_ref);
-        local_url = Application.persistentDataPath + "/" + imageName;
+        local_url = Path.Combine(Application.persistentDataPath,"images",imageName);
         Debug.Log(string.Format("{0}", local_url));
+        if (!File.Exists(local_url))
+        {
+            Debug.LogWarning("이미 파일이 존재합니다. 파일명 :" + local_url);
+        }
+        Debug.Log("로컬 다운로드 주소 : "+local_url);
         await isstorage_ref.GetFileAsync(local_url);
     }
     
@@ -53,8 +63,8 @@ public class StorageDatabase
     {
         if (_debugModeData.DebugMode == false)
         {
-            isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint + "/" + modelName);
-            local_url = Application.persistentDataPath + "/" + modelName;
+            isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint).Child(modelName);
+            local_url = Path.Combine(Application.persistentDataPath,"Models",modelName);
             Debug.Log(string.Format("{0}", local_url));
             //GetFileAsync : 파일 비동기로 로컬 저장소에 다운로드
             // COntinueWith : 다운로드 작업이 완료된 후의 작업을 설정.
