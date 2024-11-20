@@ -5159,6 +5159,7 @@ GameObject:
   - component: {fileID: 2026917821}
   - component: {fileID: 2026917820}
   - component: {fileID: 2026917819}
+  - component: {fileID: 2026917822}
   m_Layer: 0
   m_Name: NPC Chat Canvas
   m_TagString: Untagged
@@ -5249,6 +5250,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2026917822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026917817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722e358ee4eeac149abe6edfdae8e34f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2086293985
 GameObject:
   m_ObjectHideFlags: 0
@@ -7418,6 +7431,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 2026917822}
+        m_TargetAssemblyTypeName: GotoLobbySession, Assembly-CSharp
+        m_MethodName: JoinLobby
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!224 &1053810765970551106
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9231,7 +9256,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 768198730}
+      - m_Target: {fileID: 2497410606783676988}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -9243,9 +9268,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 11500000, guid: f87ebad760eae194d9e8293a87a2ee79, type: 3}
+      - m_Target: {fileID: 768198732}
         m_TargetAssemblyTypeName: GotoLobbySession, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: JoinLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14578,7 +14603,7 @@ PrefabInstance:
       objectReference: {fileID: 8210353110525352545}
     - target: {fileID: 5444906543498964216, guid: 159413d95d18579449987dbde76ad869, type: 3}
       propertyPath: closeButton.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5444906543498964216, guid: 159413d95d18579449987dbde76ad869, type: 3}
       propertyPath: 'closeButton.Array.data[0]'
@@ -14588,6 +14613,10 @@ PrefabInstance:
       propertyPath: 'closeButton.Array.data[1]'
       value: 
       objectReference: {fileID: 9205650663684803528}
+    - target: {fileID: 5444906543498964216, guid: 159413d95d18579449987dbde76ad869, type: 3}
+      propertyPath: 'closeButton.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2072592672739069709}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

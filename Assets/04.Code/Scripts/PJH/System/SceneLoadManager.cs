@@ -12,7 +12,7 @@ public class SceneLoadManager : MonoBehaviourSingleton<SceneLoadManager>
 
    private string Current { get; set; } = string.Empty;
 
-   private void Awake()
+   protected override void Awake()
    {
       var activeScene = SceneManager.GetActiveScene();
       Current = activeScene.name;
