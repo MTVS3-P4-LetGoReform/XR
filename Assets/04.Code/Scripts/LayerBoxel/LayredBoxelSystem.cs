@@ -95,6 +95,14 @@ public class LayeredBoxelSystem : MonoBehaviour
             child.gameObject.SetActive(false);
         }
     }
+    
+    public void ActivateAll()
+    {
+        foreach (Transform child in boxelizedObject.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+    }
 
     public List<float> GetKeys()
     {
