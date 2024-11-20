@@ -94,7 +94,7 @@ public class KccTest : NetworkBehaviour
         Vector3 dir = new Vector3(h, 0f, v);
         dir.Normalize();
         dir = camera.transform.TransformDirection(dir);
-        dir.y = 0;
+        dir.y = 0; 
         
         networkCC.Move(moveSpeed * Runner.DeltaTime * dir);
         
