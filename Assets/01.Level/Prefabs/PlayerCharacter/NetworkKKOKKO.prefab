@@ -361,7 +361,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9a2870b77bdedd49a68044860ebc6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerStatus: {fileID: 0}
 --- !u!114 &8128583422826789116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6909,7 +6908,7 @@ MonoBehaviour:
     m_Bits: 256
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
   audioDropBox: {fileID: 7883892890573505433}
-  camera: {fileID: 5996659952040683470}
+  userCamera: {fileID: 0}
 --- !u!114 &3293500560642303805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6927,8 +6926,8 @@ MonoBehaviour:
   chargeGauge: {fileID: 6996026108555343120}
   increaseSpeed: 5
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
-  camera: {fileID: 5996659952040683470}
   audioThrow: {fileID: 3234490502614627562}
+  userCamera: {fileID: 0}
 --- !u!114 &5015835022215157809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17259,7 +17258,7 @@ Transform:
   m_GameObject: {fileID: 7273930752703099522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.1, z: -3.7}
+  m_LocalPosition: {x: 0, y: 3, z: -1.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
