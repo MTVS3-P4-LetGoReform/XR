@@ -3,6 +3,8 @@ using Firebase.Database;
 using Firebase.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -40,6 +42,12 @@ public static partial class RealtimeDatabase
 
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Firebase초기화 실패 : "+task.Exception);
+                onFailure?.Invoke(task.Exception);
+                return;
+            }
             if (task.Result == DependencyStatus.Available)
             {
                 databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -53,6 +61,25 @@ public static partial class RealtimeDatabase
                 onFailure?.Invoke(new Exception("Firebase 초기화 실패: " + task.Result));
             }
         });
+    }
+    
+    public async static UniTask InitializeFirebaseAsync()
+    {
+        if (isInitialized)
+        {
+            return;
+        }
+        var dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync();
+        if (dependencyStatus == DependencyStatus.Available)
+        {
+            databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+            isInitialized = true;
+            Debug.Log("Firebase Initialized");
+        }
+        else
+        {
+            throw new Exception($"Firebase 초기화 실패: {dependencyStatus}");
+        }
     }
 
     /// <summary>
