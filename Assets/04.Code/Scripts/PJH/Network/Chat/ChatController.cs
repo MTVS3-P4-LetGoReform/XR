@@ -17,6 +17,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 	private void Awake()
 	{
+		UserData.ChangeName += OnChangedUserName;
 		_userName = UserData.Instance.UserName;
 		_canvas = GetComponent<Canvas>();
 	}
@@ -38,6 +39,11 @@ public class ChatController : MonoBehaviour, IChatClientListener
 		AddLine("연결시도");
 	}
 
+	private void OnChangedUserName()
+	{
+		_userName = UserData.Instance.UserName;
+	}
+	
 	private void Chating(bool chatOn)
 	{
 		if (!inputField.isFocused && chatOn)

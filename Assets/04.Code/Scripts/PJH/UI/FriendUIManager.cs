@@ -2,18 +2,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIManager>
 {
+    public static event Action RefreshList;
+    
     public Transform friendRequestListParent;  // 친구 요청을 보여줄 부모 오브젝트 (스크롤뷰의 Content)
     public GameObject friendRequestItemPrefab;  // 친구 요청 프리팹
-    public InputField usernameInputField; // 닉네임 입력 필드
+    public TMP_InputField usernameInputField; // 닉네임 입력 필드
     public Button sendRequestButton; // 친구 요청 전송 버튼
     private string _currentUserId; 
 
     private void Start()
     {
-        _currentUserId = UserData.Instance.UserName;
+        RefreshList += LoadInitialRequests;
+        if (UserData.Instance.UserId == null)
+            Debug.LogError("아이디를 찾을 수 없습니다.");
+        _currentUserId = UserData.Instance.UserId;
+        
+        LoadInitialRequests();
         
         ListenForFriendRequests();
 
@@ -21,15 +29,33 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
         sendRequestButton.onClick.AddListener(() => 
         {
             string targetUsername = usernameInputField.text;
+            
             if (!string.IsNullOrEmpty(targetUsername))
             {
                 SendFriendRequestByUsername(targetUsername);
+                Debug.Log(targetUsername);
             }
             else
             {
                 Debug.LogWarning("닉네임을 입력하세요.");
             }
         });
+    }
+    
+    private void LoadInitialRequests()
+    {
+        // 현재 유저의 친구 요청을 불러옴
+        string path = $"users/{_currentUserId}/friendRequests/incoming";
+        
+        RealtimeDatabase.ReadData<Dictionary<string, bool>>(path, 
+            onSuccess: friendRequests => 
+            {
+                OnFriendRequestReceived(friendRequests);
+            }, 
+            onFailure: exception => 
+            {
+                Debug.LogError($"친구 요청 읽기 실패: {exception.Message}");
+            });
     }
 
     /// <summary>
@@ -59,6 +85,7 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
             foreach (var request in friendRequests)
             {
                 requesterPaths.Add($"users/{request.Key}");
+                Debug.Log($"users/{request.Key}");
             }
             
             RealtimeDatabase.ReadMultipleData<User>(requesterPaths,
@@ -69,6 +96,7 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
                         GameObject friendRequestItem = Instantiate(friendRequestItemPrefab, friendRequestListParent);
                         FriendRequestItem itemScript = friendRequestItem.GetComponent<FriendRequestItem>();
                         itemScript.SetFriendRequestData(userEntry.Value, userEntry.Key, AcceptFriendRequest, RejectFriendRequest);
+                        Debug.Log("친구 요청 생성됨");
                     }
                 },
                 onFailure: exception =>
@@ -107,6 +135,7 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
         FriendRequestManager.AcceptFriendRequest(_currentUserId, requesterId,
             onSuccess: () => Debug.Log("친구 요청 수락 성공"),
             onFailure: exception => Debug.LogError($"친구 요청 수락 실패: {exception.Message}"));
+        RefreshList?.Invoke();
     }
 
     /// <summary>
@@ -118,5 +147,6 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
         FriendRequestManager.RemoveFriendRequest(_currentUserId, requesterId,
             onSuccess: () => Debug.Log("친구 요청 거절 성공"),
             onFailure: exception => Debug.LogError($"친구 요청 거절 실패: {exception.Message}"));
+        RefreshList?.Invoke();
     }
 }

@@ -1,14 +1,15 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FriendRequestItem : MonoBehaviour
 {
-    public Text friendNameText;
+    public TMP_Text friendNameText;
     public Button acceptButton;
     public Button rejectButton;
 
-    private string requesterId;
+    private string _requesterId;
 
     /// <summary>
     /// 친구 요청 데이터 설정
@@ -20,9 +21,9 @@ public class FriendRequestItem : MonoBehaviour
     public void SetFriendRequestData(User friend, string requesterId, Action<string> onAccept, Action<string> onReject)
     {
         friendNameText.text = friend.name;
-        this.requesterId = requesterId;
+        _requesterId = requesterId;
 
-        acceptButton.onClick.AddListener(() => onAccept(requesterId));
-        rejectButton.onClick.AddListener(() => onReject(requesterId));
+        acceptButton.onClick.AddListener(() => onAccept(_requesterId));
+        rejectButton.onClick.AddListener(() => onReject(_requesterId));
     }
 }

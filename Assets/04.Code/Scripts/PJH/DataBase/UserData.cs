@@ -6,7 +6,8 @@ public class UserData : MonoBehaviourSingleton<UserData>
 {
     public string UserName;
     public string UserId;
-    
+
+    public static event Action ChangeName;
     
     private void Start()
     {
@@ -27,5 +28,6 @@ public class UserData : MonoBehaviourSingleton<UserData>
     {
         UserName = username;
         Debug.Log("유저 데이터 : " + username);
+        ChangeName?.Invoke();
     }
 }

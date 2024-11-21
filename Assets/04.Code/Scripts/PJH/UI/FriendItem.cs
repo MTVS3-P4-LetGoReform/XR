@@ -1,10 +1,15 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FriendItem : MonoBehaviour
 {
-    public Text friendNameText;
-    public Text onlineStatusText;
+    public TMP_Text friendNameText;
+    public TMP_Text onlineStatusText;
+
+    public Image statusImage;
+    public Sprite onlineImage;
+    public Sprite offlineImage;
 
     public void SetFriendData(User friend)
     {
