@@ -89,7 +89,7 @@ public class SessionUIManager : MonoBehaviour
             await UniTask.Yield();
             await _storageDatabase.DownImage(webApiData.ImageName);
 
-            UpdateImage(url, targetImage);
+            UpdateImage(url, targetImage).Forget();
 
             roomInfo.roomName.text = session.Name;
             roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";

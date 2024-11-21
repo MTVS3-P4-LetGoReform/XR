@@ -1,13 +1,10 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Fusion;
-using Photon.Realtime;
 using Photon.Voice.Unity;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using Random = Unity.Mathematics.Random;
 
 public class RunnerManager : MonoBehaviour
 {
@@ -26,8 +23,6 @@ public class RunnerManager : MonoBehaviour
 
    [SerializeField] 
    private ObjectDatabase characterDatabase;
-
-   private int selectedObjectIndex = -1;
    
    #region SpawnPoint
    [SerializeField] private Transform publicParkSpawnPoint;
@@ -173,7 +168,7 @@ public class RunnerManager : MonoBehaviour
       var id = UserData.Instance.UserId;
       var selectIndex = PlayerPrefs.GetInt($"select_{id}", -1);
       
-      var playerOp = runner.SpawnAsync(characterDatabase.objectData[selectIndex].Prefab,_currentSpawnPoint.position,quaternion.identity);
+      var playerOp = runner.SpawnAsync(characterDatabase.objectData[selectIndex].Prefab,_currentSpawnPoint.position,quaternion.identity,runner.LocalPlayer);
       await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
@@ -187,6 +182,7 @@ public class RunnerManager : MonoBehaviour
       _sharedGameData = sharedGameDataOp.Object;
       _sharedGameData.name = $"Player: {_sharedGameData.Id}";
    }
+   
    private void InstantiateRunner()
    {
       var recorder = GameObject.FindAnyObjectByType<Recorder>(FindObjectsInactive.Include);

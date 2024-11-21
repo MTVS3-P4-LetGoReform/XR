@@ -11,18 +11,16 @@ public class SharedGameData : NetworkBehaviour
    
    public static int ReadyCount { get; private set; }
    public static int GameEndCount { get; private set; }
-   public static bool StartGame { get; private set; } = false;
+   public static bool StartGame { get; private set; } 
 
    private void Start()
    {
       if (HasStateAuthority)
       {
-         // 이 클라이언트가 해당 오브젝트의 StateAuthority임
          Debug.Log("이 클라이언트가 해당 오브젝트의 StateAuthority임");
       }
       else
       {
-         // 이 클라이언트는 해당 오브젝트의 StateAuthority가 아님
          Debug.Log("이 클라이언트는 해당 오브젝트의 StateAuthority가 아님");
       }
    }
@@ -55,6 +53,8 @@ public class SharedGameData : NetworkBehaviour
    public void GameStartRpc(RpcInfo info = default)
    {
       StartGame = true;
+      RunnerManager.Instance.runner.SessionInfo.IsOpen = false;
+      RunnerManager.Instance.runner.SessionInfo.IsVisible = false;
       Debug.Log($"ReadyCount Changed : {ReadyCount}");
    }
 

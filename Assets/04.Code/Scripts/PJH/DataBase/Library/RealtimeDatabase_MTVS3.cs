@@ -53,6 +53,40 @@ public static partial class RealtimeDatabase
     {
         DeleteData($"users/{userId}", onSuccess, onFailure);
     }
+    
+    /// <summary>
+    /// 이름을 사용해 사용자 ID를 검색합니다.
+    /// </summary>
+    /// <param name="name">검색할 이름</param>
+    /// <param name="onSuccess">일치하는 사용자 목록을 반환하는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void FindUserIdsByName(string name, Action<Dictionary<string, User>> onSuccess, Action<Exception> onFailure)
+    {
+        ReadData<Dictionary<string, User>>($"users",
+            onSuccess: users =>
+            {
+                Dictionary<string, User> matchedUsers = new Dictionary<string, User>();
+
+                foreach (var userEntry in users)
+                {
+                    if (userEntry.Value.name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchedUsers[userEntry.Key] = userEntry.Value;
+                    }
+                }
+
+                if (matchedUsers.Count > 0)
+                {
+                    onSuccess(matchedUsers);
+                }
+                else
+                {
+                    onFailure(new Exception("해당 이름을 가진 사용자를 찾을 수 없습니다."));
+                }
+            },
+            onFailure);
+    }
+
 
     /// <summary>
     /// 특정 유저의 영지 데이터를 생성하거나 업데이트합니다.
@@ -106,62 +140,6 @@ public static partial class RealtimeDatabase
     public static void ListenForUserLandChanges(string userId, Action<UserLand> onDataChanged, Action<Exception> onError = null)
     {
         ListenForDataChanges($"user_land/{userId}", onDataChanged, onError);
-    }
-
-    /// <summary>
-    /// 특정 유저의 친구 목록에 친구를 추가합니다.
-    /// </summary>
-    /// <param name="userId">친구를 추가할 유저의 ID입니다.</param>
-    /// <param name="friend">추가할 친구 객체입니다.</param>
-    /// <param name="onSuccess">작업이 성공하면 호출되는 콜백입니다.</param>
-    /// <param name="onFailure">작업이 실패하면 호출되는 콜백입니다.</param>
-    public static void AddFriend(string userId, Friend friend, Action onSuccess = null, Action<Exception> onFailure = null)
-    {
-        GetFriendList(userId, friendList =>
-        {
-            if (friendList == null) 
-                friendList = new FriendList();
-           
-            friendList.AddFriend(friend);
-
-            CreateData($"friend_list/{userId}", friendList, onSuccess, onFailure);
-        }, onFailure);
-    }
-
-    /// <summary>
-    /// 특정 유저의 친구 목록을 읽어옵니다.
-    /// </summary>
-    /// <param name="userId">친구 목록을 읽어올 유저의 ID입니다.</param>
-    /// <param name="onSuccess">데이터를 성공적으로 읽어오면 호출되는 콜백입니다.</param>
-    /// <param name="onFailure">데이터 읽기에 실패하면 호출되는 콜백입니다.</param>
-    public static void GetFriendList(string userId, Action<FriendList> onSuccess, Action<Exception> onFailure = null)
-    {
-        ReadData($"friend_list/{userId}", onSuccess, onFailure);
-    }
-
-    /// <summary>
-    /// 특정 유저의 친구 목록에서 친구를 삭제합니다.
-    /// </summary>
-    /// <param name="userId">친구를 삭제할 유저의 ID입니다.</param>
-    /// <param name="friendId">삭제할 친구의 ID입니다.</param>
-    /// <param name="onSuccess">작업이 성공하면 호출되는 콜백입니다.</param>
-    /// <param name="onFailure">작업이 실패하면 호출되는 콜백입니다.</param>
-    public static void RemoveFriend(string userId, string friendId, Action onSuccess = null, Action<Exception> onFailure = null)
-    {
-        GetFriendList(userId, friendList =>
-        {
-            if (friendList != null && friendList.friends.ContainsKey(friendId))
-            {
-                friendList.friends.Remove(friendId);
-
-                CreateData($"friend_list/{userId}", friendList, onSuccess, onFailure);
-            }
-            else
-            {
-                Debug.LogError("친구 삭제 실패: 친구 ID를 찾을 수 없습니다.");
-                onFailure?.Invoke(new Exception("친구 ID를 찾을 수 없습니다."));
-            }
-        }, onFailure);
     }
     
     public static void AddAiModel(string userId, Model model, Action onSuccess = null, Action<Exception> onFailure = null)
