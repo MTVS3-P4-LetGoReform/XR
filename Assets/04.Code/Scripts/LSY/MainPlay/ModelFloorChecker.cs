@@ -69,7 +69,8 @@ public class ModelFloorChecker : MonoBehaviour
                     Debug.Log($"ModelFloorChecker : sourceRenderer - {sourceRenderer}");
                     MeshRenderer targetRenderer = voxels[i, j].GetComponent<MeshRenderer>();
 
-                    targetRenderer.materials = sourceRenderer.materials; // material 전체 배열 복사
+                    targetRenderer.material = _layerController._layeredBoxelSystem.orgMat;
+                    //    = sourceRenderer.materials; // material 전체 배열 복사
                     targetFilter.sharedMesh = _layerController.curLayerdata.voxels[i, j].GetComponent<MeshFilter>().sharedMesh;
 
                     // Mesh mesh = Instantiate(targetFilter.mesh);
