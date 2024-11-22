@@ -73,6 +73,7 @@ public class FriendListUIManager : MonoBehaviour
                     foreach (var friendId in friendIds)
                     {
                         friendPaths.Add($"users/{friendId}");
+                        Debug.Log($"FriendListUIManager - userEntry.Value : users/{friendId}");
                     }
 
                     // 친구 정보를 한 번에 로드
@@ -83,6 +84,7 @@ public class FriendListUIManager : MonoBehaviour
                             {
                                 GameObject friendItem = Instantiate(friendItemPrefab, friendListParent);
                                 FriendItem itemScript = friendItem.GetComponent<FriendItem>();
+                                Debug.Log("FriendListUIManager - userEntry.Value : "+ userEntry.Value);
                                 itemScript.SetFriendData(userEntry.Value); // UI에 친구 정보 설정
                             }
                         },

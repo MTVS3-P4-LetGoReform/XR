@@ -267,18 +267,18 @@ public static partial class RealtimeDatabase
             {
                 if (task.IsFaulted)
                 {
-                    Debug.LogError("데이터 업데이트 실패");
                     onFailure?.Invoke(task.Exception);
+                    Debug.LogError("데이터 업데이트 실패");
                 }
                 else if (task.IsCanceled)
                 {
-                    Debug.LogError("데이터 업데이트 취소됨");
                     onFailure?.Invoke(new Exception("데이터 업데이트가 취소되었습니다."));
+                    Debug.LogError("데이터 업데이트 취소됨");
                 }
                 else
                 {
-                    Debug.Log("데이터 업데이트 완료");
                     onSuccess?.Invoke();
+                    Debug.Log("데이터 업데이트 완료");
                 }
             });
         }, onFailure);

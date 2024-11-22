@@ -14,7 +14,8 @@ public class FriendItem : MonoBehaviour
     public void SetFriendData(User friend)
     {
         friendNameText.text = friend.name;
-        onlineStatusText.text = friend.onlineStatus ? "Online" : "Offline";
-        onlineStatusText.color = friend.onlineStatus ? Color.green : Color.gray;
+        statusImage.sprite = friend.onlineStatus ? onlineImage : offlineImage;
+        /*onlineStatusText.text = friend.onlineStatus ? "Online" : "Offline";
+        onlineStatusText.color = friend.onlineStatus ? Color.green : Color.gray;*/
     }
 }
