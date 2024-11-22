@@ -9,6 +9,41 @@ using UnityEngine;
 public static partial class RealtimeDatabase
 {
     /// <summary>
+    /// 닉네임 중복을 확인하고 사용자 생성 시 닉네임을 등록합니다.
+    /// </summary>
+    /// <param name="userId">생성할 사용자의 ID</param>
+    /// <param name="user">생성할 사용자 객체</param>
+    /// <param name="onSuccess">작업 성공 시 호출되는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void CreateUserWithUsername(string userId, User user, Action onSuccess = null,
+        Action<Exception> onFailure = null)
+    {
+        ReadData<string>($"usernames/{user.name}",
+            onSuccess: existingUserId =>
+            {
+                if (!string.IsNullOrEmpty(existingUserId))
+                {
+                    // 중복된 닉네임 존재
+                    onFailure?.Invoke(new Exception("이미 사용 중인 닉네임입니다."));
+                }
+                else
+                {
+                    // 유저 생성 및 닉네임 등록
+                    CreateUser(userId, user,
+                        onSuccess: () => { CreateData($"usernames/{user.name}", userId, onSuccess, onFailure); },
+                        onFailure);
+                }
+            },
+            onFailure: exception =>
+            {
+                // 닉네임이 존재하지 않거나 오류 발생 시 유저 생성
+                CreateUser(userId, user,
+                    onSuccess: () => { CreateData($"usernames/{user.name}", userId, onSuccess, onFailure); },
+                    onFailure);
+            });
+    }
+
+    /// <summary>
     /// 특정 유저를 생성합니다.
     /// </summary>
     /// <param name="userId">생성할 유저의 ID입니다.</param>
@@ -30,6 +65,43 @@ public static partial class RealtimeDatabase
     {
         ReadData($"users/{userId}", onSuccess, onFailure);
     }
+    
+    /// <summary>
+    /// 닉네임을 사용하여 사용자 ID를 검색합니다.
+    /// </summary>
+    /// <param name="username">검색할 닉네임</param>
+    /// <param name="onSuccess">일치하는 사용자 ID를 반환하는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void FindUserIdByUsername(string username, Action<string> onSuccess, Action<Exception> onFailure)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            onFailure?.Invoke(new ArgumentException("닉네임은 비어 있을 수 없습니다."));
+            return;
+        }
+
+        DatabaseReference usernamesRef = FirebaseDatabase.DefaultInstance.GetReference("usernames");
+        usernamesRef.Child(username).GetValueAsync().ContinueWith(task => 
+        {
+            if (task.IsFaulted)
+            {
+                onFailure?.Invoke(new Exception($"닉네임 검색 중 오류 발생: {task.Exception}", task.Exception));
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+            if (snapshot.Exists)
+            {
+                string userId = snapshot.Value.ToString();
+                onSuccess?.Invoke(userId);
+            }
+            else
+            {
+                onSuccess?.Invoke(null); // 해당 닉네임을 가진 사용자가 없음을 null로 표시
+            }
+        });
+    }
+    
 
     /// <summary>
     /// 유저 데이터를 업데이트합니다.
