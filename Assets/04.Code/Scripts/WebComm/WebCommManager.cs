@@ -175,24 +175,28 @@ public class WebCommManager : MonoBehaviour
 
                 
             }
-            StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
-            _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager)
+            //StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+            // TESTME : storagedatabase static 변경
+            StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
+            StorageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager)
                     .Forget();
                 Debug.Log(4);
             DeactiveModelCommLoading();
         }
         else
         {
-            StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
-            _storageDatabase.DownModelPlaySession(webApiData.ModelName, _sessionUIManager).Forget();
+            // TESTME : storagedatabase static 변경
+            StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
+            StorageDatabase.DownModelPlaySession(webApiData.ModelName, _sessionUIManager).Forget();
         }
 
     }
 
     public void JoinWebComm(string filename)
     {
-        StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
-        _storageDatabase.DownModel(filename);
+        //StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+        StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
+        StorageDatabase.DownModel(filename);
 
     }
 

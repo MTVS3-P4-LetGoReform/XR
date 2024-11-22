@@ -11,7 +11,7 @@ public class StatueInventoryDB: MonoBehaviour
     private string _userId;
     private string[] hasModel;
     private string[] hasModelName;
-    private StorageDatabase _storageDatabase;
+    //private StorageDatabase _storageDatabase;
     public WebApiData webApiData;
     private RaycastHit Hit;
     private Vector3 pos;

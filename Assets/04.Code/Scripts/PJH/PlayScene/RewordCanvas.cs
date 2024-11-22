@@ -16,7 +16,7 @@ public class RewordCanvas : MonoBehaviour
 
     [SerializeField]
     private WebApiData webApiData;
-    private StorageDatabase _storageDatabase;
+    //private StorageDatabase _storageDatabase;
     private SessionInfo _sessionInfo;
     public DebugModeData debugModeData;
 
@@ -32,8 +32,8 @@ public class RewordCanvas : MonoBehaviour
         
         masterRewordButton.onClick.AddListener(MasterRewordHandler);
         userRewordButton.onClick.AddListener(UserRewordHandler);
-        
-        _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+        // TESTME : storagedatabase static 변경
+        StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
         
         await LoadSessionInfo();
     }
@@ -78,7 +78,8 @@ public class RewordCanvas : MonoBehaviour
             webApiData.ImageName = imageName;
 
             // 이미지 다운로드
-            await _storageDatabase.DownImage(webApiData.ImageName);
+            // TESTME : storagedatabase static 변경
+            await StorageDatabase.DownImage(webApiData.ImageName);
             
             if (!File.Exists(url))
             {
