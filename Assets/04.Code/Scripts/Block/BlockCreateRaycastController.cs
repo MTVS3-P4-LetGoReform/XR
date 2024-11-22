@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlockCreateRaycastController : NetworkBehaviour
 {
@@ -13,15 +14,17 @@ public class BlockCreateRaycastController : NetworkBehaviour
     public GameObject NewBlockOutLine;
     public TMP_Text noBlockText;
     public TMP_Text blockCountText;
+    public Image imageBlock;
     public LayerMask BFLayerMask;
     public LayerMask PBLayerMask;
+    public LayerMask BMLayerMask;
     public BlockData blockData;
     public AudioSource audioDropBox;
     
     private RaycastHit Hit;
     private GameObject BasicBlockParent;
     [SerializeField] private Camera userCamera;
-    
+    [SerializeField] private NetworkMecanimAnimator NMAni;
 
     private ModelPlacementChecker _modelPlacementChecker;
 
@@ -118,7 +121,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
                 if (Hit.collider != null && Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
-            
+                    Debug.Log("위쪽 실행");
                     // 블록이 삭제 요청 중인지 확인
                     if (block != null && !_pendingDeletionBlocks.Contains(block))
                     {
@@ -138,6 +141,15 @@ public class BlockCreateRaycastController : NetworkBehaviour
             }
         }
 
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BMLayerMask))
+        {
+            if (Hit.collider != null && Hit.collider.name == "BlockMaker")
+            {
+                imageBlock.gameObject.SetActive(true);
+                blockCountText.gameObject.SetActive(true);
+            }
+        }
+
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, PBLayerMask))
         {
             if (Input.GetMouseButtonDown(1))
@@ -145,6 +157,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
                 if (Hit.collider != null && Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
+                    
+                    NMAni.SetTrigger("IsPickUp");
             
                     // 블록이 삭제 요청 중인지 확인
                     if (block != null && !_pendingDeletionBlocks.Contains(block))
