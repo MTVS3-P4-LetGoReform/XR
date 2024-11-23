@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class GoatItem : MonoBehaviour
 {
@@ -10,14 +12,17 @@ public class GoatItem : MonoBehaviour
         
     public string modelId;
 
-    public void SetGoatData (RankingEntry rankingEntry)
+    public Button likeButton;
+
+    public void SetGoatData (RankingEntry rankingEntry , Action<string> onAccept)
     {
-        rank = rankingEntry.rank;
-        score = rankingEntry.score;
-        username = rankingEntry.username;
-        modelName = rankingEntry.modelName;
-        modelImageName = rankingEntry.modelImageName;
+        rank = rankingEntry.rank; // int 
+        score = rankingEntry.score; // int
+        username = rankingEntry.username; // string
+        modelName = rankingEntry.modelName; // string
+        modelImageName = rankingEntry.modelImageName; // string
 
         modelId = rankingEntry.modelId;
+        likeButton.onClick.AddListener(() => onAccept(modelId));
     }
 }

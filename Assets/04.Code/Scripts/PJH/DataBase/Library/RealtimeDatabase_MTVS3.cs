@@ -4,6 +4,7 @@ using Firebase.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public static partial class RealtimeDatabase
@@ -160,7 +161,7 @@ public static partial class RealtimeDatabase
             onFailure);
     }
     
-    /// <summary>
+    /*/// <summary>
     /// 사용자 ID를 사용해 닉네임을 검색합니다.
     /// </summary>
     /// <param name="userId">검색할 사용자 ID</param>
@@ -181,7 +182,27 @@ public static partial class RealtimeDatabase
                 }
             },
             onFailure);
+    }*/
+    
+    /// <summary>
+    /// 사용자 ID를 사용해 닉네임을 검색합니다.
+    /// </summary>
+    /// <param name="userId">검색할 사용자 ID</param>
+    /// <returns>사용자의 닉네임</returns>
+    public static async UniTask<string> FindNameByIdAsync(string userId)
+    {
+        try
+        {
+            var user = await ReadDataAsync<User>($"users/{userId}");
+            return user.name;
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning($"FindNameByIdAsync 실패: {e.Message}");
+            throw new Exception(e.Message); // 예외를 다시 던져 호출자에게 알림
+        }
     }
+
 
 
     /// <summary>
