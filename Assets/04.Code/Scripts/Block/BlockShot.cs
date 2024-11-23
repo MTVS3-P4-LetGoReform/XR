@@ -15,7 +15,7 @@ public class BlockShot : NetworkBehaviour
     public BlockData blockData;
     
     private float currentGauge = 0f;
-    private Animator animator;
+    [SerializeField] private NetworkMecanimAnimator NMAni;
     private bool isKeyPressed = false;
     public AudioSource audioThrow;
     
@@ -25,9 +25,7 @@ public class BlockShot : NetworkBehaviour
     void Start()
     {
         Debug.Log(blockData.BlockNumber);
-        //animator = GetComponentInChildren<Animator>();
         
-       
     }
     
     void Update()
@@ -74,9 +72,13 @@ public class BlockShot : NetworkBehaviour
                     audioThrow.Play();
                     blockData.BlockNumber -= 1;
                     blockCountText.text = $"{blockData.BlockNumber}";
-                    Vector3 throwDirection = (userCamera.transform.forward * 20f) + (Vector3.up * 10f);
+                    Vector3 throwDirection = (userCamera.transform.forward * 10f) + (Vector3.up * 5f);
                     Vector3 force = throwDirection * currentGauge;
+                    
+                    NMAni.SetTrigger("IsThrowing");
+                    
                     ThrowRpc(force);
+                    
                 }
                 else
                 {

@@ -62,7 +62,7 @@ public class KccCameraTest : NetworkBehaviour
         
         mouseY += Input.GetAxis("Mouse Y") * rotationSpeed;
 
-        mouseY = Mathf.Clamp(mouseY, -45f, 30f);
+        mouseY = Mathf.Clamp(mouseY, -45f, 75f);
         
         Quaternion targetRotation = Quaternion.Euler(-mouseY, TpCameraPoint.eulerAngles.y, 0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
@@ -97,7 +97,7 @@ public class KccCameraTest : NetworkBehaviour
                 Time.deltaTime * positionLerpSpeed); */
             targetPosition = TpCameraPoint.position;
             
-            float adjustedHeight = Mathf.Lerp(0.5f, 1.5f, (-mouseY + 45f) / 75f); // 회전 각도에 따라 카메라 높이 조정
+            float adjustedHeight = Mathf.Lerp(0.5f, 2f, (-mouseY + 45f) / 75f); // 회전 각도에 따라 카메라 높이 조정
             targetPosition.y -= adjustedHeight;
         }
         

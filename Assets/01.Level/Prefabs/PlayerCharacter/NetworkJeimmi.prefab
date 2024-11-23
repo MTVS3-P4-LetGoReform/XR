@@ -1832,11 +1832,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8815757568080468692}
+  - {fileID: 3275822571706019692}
   - {fileID: 6257261094715716772}
   - {fileID: 9019531624050510060}
   - {fileID: 3793077078959038545}
   - {fileID: 644264221979367883}
+  - {fileID: 8815757568080468692}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &907181180311285354
@@ -1861,14 +1862,14 @@ MonoBehaviour:
   - {fileID: 5328158931810037605}
   - {fileID: 9033893252450903886}
   - {fileID: 7634451976358770755}
-  - {fileID: 8809208012829488615}
-  - {fileID: 8164162116590119351}
-  - {fileID: 9146873745201987009}
-  - {fileID: 6299909350327096304}
   - {fileID: 6901297904319958150}
   - {fileID: 2551984064410210820}
   - {fileID: 4600864709853760540}
   - {fileID: 5971326974676284570}
+  - {fileID: 8809208012829488615}
+  - {fileID: 8164162116590119351}
+  - {fileID: 9146873745201987009}
+  - {fileID: 6299909350327096304}
 --- !u!114 &6964459590470643316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15135,7 +15136,6 @@ Transform:
   m_Children:
   - {fileID: 2072599933190856324}
   - {fileID: 4269756264320765402}
-  - {fileID: 3275822571706019692}
   m_Father: {fileID: 5262121949575309584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8809208012829488615
@@ -15163,7 +15163,8 @@ MonoBehaviour:
     m_Bits: 256
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
   audioDropBox: {fileID: 6634837086599717959}
-  userCamera: {fileID: 0}
+  userCamera: {fileID: 6866075805170960130}
+  NMAni: {fileID: 6901297904319958150}
 --- !u!114 &8164162116590119351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15181,8 +15182,9 @@ MonoBehaviour:
   chargeGauge: {fileID: 5220956038286483544}
   increaseSpeed: 5
   blockData: {fileID: 11400000, guid: 1d79720810ceab942b44e5b636c66bae, type: 2}
+  NMAni: {fileID: 6901297904319958150}
   audioThrow: {fileID: 8786593656047815838}
-  userCamera: {fileID: 0}
+  userCamera: {fileID: 6866075805170960130}
 --- !u!114 &9146873745201987009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18929,14 +18931,14 @@ Transform:
   m_GameObject: {fileID: 8158163948332394670}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.5, z: 0}
+  m_LocalPosition: {x: -0.003, y: 0, z: -0.092999935}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3818467799340594663}
   - {fileID: 6462768156824824707}
   - {fileID: 5351858721017070188}
-  m_Father: {fileID: 8815757568080468692}
+  m_Father: {fileID: 5262121949575309584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1203361317300792670
 Animator:
@@ -18976,8 +18978,8 @@ MonoBehaviour:
   TotalWords: 1
   ApplyTiming: 2
   SyncSettings: 79
-  StateHashes: 00000000612d1f90c469f82fb2e1dedd17a53962dfb1dac07af53d7f
-  TriggerHashes: 00000000bcd2f0e5
+  StateHashes: 00000000612d1f90c469f82fb2e1dedd17a53962f19dfcf754d91b48336e528eb1211e0b
+  TriggerHashes: 00000000bcd2f0e5d9d04068
 --- !u!1 &8164615260717921654
 GameObject:
   m_ObjectHideFlags: 0

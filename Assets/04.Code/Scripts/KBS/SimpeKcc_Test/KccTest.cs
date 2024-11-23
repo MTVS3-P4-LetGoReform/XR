@@ -10,7 +10,7 @@ public class KccTest : NetworkBehaviour
     
     
     private Animator animator;
-    private NetworkMecanimAnimator NetworkMecanimAnimator;
+    private NetworkMecanimAnimator NMAni;
 
     private NetworkCharacterController networkCC;
 
@@ -33,7 +33,7 @@ public class KccTest : NetworkBehaviour
     {
         networkCC = GetComponent<NetworkCharacterController>();
         animator = GetComponentInChildren<Animator>();
-        NetworkMecanimAnimator = GetComponentInChildren<NetworkMecanimAnimator>();
+        NMAni = GetComponentInChildren<NetworkMecanimAnimator>();
     }
 
     public override void Spawned()
@@ -64,7 +64,22 @@ public class KccTest : NetworkBehaviour
         if (Input.GetButtonDown("Jump") && networkCC.Grounded)
         {
             _jump = true;
-            NetworkMecanimAnimator.SetTrigger("IsJumping");
+            NMAni.SetTrigger("IsJumping");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            NMAni.SetTrigger("IsHello");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            NMAni.SetTrigger("IsCheerUp");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            NMAni.SetTrigger("IsDancing");
         }
     }
 
@@ -114,6 +129,8 @@ public class KccTest : NetworkBehaviour
                 audioWalking.loop = true;
             }
         }
+        
+        
 
         
     } 
