@@ -125,6 +125,11 @@ public void CreateAccount(string email, string password, string nickname)
 
             if (task.IsFaulted)
             {
+                Debug.LogError($"로그인 실패: {task.Exception?.Message}");
+                foreach (var inner in task.Exception?.InnerExceptions)
+                {
+                    Debug.LogError($"상세 오류: {inner.Message}");
+                }
                 Debug.LogError("로그인 실패");
                 OnLoginResult.Invoke("로그인에 실패했습니다.");
                 return;

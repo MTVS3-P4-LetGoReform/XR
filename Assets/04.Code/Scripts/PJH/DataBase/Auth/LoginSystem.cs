@@ -83,7 +83,7 @@ public class LoginSystem : MonoBehaviour
         Debug.Log($"select_{id}, selectedObjectIndex : "+selectedObjectIndex);
     }
 
-    public async void GotoPlayScene()
+    public async void GotoParkScene()
     {
         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
         await SceneLoadManager.Instance.LoadScene(sceneName);
