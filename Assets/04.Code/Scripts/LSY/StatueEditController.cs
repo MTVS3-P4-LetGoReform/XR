@@ -43,10 +43,15 @@ public class StatueEditController : MonoBehaviour
             OnClicked?.Invoke();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             OnExit?.Invoke();
             Cursor.lockState = CursorLockMode.None;
+            statueInventoryUIController.SetInventoryMode();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            statueInventoryUIController.SetInventoryMode();
         }
         
     }

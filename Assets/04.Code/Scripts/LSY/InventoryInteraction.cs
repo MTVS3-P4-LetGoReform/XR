@@ -18,6 +18,13 @@ public class InventoryInteraction : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             StatueInventory.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StatueInventory.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }
