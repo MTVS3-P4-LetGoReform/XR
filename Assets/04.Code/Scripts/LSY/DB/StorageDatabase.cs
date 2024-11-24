@@ -71,9 +71,4 @@ public static class StorageDatabase
         
         _sessionUIManager.CreatePlaySession();
     }
-    // public async UniTask DownModelPlaySessionDebug(string modelName, SessionUIManager _sessionUIManager)
-    // {
-    //     
-    //     _sessionUIManager.CreatePlaySession();
-    // }
 }
