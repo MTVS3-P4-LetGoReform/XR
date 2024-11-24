@@ -28,68 +28,75 @@ public static partial class RealtimeDatabase
     
     // 상위 랭킹 조회
     public static async UniTask<List<RankingEntry>> GetTopRankings(int limit = 9)
+{
+    List<RankingEntry> rankings = new List<RankingEntry>();
+
+    await EnsureInitializedAsync(onInitialized: () => { },
+        onFailure: (error) => { Debug.LogError($"Firebase 초기화 실패: {error.Message}"); });
+
+    try
     {
-        List<RankingEntry> rankings = new List<RankingEntry>();
+        var snapshot = await databaseReference.Child("models")
+            .OrderByChild("score")
+            .LimitToLast(limit)
+            .GetValueAsync();
 
-        await EnsureInitializedAsync(onInitialized: () => { },
-            onFailure: (error) => { Debug.LogError($"Firebase 초기화 실패: {error.Message}"); });
+        // Firebase에서 내림차순으로 데이터를 가져오기 위해 역순으로 처리
+        var tempList = new List<RankingEntry>();
 
-        try
+        foreach (var child in snapshot.Children)
         {
-            var snapshot = await databaseReference.Child("models")
-                .OrderByChild("score")
-                .LimitToLast(limit)
-                .GetValueAsync();
+            var modelScore = JsonConvert.DeserializeObject<Model>(child.GetRawJsonValue());
 
-            int rank = 1;
-            // Firebase에서 내림차순으로 데이터를 가져오기 위해 역순으로 처리
-            var tempList = new List<RankingEntry>();
-
-            foreach (var child in snapshot.Children)
+            // 필터링 조건: select_image_name과 prompt_ko가 없거나 비어있는 경우 건너뛰기
+            if (string.IsNullOrEmpty(modelScore.select_image_name) || string.IsNullOrEmpty(modelScore.prompt_ko))
             {
-                var modelScore = JsonConvert.DeserializeObject<Model>(child.GetRawJsonValue());
-
-                string userName = "";
-                try
-                {
-                    userName = await FindNameByIdAsync(modelScore.creator_id);
-                    Debug.Log($"닉네임 조회 성공: {userName}");
-                }
-                catch (Exception e)
-                {
-                    userName = "알 수 없는 사용자";
-                    Debug.LogWarning($"닉네임 조회 실패: {e.Message}");
-                }
-
-                tempList.Add(new RankingEntry
-                {
-                    rank = rank++,
-                    username = userName,
-                    score = modelScore.score,
-                    modelName = modelScore.prompt_ko,
-                    modelImageName = modelScore.select_image_name,
-                    modelId = modelScore.id
-                });
+                Debug.LogWarning($"필터링된 데이터 - ID: {modelScore.id}");
+                continue;
             }
 
-            // 점수 내림차순으로 정렬
-            tempList.Sort((a, b) => b.score.CompareTo(a.score));
-
-            // 순위 재할당
-            for (int i = 0; i < tempList.Count; i++)
+            string userName = "";
+            try
             {
-                tempList[i].rank = i + 1;
+                userName = await FindNameByIdAsync(modelScore.creator_id);
+                Debug.Log($"닉네임 조회 성공: {userName}");
+            }
+            catch (Exception e)
+            {
+                userName = "알 수 없는 사용자";
+                Debug.LogWarning($"닉네임 조회 실패: {e.Message}");
             }
 
-            rankings = tempList;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error fetching rankings: {e.Message}");
+            tempList.Add(new RankingEntry
+            {
+                rank = 0, // 정렬 후 순위를 재할당하므로 초기값은 0
+                username = userName,
+                score = modelScore.score,
+                modelName = modelScore.prompt_ko,
+                selectImageName = modelScore.select_image_name,
+                modelId = modelScore.id
+            });
         }
 
-        return rankings;
+        // 점수 내림차순으로 정렬
+        tempList.Sort((a, b) => b.score.CompareTo(a.score));
+
+        // 순위 재할당
+        for (int i = 0; i < tempList.Count; i++)
+        {
+            tempList[i].rank = i + 1;
+        }
+
+        rankings = tempList;
     }
+    catch (Exception e)
+    {
+        Debug.LogError($"Error fetching rankings: {e.Message}");
+    }
+
+    return rankings;
+}
+
 
     // 특정 Model의 랭킹 조회
     public static async UniTask<RankingEntry> GetModelRank(string modelId)

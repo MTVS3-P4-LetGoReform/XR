@@ -5,7 +5,7 @@ public class RankingEntry
     public int score;
     public string username;
     public string modelName;
-    public string modelImageName;
+    public string selectImageName;
         
     public string modelId;
 }
