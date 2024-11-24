@@ -85,6 +85,7 @@ public class FriendListUIManager : MonoBehaviour
                                 GameObject friendItem = Instantiate(friendItemPrefab, friendListParent);
                                 FriendItem itemScript = friendItem.GetComponent<FriendItem>();
                                 Debug.Log("FriendListUIManager - userEntry.Value : "+ userEntry.Value);
+                                itemScript.friendId = userEntry.Key;
                                 itemScript.SetFriendData(userEntry.Value); // UI에 친구 정보 설정
                             }
                         },

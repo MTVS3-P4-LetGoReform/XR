@@ -42,9 +42,18 @@ public class TheGoatManager : MonoBehaviour
     }
 
     // 상위 랭킹 조회
-    public async UniTask GetTopRankings()
+    private async UniTask GetTopRankings()
     {
-        List<RankingEntry> topRankings = await RealtimeDatabase.GetTopRankings();
+        foreach (Transform child in topParent)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in secParent)
+        {
+            Destroy(child.gameObject);
+        }
+        
+        var topRankings = await RealtimeDatabase.GetTopRankings();
         foreach (var entry in topRankings)
         {
             if (entry.rank == 1)
