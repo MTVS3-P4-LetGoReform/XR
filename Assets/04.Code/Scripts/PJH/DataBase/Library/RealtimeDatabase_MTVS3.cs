@@ -8,6 +8,7 @@ using UnityEngine;
 
 public static partial class RealtimeDatabase
 {
+    
     /// <summary>
     /// 닉네임 중복을 확인하고 사용자 생성 시 닉네임을 등록합니다.
     /// </summary>
@@ -154,6 +155,29 @@ public static partial class RealtimeDatabase
                 else
                 {
                     onFailure(new Exception("해당 이름을 가진 사용자를 찾을 수 없습니다."));
+                }
+            },
+            onFailure);
+    }
+    
+    /// <summary>
+    /// 사용자 ID를 사용해 닉네임을 검색합니다.
+    /// </summary>
+    /// <param name="userId">검색할 사용자 ID</param>
+    /// <param name="onSuccess">사용자의 닉네임을 반환하는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void FindNameById(string userId, Action<string> onSuccess, Action<Exception> onFailure)
+    {
+        ReadData<User>($"users/{userId}",
+            onSuccess: user =>
+            {
+                if (user != null && !string.IsNullOrEmpty(user.name))
+                {
+                    onSuccess(user.name);
+                }
+                else
+                {
+                    onFailure(new Exception("해당 ID를 가진 사용자를 찾을 수 없습니다."));
                 }
             },
             onFailure);

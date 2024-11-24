@@ -7,6 +7,8 @@ public class Model
     public string creator_id;
     public string create_3d_name;
     public string select_image_name;
+    public string prompt_ko;
+    public int score;
     
     public Model() { }
 
