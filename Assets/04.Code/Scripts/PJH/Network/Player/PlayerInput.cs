@@ -39,6 +39,11 @@ public class PlayerInput : NetworkBehaviour
         HandleSceneSpecificInput();
     }
 
+    public static void PlayerLockCamera(bool isActive)
+    {
+        OnMouse?.Invoke(isActive);
+    }
+
     private void HandleGeneralInput()
     {
         

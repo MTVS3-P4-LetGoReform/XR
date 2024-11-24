@@ -25,9 +25,9 @@ public class LoginSystem : MonoBehaviour
 
     [SerializeField] private ObjectDatabase characterDatabase;
     [SerializeField] private int selectedObjectIndex = -1;
-    private void Start()
+    private async void Start()
     {
-        InitializeFirebase();
+        await InitializeFirebaseAsync();
         FirebaseAuthManager.Instance.Init();
         
         FirebaseAuthManager.Instance.LoginState += OnChangedState;

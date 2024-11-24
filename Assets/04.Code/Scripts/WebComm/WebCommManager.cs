@@ -29,7 +29,11 @@ public class WebCommManager : MonoBehaviour
     
     public Button createRoomStart;
     public Button ImageGenBtn;
+    public Button ImageRengenBtn;
     private SessionUIManager _sessionUIManager;
+
+    public GameObject ImageCommLoadingObject;
+    public GameObject ModelCommLoadingObject;
     
     private bool isGenerating = false;
     public DebugModeData debugModeData;
@@ -42,6 +46,7 @@ public class WebCommManager : MonoBehaviour
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
         ImageGenBtn.onClick.AddListener(DoImageGenDown);
+        ImageRengenBtn.onClick.AddListener(DoImageRegen);
         
         genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
         genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
@@ -61,7 +66,8 @@ public class WebCommManager : MonoBehaviour
     }
     private IEnumerator ImageGenDown()
     {
-        yield return null;
+        //yield return null;
+        ActiveImageCommLoading();
         ImageGen _imageGen = new ImageGen(webApiData);
 
         yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
@@ -75,22 +81,25 @@ public class WebCommManager : MonoBehaviour
             yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
             ConvertSpriteFromPNG(genImageList[i].GetComponent<Image>(), genImageNameList[i]);
         }
+        DeactiveImageCommLoading();
     }
     
     // 이미지 재생성
-    public void DoRequestImageRegen()
+    public void DoImageRegen()
     {
         StartCoroutine(RequestImageGen(selectedImageIndex));
     }
     private IEnumerator RequestImageGen(int idx)
-    { 
-        ImageGen _imageGen = new ImageGen(webApiData);
+    {
+        ActiveImageCommLoading();
+        ImageRegen _imageRegen = new ImageRegen(webApiData);
 
-        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId));
-        genImageNameList[idx] = _imageGen._imageGenRes.filenames[0];
+        yield return StartCoroutine(_imageRegen.RequestImageRegen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId, webApiData.ModelId));
+        genImageNameList[idx] = _imageRegen._imageRegenRes.filenames[0];
         ImageDownload _imageDownload = new ImageDownload(webApiData);
         yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[idx]));
         ConvertSpriteFromPNG(genImageList[idx].GetComponent<Image>(), genImageNameList[idx]);
+        DeactiveImageCommLoading();
     }
 
     public void SetIndex0()
@@ -142,10 +151,7 @@ public class WebCommManager : MonoBehaviour
     public IEnumerator ModelGenDownSceneLoad()
     {
         yield return StartCoroutine(ModelGenDown());
-        Debug.Log(5);
-        
         isGenerating = false;
-        Debug.Log(6);
     }
 
     public IEnumerator ModelGenDown()
@@ -154,7 +160,7 @@ public class WebCommManager : MonoBehaviour
         
         if (debugModeData.DebugMode == false)
         {
-            
+            ActiveModelCommLoading();
             webApiData.ImageName = genImageNameList[selectedImageIndex];
             yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
             Debug.Log(_modelGen._modelGenRes.model_filename);
@@ -173,6 +179,7 @@ public class WebCommManager : MonoBehaviour
             _storageDatabase.DownModelPlaySession(_modelGen._modelGenRes.model_filename, _sessionUIManager)
                     .Forget();
                 Debug.Log(4);
+            DeactiveModelCommLoading();
         }
         else
         {
@@ -187,5 +194,23 @@ public class WebCommManager : MonoBehaviour
         StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
         _storageDatabase.DownModel(filename);
 
+    }
+
+    public void ActiveImageCommLoading()
+    {
+        ImageCommLoadingObject.SetActive(true);
+    }
+    public void DeactiveImageCommLoading()
+    {
+        ImageCommLoadingObject.SetActive(false);
+    }
+
+    public void ActiveModelCommLoading()
+    {
+        ModelCommLoadingObject.SetActive(true);
+    }
+    public void DeactiveModelCommLoading()
+    {
+        ModelCommLoadingObject.SetActive(false);
     }
 }

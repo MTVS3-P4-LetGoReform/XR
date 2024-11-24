@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlockCreateRaycastController : NetworkBehaviour
 {
@@ -12,15 +14,17 @@ public class BlockCreateRaycastController : NetworkBehaviour
     public GameObject NewBlockOutLine;
     public TMP_Text noBlockText;
     public TMP_Text blockCountText;
+    public Image imageBlock;
     public LayerMask BFLayerMask;
     public LayerMask PBLayerMask;
+    public LayerMask BMLayerMask;
     public BlockData blockData;
     public AudioSource audioDropBox;
     
     private RaycastHit Hit;
     private GameObject BasicBlockParent;
     [SerializeField] private Camera userCamera;
-    
+    [SerializeField] private NetworkMecanimAnimator NMAni;
 
     private ModelPlacementChecker _modelPlacementChecker;
 
@@ -114,13 +118,35 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
             if (Input.GetMouseButtonDown(1))
             {
-                if ( Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                if (Hit.collider != null && Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
-                    DeleteBlockRpc(block);
-                    blockData.BlockNumber += 1;
-                    blockCountText.text = $"{blockData.BlockNumber}";
+                    Debug.Log("위쪽 실행");
+                    // 블록이 삭제 요청 중인지 확인
+                    if (block != null && !_pendingDeletionBlocks.Contains(block))
+                    {
+                        // 삭제 요청 중인 블록으로 추가
+                        _pendingDeletionBlocks.Add(block);
+                        
+                        DeleteBlockRpc(block);
+                        
+                        blockData.BlockNumber += 1;
+                        blockCountText.text = $"{blockData.BlockNumber}";
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Block is already pending deletion.");
+                    }
                 }
+            }
+        }
+
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BMLayerMask))
+        {
+            if (Hit.collider != null && Hit.collider.name == "BlockMaker")
+            {
+                imageBlock.gameObject.SetActive(true);
+                blockCountText.gameObject.SetActive(true);
             }
         }
 
@@ -128,38 +154,101 @@ public class BlockCreateRaycastController : NetworkBehaviour
         {
             if (Input.GetMouseButtonDown(1))
             {
-                if ( Hit.collider.name == "PhysicsBasicBlock(Clone)")
+                if (Hit.collider != null && Hit.collider.name == "PhysicsBasicBlock(Clone)")
                 {
                     var block = Hit.collider.GetComponent<NetworkObject>();
-                    DeleteBlockRpc(block);
-                    blockData.BlockNumber += 1;
-                    blockCountText.text = $"{blockData.BlockNumber}";
+                    
+                    NMAni.SetTrigger("IsPickUp");
+            
+                    // 블록이 삭제 요청 중인지 확인
+                    if (block != null && !_pendingDeletionBlocks.Contains(block))
+                    {
+                        // 삭제 요청 중인 블록으로 추가
+                        _pendingDeletionBlocks.Add(block);
+
+                        // 블록 삭제 RPC 호출
+                        DeleteBlockRpc(block);
+
+                        // 블록 번호 증가
+                        blockData.BlockNumber += 1;
+                        blockCountText.text = $"{blockData.BlockNumber}";
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Block is already pending deletion.");
+                    }
                 }
             }
         }
 
     }
     
-    
+    private HashSet<NetworkObject> _pendingDeletionBlocks = new HashSet<NetworkObject>();
+
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
     {
-        var spawnObject = RunnerManager.Instance.runner.SpawnAsync(blockData.BasicBlockPrefab,
-            pos, Quaternion.identity);
-        //spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
-       
-       
-    }
-
-    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
-    private void DeleteBlockRpc(NetworkObject networkObject)
-    {
-        if (networkObject != null)
+        if (RunnerManager.Instance.runner != null)
         {
-            RunnerManager.Instance.runner.Despawn(networkObject);
+            RunnerManager.Instance.runner.SpawnAsync(
+                blockData.BasicBlockPrefab, 
+                pos, 
+                Quaternion.identity
+            );
+
+            // 부모 설정을 원할 경우 유효성 체크 후 추가
+            // if (spawnObject != null && BasicBlockParent != null)
+            // {
+            //     spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
+            // }
+        }
+        else
+        {
+            Debug.LogError("Runner is null. Cannot spawn block.");
         }
     }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void DeleteBlockRpc(NetworkObject networkObject)
+    {
+        // networkObject가 null인지 확인
+        if (networkObject == null)
+        {
+            Debug.LogWarning("NetworkObject is null. Skipping despawn.");
+            return;
+        }
+
+        // NetworkObject가 유효한지 확인
+        if (!networkObject.IsValid)
+        {
+            Debug.LogWarning("NetworkObject is not valid. Skipping despawn.");
+            return;
+        }
+
+        // Runner가 null이 아닌지 확인
+        if (RunnerManager.Instance.runner == null)
+        {
+            Debug.LogError("Runner is null. Cannot despawn block.");
+            return;
+        }
+
+        // 실제 Despawn 호출
+        RunnerManager.Instance.runner.Despawn(networkObject);
+        
+        OnBlockDeletionCompletedRpc(networkObject);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void OnBlockDeletionCompletedRpc(NetworkObject block)
+    {
+        // 삭제된 블록을 추적 목록에서 제거
+        if (block != null && _pendingDeletionBlocks.Contains(block))
+        {
+            _pendingDeletionBlocks.Remove(block);
+        }
+    }
+
     
     IEnumerator NoBlockTextSet()
     {
@@ -167,5 +256,6 @@ public class BlockCreateRaycastController : NetworkBehaviour
         yield return new WaitForSeconds(2f);
         noBlockText.gameObject.SetActive(false);
     }
+    
     
 }

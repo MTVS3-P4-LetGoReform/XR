@@ -10,6 +10,8 @@ public class LayeredBoxelSystem : MonoBehaviour
     public GameObject parentObject;
     private GameObject boxelizedObject;
     private SortedDictionary<float, LayerData> voxelList;
+
+    public Material orgMat;
     //Dictionary<float, List<GameObject>>
     // scaling 관련
 
@@ -21,6 +23,7 @@ public class LayeredBoxelSystem : MonoBehaviour
     {
         parentObject = modelObject;
         boxelizedObject = parentObject.transform.GetChild(0).gameObject;
+        orgMat = boxelizedObject.GetComponentInChildren<Renderer>().material;
         GameStateManager.Instance.maxCnt = boxelizedObject.transform.childCount;
         Debug.Log("LayeredBoxelSystem : 총 복셀 수 - "+ GameStateManager.Instance.allCnt);
         voxelList = new SortedDictionary<float, LayerData>();
@@ -93,6 +96,14 @@ public class LayeredBoxelSystem : MonoBehaviour
         foreach (Transform child in boxelizedObject.transform)
         {
             child.gameObject.SetActive(false);
+        }
+    }
+    
+    public void ActivateAll()
+    {
+        foreach (Transform child in boxelizedObject.transform)
+        {
+            child.gameObject.SetActive(true);
         }
     }
 

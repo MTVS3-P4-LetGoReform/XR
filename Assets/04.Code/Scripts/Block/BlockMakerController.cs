@@ -50,7 +50,7 @@ public class BlockMakerController : MonoBehaviour
     private void GetBlockFromMaker()
     {
         
-        if (Vector3.Distance(transform.position, playerTransform.transform.position) < 5)
+        if (Vector3.Distance(transform.position, playerTransform.transform.position) < 10)
         {
             pressText.gameObject.SetActive(true);
             if (Input.GetKeyDown(KeyCode.E))

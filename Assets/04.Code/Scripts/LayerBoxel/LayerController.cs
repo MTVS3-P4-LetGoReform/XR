@@ -3,12 +3,13 @@ using UnityEngine;
 using DG.Tweening;
 using Fusion;
 using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class LayerController : MonoBehaviour
 {
     public BlockData blockData;
-    private LayeredBoxelSystem layeredBoxelSystem; //인스펙터 연결
+    public LayeredBoxelSystem _layeredBoxelSystem; //인스펙터 연결
     private ModelScaling ModelScaling;
     public GameObject parentGuideObject;
     private ModelFloorChecker _modelFloorChecker;
@@ -30,7 +31,7 @@ public class LayerController : MonoBehaviour
     {
         outlineRenderer = new OutlineRenderer();
         curGuideObjects = new List<GameObject>();
-        layeredBoxelSystem = FindObjectOfType<LayeredBoxelSystem>();
+        _layeredBoxelSystem = FindObjectOfType<LayeredBoxelSystem>();
         ModelScaling = FindObjectOfType<ModelScaling>();
         _modelFloorChecker = FindObjectOfType<ModelFloorChecker>();
         curLayerdata = new LayerData();
@@ -71,29 +72,21 @@ public class LayerController : MonoBehaviour
         Debug.Log("LayerController : AdvanceFloor()");
         Debug.Log($"LayController : index{curIndex}");
         
-        keys = layeredBoxelSystem.GetKeys();
+        keys = _layeredBoxelSystem.GetKeys();
         curIndex++;
         Debug.Log($"LayerController : curIndex - {curIndex}");
         if (curIndex < keys.Count)
         {
-            if (curIndex == 0)
+            foreach (GameObject obj in curGuideObjects)
             {
-                layeredBoxelSystem.DeactivateAll();
+                Debug.Log("LayerController : Advance Floor Destory Guide objects");
+                Destroy(obj);
             }
 
-            else
-            {
-                foreach (GameObject obj in curGuideObjects)
-                {
-                    Debug.Log("LayerController : Advance Floor Destory Guide objects");
-                    Destroy(obj);
-                }
-
-                curGuideObjects.Clear();
-                Debug.Log($"LayerController : cuGuideObjects.Clear() {curGuideObjects} ");
-            }
+            curGuideObjects.Clear();
+            Debug.Log($"LayerController : cuGuideObjects.Clear() {curGuideObjects} ");
             
-            curLayerdata = layeredBoxelSystem.GetLayerData(keys[curIndex]);
+            curLayerdata = _layeredBoxelSystem.GetLayerData(keys[curIndex]);
             //FIXME : 중복으로 계속 생기는 문제 해결
             GameObject guideObject = new GameObject("Gudieline");
 

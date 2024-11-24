@@ -10,6 +10,12 @@ public class ModelgenerateController : MonoBehaviour
     private GameObject modelObject;
     private MeshFilter modelMeshFilter;
     private MeshRenderer modelMeshRenderer;
+    private Material rootMat;
+    private Renderer rootRenderer;
+    public Material CompletionMat;
+    public Material orgMat;
+    private float transparency = 0.5f;
+
     public void Awake()
     {
         _layeredBoxelSystem = FindObjectOfType<LayeredBoxelSystem>();
@@ -32,7 +38,62 @@ public class ModelgenerateController : MonoBehaviour
         _cMeshVoxelizerWindow.Voxelize(modelMeshFilter.gameObject);
         Debug.Log("Layering");
         _layeredBoxelSystem.DoLayering(modelObject);
-        Debug.Log("AdvanceFloor");
+        ChangeLayertoChild(modelObject, "OrgModel");
+        //_layeredBoxelSystem.DeactivateAll();
+    }
+
+    // 한 층 올리기
+    public void AdvanceLayer()
+    {
         _layerController.AdvanceFloor();
     }
+
+    // 오브젝트 및 오브젝트 자식 레이어 변경
+
+    public void ChangeLayertoChild(GameObject root, string layerName)
+    {
+        int layer = LayerMask.NameToLayer(layerName);
+        root.layer = layer;
+        ChangeLayerRecursively(root, layer);
+    }
+    public void ChangeLayerRecursively(GameObject root, int layer)
+    {
+        rootRenderer = root.GetComponent<Renderer>();
+        if(rootRenderer != null){
+            if (orgMat == null)
+            {
+                orgMat = rootRenderer.material;
+            }
+            rootRenderer.material = CompletionMat;
+            //SetMaterialToTransparent(rootMat);
+            //Color color = rootMat.color;
+            //color.a = transparency; // 투명도 설정
+            //rootMat.color = color;
+        }
+        root.layer = layer;
+        foreach (Transform child in root.transform)
+        {
+            if (child != null)
+            {
+                ChangeLayerRecursively(child.gameObject, layer);
+            }
+        }
+
+    }
+
+    // private void SetMaterialToTransparent(Material material)
+    // {
+    //     material.SetFloat("_AlphaMode", 1); // 0: Opaque, 1: Blend
+    //     Debug.Log($"ModelGenController : AlphaMode : {material.GetFloat("_AlphaMode")}");
+    //     material.SetOverrideTag("RenderType", "Transparent");
+    //     Debug.Log($"ModelGenController : RenderType : {material.GetFloat("RenderType")}");
+    //     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+    //     Debug.Log($"ModelGenController : SrcBlend : {material.GetInt("_SrcBlend")}");
+    //     material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+    //     Debug.Log($"ModelGenController : DstBlend : {material.GetInt("_DstBlend")}");
+    //     material.SetInt("_ZWrite", 0);
+    //     Debug.Log($"ModelGenController : ZWrite : {material.GetInt("_ZWrite")}");
+    //     material.renderQueue = 3000;
+    //     Debug.Log($"ModelGenController : renderQueue : {material.renderQueue}");
+    // }
 }

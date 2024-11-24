@@ -8,6 +8,42 @@ using UnityEngine;
 
 public static partial class RealtimeDatabase
 {
+    
+    /// <summary>
+    /// 닉네임 중복을 확인하고 사용자 생성 시 닉네임을 등록합니다.
+    /// </summary>
+    /// <param name="userId">생성할 사용자의 ID</param>
+    /// <param name="user">생성할 사용자 객체</param>
+    /// <param name="onSuccess">작업 성공 시 호출되는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void CreateUserWithUsername(string userId, User user, Action onSuccess = null,
+        Action<Exception> onFailure = null)
+    {
+        ReadData<string>($"usernames/{user.name}",
+            onSuccess: existingUserId =>
+            {
+                if (!string.IsNullOrEmpty(existingUserId))
+                {
+                    // 중복된 닉네임 존재
+                    onFailure?.Invoke(new Exception("이미 사용 중인 닉네임입니다."));
+                }
+                else
+                {
+                    // 유저 생성 및 닉네임 등록
+                    CreateUser(userId, user,
+                        onSuccess: () => { CreateData($"usernames/{user.name}", userId, onSuccess, onFailure); },
+                        onFailure);
+                }
+            },
+            onFailure: exception =>
+            {
+                // 닉네임이 존재하지 않거나 오류 발생 시 유저 생성
+                CreateUser(userId, user,
+                    onSuccess: () => { CreateData($"usernames/{user.name}", userId, onSuccess, onFailure); },
+                    onFailure);
+            });
+    }
+
     /// <summary>
     /// 특정 유저를 생성합니다.
     /// </summary>
@@ -30,6 +66,43 @@ public static partial class RealtimeDatabase
     {
         ReadData($"users/{userId}", onSuccess, onFailure);
     }
+    
+    /// <summary>
+    /// 닉네임을 사용하여 사용자 ID를 검색합니다.
+    /// </summary>
+    /// <param name="username">검색할 닉네임</param>
+    /// <param name="onSuccess">일치하는 사용자 ID를 반환하는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void FindUserIdByUsername(string username, Action<string> onSuccess, Action<Exception> onFailure)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            onFailure?.Invoke(new ArgumentException("닉네임은 비어 있을 수 없습니다."));
+            return;
+        }
+
+        DatabaseReference usernamesRef = FirebaseDatabase.DefaultInstance.GetReference("usernames");
+        usernamesRef.Child(username).GetValueAsync().ContinueWith(task => 
+        {
+            if (task.IsFaulted)
+            {
+                onFailure?.Invoke(new Exception($"닉네임 검색 중 오류 발생: {task.Exception}", task.Exception));
+                return;
+            }
+
+            DataSnapshot snapshot = task.Result;
+            if (snapshot.Exists)
+            {
+                string userId = snapshot.Value.ToString();
+                onSuccess?.Invoke(userId);
+            }
+            else
+            {
+                onSuccess?.Invoke(null); // 해당 닉네임을 가진 사용자가 없음을 null로 표시
+            }
+        });
+    }
+    
 
     /// <summary>
     /// 유저 데이터를 업데이트합니다.
@@ -53,6 +126,63 @@ public static partial class RealtimeDatabase
     {
         DeleteData($"users/{userId}", onSuccess, onFailure);
     }
+    
+    /// <summary>
+    /// 이름을 사용해 사용자 ID를 검색합니다.
+    /// </summary>
+    /// <param name="name">검색할 이름</param>
+    /// <param name="onSuccess">일치하는 사용자 목록을 반환하는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void FindUserIdsByName(string name, Action<Dictionary<string, User>> onSuccess, Action<Exception> onFailure)
+    {
+        ReadData<Dictionary<string, User>>($"users",
+            onSuccess: users =>
+            {
+                Dictionary<string, User> matchedUsers = new Dictionary<string, User>();
+
+                foreach (var userEntry in users)
+                {
+                    if (userEntry.Value.name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchedUsers[userEntry.Key] = userEntry.Value;
+                    }
+                }
+
+                if (matchedUsers.Count > 0)
+                {
+                    onSuccess(matchedUsers);
+                }
+                else
+                {
+                    onFailure(new Exception("해당 이름을 가진 사용자를 찾을 수 없습니다."));
+                }
+            },
+            onFailure);
+    }
+    
+    /// <summary>
+    /// 사용자 ID를 사용해 닉네임을 검색합니다.
+    /// </summary>
+    /// <param name="userId">검색할 사용자 ID</param>
+    /// <param name="onSuccess">사용자의 닉네임을 반환하는 콜백</param>
+    /// <param name="onFailure">작업 실패 시 호출되는 콜백</param>
+    public static void FindNameById(string userId, Action<string> onSuccess, Action<Exception> onFailure)
+    {
+        ReadData<User>($"users/{userId}",
+            onSuccess: user =>
+            {
+                if (user != null && !string.IsNullOrEmpty(user.name))
+                {
+                    onSuccess(user.name);
+                }
+                else
+                {
+                    onFailure(new Exception("해당 ID를 가진 사용자를 찾을 수 없습니다."));
+                }
+            },
+            onFailure);
+    }
+
 
     /// <summary>
     /// 특정 유저의 영지 데이터를 생성하거나 업데이트합니다.
@@ -106,62 +236,6 @@ public static partial class RealtimeDatabase
     public static void ListenForUserLandChanges(string userId, Action<UserLand> onDataChanged, Action<Exception> onError = null)
     {
         ListenForDataChanges($"user_land/{userId}", onDataChanged, onError);
-    }
-
-    /// <summary>
-    /// 특정 유저의 친구 목록에 친구를 추가합니다.
-    /// </summary>
-    /// <param name="userId">친구를 추가할 유저의 ID입니다.</param>
-    /// <param name="friend">추가할 친구 객체입니다.</param>
-    /// <param name="onSuccess">작업이 성공하면 호출되는 콜백입니다.</param>
-    /// <param name="onFailure">작업이 실패하면 호출되는 콜백입니다.</param>
-    public static void AddFriend(string userId, Friend friend, Action onSuccess = null, Action<Exception> onFailure = null)
-    {
-        GetFriendList(userId, friendList =>
-        {
-            if (friendList == null) 
-                friendList = new FriendList();
-           
-            friendList.AddFriend(friend);
-
-            CreateData($"friend_list/{userId}", friendList, onSuccess, onFailure);
-        }, onFailure);
-    }
-
-    /// <summary>
-    /// 특정 유저의 친구 목록을 읽어옵니다.
-    /// </summary>
-    /// <param name="userId">친구 목록을 읽어올 유저의 ID입니다.</param>
-    /// <param name="onSuccess">데이터를 성공적으로 읽어오면 호출되는 콜백입니다.</param>
-    /// <param name="onFailure">데이터 읽기에 실패하면 호출되는 콜백입니다.</param>
-    public static void GetFriendList(string userId, Action<FriendList> onSuccess, Action<Exception> onFailure = null)
-    {
-        ReadData($"friend_list/{userId}", onSuccess, onFailure);
-    }
-
-    /// <summary>
-    /// 특정 유저의 친구 목록에서 친구를 삭제합니다.
-    /// </summary>
-    /// <param name="userId">친구를 삭제할 유저의 ID입니다.</param>
-    /// <param name="friendId">삭제할 친구의 ID입니다.</param>
-    /// <param name="onSuccess">작업이 성공하면 호출되는 콜백입니다.</param>
-    /// <param name="onFailure">작업이 실패하면 호출되는 콜백입니다.</param>
-    public static void RemoveFriend(string userId, string friendId, Action onSuccess = null, Action<Exception> onFailure = null)
-    {
-        GetFriendList(userId, friendList =>
-        {
-            if (friendList != null && friendList.friends.ContainsKey(friendId))
-            {
-                friendList.friends.Remove(friendId);
-
-                CreateData($"friend_list/{userId}", friendList, onSuccess, onFailure);
-            }
-            else
-            {
-                Debug.LogError("친구 삭제 실패: 친구 ID를 찾을 수 없습니다.");
-                onFailure?.Invoke(new Exception("친구 ID를 찾을 수 없습니다."));
-            }
-        }, onFailure);
     }
     
     public static void AddAiModel(string userId, Model model, Action onSuccess = null, Action<Exception> onFailure = null)
