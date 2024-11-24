@@ -18,7 +18,7 @@ public class StatueEditController : MonoBehaviour
     private Vector3 pos;
     
     public Camera playerCamera;
-    private GameObject newPreviewPrefab;
+    //private GameObject newPreviewPrefab;
     [SerializeField] private LayerMask BFLayerMask; 
     
     void Start()
@@ -33,10 +33,52 @@ public class StatueEditController : MonoBehaviour
             int curIndex = i;
             
             Debug.Log(i);
-            statueInventoryController.inventoryTargetList[i].GetComponent<Button>().onClick.AddListener(() => SetSelectedObjectIndex(curIndex));
+            statueInventoryController.inventoryTargetList[i].GetComponent<Button>().onClick.AddListener(() => StartPlacement(curIndex));
         }
     }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            OnClicked?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnExit?.Invoke();
+            Cursor.lockState = CursorLockMode.None;
+        }
+        
+    }
     
+    public void StartPlacement(int idx) // 클릭하는 버튼에 할당
+    {
+        //selectedObjectIndex =
+        //    objectDatabase.objectData.FindIndex(data => data.ID == ID); // data의 ID속성이 외부의 ID와 같으면 return true
+        if (idx < 0)
+        {
+            Debug.LogError($"No index Found{idx}");
+            return;
+        }
+        selectedObjectIndex = idx;
+
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+            currentCoroutine = null;
+            //해당 코루틴을 1번만 실행시켜주게 하는 코드
+        }
+
+        //currentCoroutine = StartCoroutine(PreviewObjectMoveController());
+
+
+        OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
+        OnExit += StopPlacement; // StopPlacement 메소드 구독
+
+        Cursor.lockState = CursorLockMode.Locked;
+
+    }
     public void StopPlacement()
     {
         
@@ -50,7 +92,7 @@ public class StatueEditController : MonoBehaviour
             currentCoroutine = null;
         }
         
-        Destroy(newPreviewPrefab);
+        //Destroy(newPreviewPrefab);
         isInstantitate = false;
     }
     

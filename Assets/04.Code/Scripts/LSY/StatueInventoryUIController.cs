@@ -74,6 +74,7 @@ public class StatueInventoryUIController : MonoBehaviour
         ContentBG.DOSizeDelta(new Vector2(584f, 696f), duration);
         CategoryBG.DOSizeDelta(new Vector2(584f, 793f), duration);
         //bakcBtn.gameObject.GetComponent<RectTransform>().DOAnchorPos(listInteriorModePoint.anchoredPosition, duration);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void SetInventoryMode()
