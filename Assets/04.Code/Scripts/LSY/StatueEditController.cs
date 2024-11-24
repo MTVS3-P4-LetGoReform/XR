@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
-using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GLTFast;
+using UnityEditor.Rendering;
 using UnityEngine.UI;
 
 public class StatueEditController : MonoBehaviour
 {
+    
     private int selectedObjectIndex = -1;
     public event Action OnClicked, OnExit;
     private Coroutine currentCoroutine;
@@ -16,25 +18,22 @@ public class StatueEditController : MonoBehaviour
     private StatueInventoryUIController statueInventoryUIController;
     private RaycastHit Hit;
     private Vector3 pos;
+    public float scaleFactor = 3f;
+
+    public Material previewMat;
     
-    public Camera playerCamera;
-    //private GameObject newPreviewPrefab;
     [SerializeField] private LayerMask BFLayerMask; 
+    [SerializeField] private LayerMask IPLayerMask;
+    [SerializeField] private TestInteriorMode _testInteriorMode;
+    [SerializeField] private GameObject newPreviewPrefab;
     
     void Start()
     {
         StopPlacement();
-        StartCoroutine(FindPlayerCamera());
+        _testInteriorMode = FindObjectOfType<TestInteriorMode>();
         StartCoroutine(FindInventoryController());
         StartCoroutine(FindInventoryUIController());
 
-        for (int i = 0; i < statueInventoryController.inventoryTargetList.Count; i++)
-        {
-            int curIndex = i;
-            
-            Debug.Log(i);
-            statueInventoryController.inventoryTargetList[i].GetComponent<Button>().onClick.AddListener(() => StartPlacement(curIndex));
-        }
     }
 
     void Update()
@@ -54,14 +53,14 @@ public class StatueEditController : MonoBehaviour
     
     public void StartPlacement(int idx) // 클릭하는 버튼에 할당
     {
-        //selectedObjectIndex =
-        //    objectDatabase.objectData.FindIndex(data => data.ID == ID); // data의 ID속성이 외부의 ID와 같으면 return true
+        Debug.Log("StatueEditController : StartPlacement()");
         if (idx < 0)
         {
             Debug.LogError($"No index Found{idx}");
             return;
         }
         selectedObjectIndex = idx;
+        Debug.Log($"selectedObjectIndex : {selectedObjectIndex}");
 
         if (currentCoroutine != null)
         {
@@ -70,8 +69,9 @@ public class StatueEditController : MonoBehaviour
             //해당 코루틴을 1번만 실행시켜주게 하는 코드
         }
 
-        //currentCoroutine = StartCoroutine(PreviewObjectMoveController());
+        //currentCoroutin = StartCoroutine(PreviewObjectMoveController());
 
+        currentCoroutine = StartCoroutine(PreviewObjectMoveController());
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
         OnExit += StopPlacement; // StopPlacement 메소드 구독
@@ -91,33 +91,33 @@ public class StatueEditController : MonoBehaviour
             StopCoroutine(currentCoroutine);
             currentCoroutine = null;
         }
-        
-        //Destroy(newPreviewPrefab);
+        Destroy(newPreviewPrefab);
         isInstantitate = false;
     }
     
-    IEnumerator FindPlayerCamera()
-    {
-        while (playerCamera == null)
-        {
-            GameObject playerCamObj = GameObject.FindWithTag("PlayerCamera");
-
-            if (playerCamObj != null)
-            {
-                playerCamera = playerCamObj.GetComponent<Camera>();
-            }
-
-            yield return null;
-        }
-    }
 
     IEnumerator FindInventoryController()
     {
         while (statueInventoryController == null)
         {
+            Debug.Log("FindInventoryController");
             statueInventoryController = FindObjectOfType<StatueInventoryController>();
+            yield return null;
         }
-        yield return null;
+
+        Debug.Log($"statueInventoryController - {statueInventoryController}");
+        InitializeInventoryTargets();
+    }
+    
+    void InitializeInventoryTargets()
+    {
+        for (int i = 0; i < statueInventoryController.inventoryTargetList.Count; i++)
+        {
+            int curIndex = i;
+            statueInventoryController.installBtns[i].onClick.AddListener(() => StartPlacement(curIndex));
+            statueInventoryController.inventoryTargetList[i].GetComponent<Button>().onClick
+                .AddListener(() => ActivateInstallBtn(curIndex));
+        }
     }
     
     IEnumerator FindInventoryUIController()
@@ -125,14 +125,17 @@ public class StatueEditController : MonoBehaviour
         while (statueInventoryUIController == null)
         {
             statueInventoryUIController = FindObjectOfType<StatueInventoryUIController>();
+            yield return null;
         }
-        yield return null;
+        
     }
+    
     public bool IsPointerOnUI()
         => EventSystem.current.IsPointerOverGameObject(); // EventSystem에서 현재 마우스위치가 UI위에 있는지 판별
     
      private async void PlaceStructure() // 카메라Ray의 위치에 선택한 가구 배치
     {
+        Debug.Log($"StatueEditController : PlaceStructure");
         if (IsPointerOnUI()) // 판별값이 true일때 placeStructure 실행
         {
             Cursor.lockState = CursorLockMode.None;
@@ -144,11 +147,13 @@ public class StatueEditController : MonoBehaviour
         
         // 설치할 오브젝트 생성
         StatueData statueData = statueInventoryController.statueDatas[selectedObjectIndex];
+        Debug.Log($"statueData Id : {statueData.modelId}");
         GltfImport gltfImport = statueData.modelGltf;
+        Debug.Log($"statueData gltfImport : {statueData.modelGltf}");
         GameObject glbObject = new GameObject("GLBModel");
         
         // 설치할 오브젝트 위치 설정
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        Ray ray = new Ray(_testInteriorMode.userCamera.transform.position, _testInteriorMode.userCamera.transform.forward);
         
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BFLayerMask))
         {
@@ -175,11 +180,52 @@ public class StatueEditController : MonoBehaviour
         }
     }
 
-    public void SetSelectedObjectIndex(int idx)
+    public void ActivateInstallBtn(int idx)
     {
-        selectedObjectIndex = idx;
-        statueInventoryUIController.ActivateInstallBtn(idx);
-        Debug.Log("selectedObjectIndex : "+idx);
+        Debug.Log($"ActivateInstallBtn {idx}");
+        statueInventoryController.installBtns[idx].gameObject.SetActive(true);
     }
-    
+
+    private IEnumerator PreviewObjectMoveController()
+    {
+        
+        Debug.Log("PreviewObjectMoveController");
+        if (!isInstantitate)
+        {
+            Debug.Log("isInsantiate = flase");
+            yield return CreatePreviewObjectAsync(); // 비동기 메서드를 호출
+            isInstantitate = true; // 생성 완료 플래그 설정
+        }
+        
+        while (true)
+        {
+            Debug.Log("while");
+            Ray ray = new Ray(_testInteriorMode.userCamera.transform.position,
+                _testInteriorMode.userCamera.transform.forward);
+            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
+            {
+                pos = Hit.point;
+
+                pos = new Vector3(
+                    Mathf.Floor(pos.x),
+                    Mathf.Floor(pos.y),
+                    Mathf.Floor(pos.z));
+                Debug.Log($"pos : {pos}");
+                newPreviewPrefab.transform.position = pos;
+            }
+            
+            yield return null;
+        }
+    }
+    private async Task CreatePreviewObjectAsync()
+    {
+        Debug.Log("CreatePreviewObjectAsync start");
+        GltfImport gltfImport = statueInventoryController.statueDatas[selectedObjectIndex].modelGltf;
+        newPreviewPrefab = new GameObject("PreviewModel");
+        Vector3 scaleVec3 = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        newPreviewPrefab.transform.localScale = scaleVec3;
+        await gltfImport.InstantiateMainSceneAsync(newPreviewPrefab.transform); // 비동기 작업
+        newPreviewPrefab.GetComponentInChildren<Renderer>().material = previewMat;
+        Debug.Log("CreatePreviewObjectAsync Finish");
+    }
 }

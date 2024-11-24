@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class StatueInventoryUIController : MonoBehaviour
 {
+    // 스태츄 인벤토리 최상위 캔버스 오브젝트
+    public GameObject statueInventoryCanvas;
     // 스태츄 인벤토리 전체 UI
     public RectTransform statueInventoryUI;
     // 하위 스태츄 정보 UI(왼쪽 페이지)

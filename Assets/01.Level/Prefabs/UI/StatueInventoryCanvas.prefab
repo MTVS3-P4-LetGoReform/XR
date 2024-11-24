@@ -3930,58 +3930,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &4022873913084910098
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 995038328503309671}
-  - component: {fileID: 7737663963676868373}
-  m_Layer: 0
-  m_Name: StatueEditController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &995038328503309671
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4022873913084910098}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3055011260039957498}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &7737663963676868373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4022873913084910098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cce205a28c448a9ae8415c3b7b2aa1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 0}
-  BFLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!1 &4138585138357153051
 GameObject:
   m_ObjectHideFlags: 0
@@ -5391,6 +5339,16 @@ MonoBehaviour:
   - {fileID: 8479348802851566017}
   - {fileID: 6101592563448733047}
   - {fileID: 1094762422513082039}
+  installBtns:
+  - {fileID: 8497745654461417652}
+  - {fileID: 8936571693104858258}
+  - {fileID: 7131559970043603937}
+  - {fileID: 8170798705534863398}
+  - {fileID: 2598631869145201775}
+  - {fileID: 8613536509975159952}
+  - {fileID: 5623715731789212240}
+  - {fileID: 2745464459504676830}
+  - {fileID: 9183620330366866819}
 --- !u!1 &5770915647827189209
 GameObject:
   m_ObjectHideFlags: 0
@@ -7810,7 +7768,6 @@ RectTransform:
   - {fileID: 7632819305178863661}
   - {fileID: 4696554845040399559}
   - {fileID: 1608025225412953997}
-  - {fileID: 995038328503309671}
   m_Father: {fileID: 2024102107880577132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}

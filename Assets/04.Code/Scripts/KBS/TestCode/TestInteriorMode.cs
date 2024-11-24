@@ -24,7 +24,7 @@ public class TestInteriorMode : MonoBehaviour
 
     private float rotateSpeed = 200f;
 
-    [SerializeField] private Camera userCamera;
+    [SerializeField] public Camera userCamera;
     [SerializeField] private GameObject newUserCamera;
 
 

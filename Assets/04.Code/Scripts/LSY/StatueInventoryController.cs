@@ -16,6 +16,8 @@ public class StatueInventoryController : MonoBehaviour
     
     public List<StatueData> statueDatas;
 
+    public List<Button> installBtns;
+
     public void Start()
     {
         statueDatas = new List<StatueData>();
