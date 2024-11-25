@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class TempDecoMarket : MonoBehaviour
 {
-   public Button tempTreeButton;
+   public GameObject ChriTree;
    public Canvas bpShopCanvas;
    public Canvas userInfoCanvas;
    public Image imagePurchaseBG;
@@ -12,7 +12,7 @@ public class TempDecoMarket : MonoBehaviour
 
    public void tempTreeButtonTrueOnClick()
    {
-      tempTreeButton.gameObject.SetActive(true);
+      
    }
 
    public void bPShopButtonTrueOnClick()
@@ -30,6 +30,8 @@ public class TempDecoMarket : MonoBehaviour
    public void bpShopPurchaseButtonOnClick()
    {
       imagePurchaseBG.gameObject.SetActive(true);
+      
+      ChriTree.gameObject.SetActive(true);
    }
    
    public void PurchaseBgPurchaseButtonOnClick()
