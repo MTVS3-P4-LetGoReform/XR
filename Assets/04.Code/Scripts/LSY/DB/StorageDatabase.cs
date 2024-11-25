@@ -60,7 +60,7 @@ public static class StorageDatabase
         Debug.Log("다운로드 완료");
     }
     
-    public async UniTask DownLoadImage(string imageName, string localPath)
+    public static async UniTask DownLoadImage(string imageName, string localPath)
     {
         if (_debugModeData.DebugMode)
         {
@@ -92,7 +92,7 @@ public static class StorageDatabase
     }
 
     
-    public async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
+    public static async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
     {
         if (_debugModeData.DebugMode == false)
         {
