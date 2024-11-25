@@ -2,17 +2,22 @@ using UnityEngine;
 using Photon.Chat;
 using ExitGames.Client.Photon;
 using TMPro;
+using UnityEngine.UI;
 
 public class ChatController : MonoBehaviour, IChatClientListener
 {
 	public TMP_InputField inputField;
 	public TMP_Text outputText;
 
+	public Button chatOn;
+	public Button chatOff;
+	public GameObject chatPanel;
+
 	private Canvas _canvas;
 	private ChatClient _chatClient;
 	private string _userName;
 	private string _currentChannelName;
-	private string _appId = "f9b6f292-fcf5-424d-8d31-75b7450643f2";
+	private const string AppId = "f9b6f292-fcf5-424d-8d31-75b7450643f2";
 	
 
 	private void Awake()
@@ -20,6 +25,8 @@ public class ChatController : MonoBehaviour, IChatClientListener
 		UserData.ChangeName += OnChangedUserName;
 		_userName = UserData.Instance.UserName;
 		_canvas = GetComponent<Canvas>();
+		chatOn.onClick.AddListener(() => ToggleChatPanel(true));
+		chatOff.onClick.AddListener(() => ToggleChatPanel(false));
 	}
 
 	void Start()
@@ -33,10 +40,16 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 		_chatClient = new ChatClient(this);
 
-		_chatClient.Connect(_appId, "1", new AuthenticationValues(_userName));
+		_chatClient.Connect(AppId, "1", new AuthenticationValues(_userName));
 
 		//AddLine(string.Format("연결시도", _userName));
 		AddLine("연결시도");
+	}
+
+	private void ToggleChatPanel(bool active)
+	{
+		chatOn.gameObject.SetActive(!active);
+		chatPanel.SetActive(active);
 	}
 
 	private void OnChangedUserName()
