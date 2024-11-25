@@ -141,7 +141,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
             }
         }
 
-        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, BMLayerMask))
+        if (Physics.Raycast(ray, out Hit, Mathf.Infinity,BMLayerMask))
         {
             if (Hit.collider != null && Hit.collider.name == "BlockMaker")
             {
