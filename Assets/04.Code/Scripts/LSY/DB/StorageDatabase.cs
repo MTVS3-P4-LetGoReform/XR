@@ -1,30 +1,29 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Firebase.Storage;
 using Application = UnityEngine.Device.Application;
 
 
-public class StorageDatabase
+public static class StorageDatabase
 {
-    private FirebaseStorage storage;
-    private StorageReference storage_ref;
-    private StorageReference isstorage_ref;
-    private string local_url;
-    private WebApiData webApiData;
-    public DebugModeData _debugModeData;
+    private static FirebaseStorage storage;
+    private static StorageReference storage_ref;
+    private static StorageReference isstorage_ref;
+    private static string local_url;
+    private static WebApiData webApiData;
+    public static DebugModeData _debugModeData;
 
-    public StorageDatabase(WebApiData webapi, DebugModeData debugmodedata)
+    public static void InitializStorageDatabase(WebApiData webapi, DebugModeData debugmodedata)
     {
         webApiData = webapi;
         _debugModeData = debugmodedata;
         storage = FirebaseStorage.DefaultInstance;
         storage_ref = storage.GetReferenceFromUrl(webApiData.StorageBaseUrl);
-        //isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint+"/"+webApiData.TempModelName);
-        //local_url = Application.persistentDataPath + webApiData.TempModelName;
     }
     
-    public async UniTask DownModel(string modelName)
+    public static async UniTask DownModel(string modelName)
     {
         if (_debugModeData.DebugMode == true)
         {
@@ -41,7 +40,7 @@ public class StorageDatabase
         await isstorage_ref.GetFileAsync(local_url);
     }
     
-    public async UniTask DownImage(string imageName)
+    public static async UniTask DownImage(string imageName)
     {
         if (_debugModeData.DebugMode == true)
         {
@@ -55,11 +54,45 @@ public class StorageDatabase
         {
             Debug.LogWarning("이미 파일이 존재합니다. 파일명 :" + local_url);
         }
-        Debug.Log("로컬 다운로드 주소 : "+local_url);
+
+        Debug.Log("로컬 다운로드 주소 : " + local_url);
         await isstorage_ref.GetFileAsync(local_url);
+        Debug.Log("다운로드 완료");
     }
     
-    public async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
+    public static async UniTask DownLoadImage(string imageName, string localPath)
+    {
+        if (_debugModeData.DebugMode)
+        {
+            Debug.Log("현재 DebugMode입니다.");
+            return;
+        }
+
+        isstorage_ref = storage_ref.Child("images").Child(imageName);
+        Debug.Log("StorageDatabase : isstorage_ref - " + isstorage_ref);
+        Debug.Log("로컬 다운로드 주소 : " + localPath);
+
+        // 로컬 파일 경로 확인
+        if (File.Exists(localPath))
+        {
+            Debug.LogWarning("이미 파일이 존재합니다. 파일명: " + localPath);
+            return; // 파일이 존재하면 다운로드를 중단합니다.
+        }
+
+        try
+        {
+            // Firebase에서 파일 다운로드
+            await isstorage_ref.GetFileAsync(localPath);
+            Debug.Log("다운로드 완료");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"다운로드 중 오류 발생: {e.Message}");
+        }
+    }
+
+    
+    public static async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
     {
         if (_debugModeData.DebugMode == false)
         {
@@ -73,9 +106,4 @@ public class StorageDatabase
         
         _sessionUIManager.CreatePlaySession();
     }
-    // public async UniTask DownModelPlaySessionDebug(string modelName, SessionUIManager _sessionUIManager)
-    // {
-    //     
-    //     _sessionUIManager.CreatePlaySession();
-    // }
 }

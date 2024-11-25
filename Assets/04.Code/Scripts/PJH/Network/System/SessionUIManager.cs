@@ -12,7 +12,7 @@ public class SessionUIManager : MonoBehaviour
 {
     public static SessionUIManager Instance { get; private set; }
 
-    public StorageDatabase _storageDatabase;
+    //public StorageDatabase _storageDatabase;
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPromptInput;
     
@@ -22,7 +22,7 @@ public class SessionUIManager : MonoBehaviour
     
     public WebApiData webApiData;
     public WebCommManager _webCommManager;
-    public DebugModeData _debugmodeData;
+    public DebugModeData _debugModeData;
     
    
     private void Awake()
@@ -47,7 +47,8 @@ public class SessionUIManager : MonoBehaviour
         createRoomBack.onClick.AddListener(OffCreateRoom);*/
         //createRoomRecreate.onClick.AddListener(ImageCraft);
         //createRoomStart.onClick.AddListener(CreatePlaySession);
-        _storageDatabase = new StorageDatabase(webApiData, _debugmodeData);
+        // TESTME : storagedatabase static 변경
+        StorageDatabase.InitializStorageDatabase(webApiData, _debugModeData);
     }
 
     // private void ImageCraft()
@@ -87,7 +88,8 @@ public class SessionUIManager : MonoBehaviour
             Image targetImage = roomInfo.image;
 
             await UniTask.Yield();
-            await _storageDatabase.DownImage(webApiData.ImageName);
+            // TESTME : storagedatabase static 변경
+            await StorageDatabase.DownImage(webApiData.ImageName);
 
             UpdateImage(url, targetImage).Forget();
 
