@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GLTFast;
-using UnityEditor.Rendering;
 using UnityEngine.UI;
 
 public class StatueEditController : MonoBehaviour
