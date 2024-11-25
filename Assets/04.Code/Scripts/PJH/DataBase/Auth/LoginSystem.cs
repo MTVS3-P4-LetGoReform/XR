@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
+using Firebase.Database;
 using GLTFast.Schema;
 using TMPro;
 using UnityEngine;
@@ -25,6 +26,14 @@ public class LoginSystem : MonoBehaviour
 
     [SerializeField] private ObjectDatabase characterDatabase;
     [SerializeField] private int selectedObjectIndex = -1;
+
+    private void Awake()
+    {
+        FirebaseDatabase.DefaultInstance.SetPersistenceEnabled(false);
+        FirebaseDatabase.DefaultInstance.GoOffline();
+        FirebaseDatabase.DefaultInstance.GoOnline();
+    }
+
     private async void Start()
     {
         await InitializeFirebaseAsync();
@@ -83,7 +92,7 @@ public class LoginSystem : MonoBehaviour
         Debug.Log($"select_{id}, selectedObjectIndex : "+selectedObjectIndex);
     }
 
-    public async void GotoPlayScene()
+    public async void GotoParkScene()
     {
         var sceneName = SceneUtility.GetScenePathByBuildIndex(1);
         await SceneLoadManager.Instance.LoadScene(sceneName);

@@ -7,17 +7,18 @@ using UnityEngine;
 public static partial class RealtimeDatabase
 {
     // 점수 업데이트
-    public static void UpdateScore(string modelId, string username, int score)
+    public static async UniTask UpdateScore(string modelId, int score)
     {
         try
         {
+            var currentScore = score + 1;
             var updates = new Dictionary<string, object>
             {
-                { "score", score++ }
+                { "score", currentScore }
             };
 
-            RealtimeDatabase.UpdateData($"models/{modelId}",updates);
-            Debug.Log($"좋아요 업데이트 됨 - 모델이름 : {modelId}, 좋아요 수 : {score}");
+            await UpdateDataAsync($"models/{modelId}",updates);
+            Debug.Log($"좋아요 업데이트 됨 - 모델이름 : {modelId}, 좋아요 수 : {currentScore}");
         }
         catch (Exception e)
         {
@@ -27,67 +28,85 @@ public static partial class RealtimeDatabase
     
     // 상위 랭킹 조회
     public static async UniTask<List<RankingEntry>> GetTopRankings(int limit = 9)
+{
+    List<RankingEntry> rankings = new List<RankingEntry>();
+
+    await EnsureInitializedAsync(onInitialized: () => { },
+        onFailure: (error) => { Debug.LogError($"Firebase 초기화 실패: {error.Message}"); });
+
+    try
     {
-        List<RankingEntry> rankings = new List<RankingEntry>();
-        
-        try
+        var snapshot = await databaseReference.Child("models")
+            .OrderByChild("score")
+            .LimitToLast(limit)
+            .GetValueAsync();
+
+        // Firebase에서 내림차순으로 데이터를 가져오기 위해 역순으로 처리
+        var tempList = new List<RankingEntry>();
+
+        foreach (var child in snapshot.Children)
         {
-            var snapshot = await databaseReference.Child("models")
-                .OrderByChild("score")
-                .LimitToLast(limit)
-                .GetValueAsync();
+            var modelScore = JsonConvert.DeserializeObject<Model>(child.GetRawJsonValue());
 
-            int rank = 1;
-            // Firebase에서 내림차순으로 데이터를 가져오기 위해 역순으로 처리
-            var tempList = new List<RankingEntry>();
-            
-            foreach (var child in snapshot.Children)
+            // 필터링 조건: select_image_name과 prompt_ko가 없거나 비어있는 경우 건너뛰기
+            if (string.IsNullOrEmpty(modelScore.select_image_name) || string.IsNullOrEmpty(modelScore.prompt_ko))
             {
-                var modelScore = JsonConvert.DeserializeObject<Model>(child.GetRawJsonValue());
-                string userName = "";
-                RealtimeDatabase.FindNameById(modelScore.creator_id, onSuccess: (name) =>
-                    {
-                        userName = name;
-                        Debug.Log($"Found user name: {name}");
-                    },
-                    onFailure: (error) =>
-                    {
-                        Debug.LogError($"유저를 찾기 못했습니다. : {error.Message}");
-                    });
-
-                tempList.Add(new RankingEntry
-                {
-                    rank = rank++,
-                    username = userName,
-                    score = modelScore.score,
-                    modelName = modelScore.prompt_ko,
-                    modelImageName = modelScore.select_image_name,
-                    modelId = modelScore.id
-                });
+                Debug.LogWarning($"필터링된 데이터 - ID: {modelScore.id}");
+                continue;
             }
 
-            // 점수 내림차순으로 정렬
-            tempList.Sort((a, b) => b.score.CompareTo(a.score));
-            
-            // 순위 재할당
-            for (int i = 0; i < tempList.Count; i++)
+            string userName = "";
+            try
             {
-                tempList[i].rank = i + 1;
+                userName = await FindNameByIdAsync(modelScore.creator_id);
+                Debug.Log($"닉네임 조회 성공: {userName}");
+            }
+            catch (Exception e)
+            {
+                userName = "알 수 없는 사용자";
+                Debug.LogWarning($"닉네임 조회 실패: {e.Message}");
             }
 
-            rankings = tempList;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error fetching rankings: {e.Message}");
+            tempList.Add(new RankingEntry
+            {
+                rank = 0, // 정렬 후 순위를 재할당하므로 초기값은 0
+                username = userName,
+                score = modelScore.score,
+                modelName = modelScore.prompt_ko,
+                selectImageName = modelScore.select_image_name,
+                modelId = modelScore.id
+            });
         }
 
-        return rankings;
+        // 점수 내림차순으로 정렬
+        tempList.Sort((a, b) => b.score.CompareTo(a.score));
+
+        // 순위 재할당
+        for (int i = 0; i < tempList.Count; i++)
+        {
+            tempList[i].rank = i + 1;
+        }
+
+        rankings = tempList;
     }
+    catch (Exception e)
+    {
+        Debug.LogError($"Error fetching rankings: {e.Message}");
+    }
+
+    return rankings;
+}
+
 
     // 특정 Model의 랭킹 조회
     public static async UniTask<RankingEntry> GetModelRank(string modelId)
     {
+        RankingEntry result = null;
+
+        await EnsureInitializedAsync(
+            onInitialized: () => {Debug.Log($"Firebase 초기화"); },
+            onFailure: (error) => { Debug.LogError($"Firebase 초기화 실패: {error.Message}"); });
+
         try
         {
             var allScores = new List<KeyValuePair<string, Model>>();
@@ -102,28 +121,20 @@ public static partial class RealtimeDatabase
             // 점수로 정렬
             allScores.Sort((a, b) => b.Value.score.CompareTo(a.Value.score));
 
-            // 사용자의 순위 찾기
+            // 모델의 순위 찾기
             for (int i = 0; i < allScores.Count; i++)
             {
                 if (allScores[i].Key == modelId)
                 {
-                    string userName = "";
-                    RealtimeDatabase.FindNameById(allScores[i].Value.creator_id, onSuccess: (name) =>
-                        {
-                            userName = name;
-                            Debug.Log($"Found user name: {name}");
-                        },
-                        onFailure: (error) =>
-                        {
-                            Debug.LogError($"유저를 찾기 못했습니다. : {error.Message}");
-                        });
-
-                    return new RankingEntry
+                    // Null 체크 및 반환값 설정
+                    result = new RankingEntry
                     {
                         rank = i + 1,
-                        username = userName,
-                        score = allScores[i].Value.score
+                        modelName = allScores[i].Value?.prompt_ko ?? "알 수 없음",
+                        score = allScores[i].Value?.score ?? 0
                     };
+                    Debug.Log($"Rank: {result.rank}, UserName: {result.modelName}, Score: {result.score}");
+                    return result; // Rank를 찾았으면 해당 순위 반환
                 }
             }
         }
@@ -132,6 +143,8 @@ public static partial class RealtimeDatabase
             Debug.LogError($"Error fetching user rank: {e.Message}");
         }
 
-        return null;
+        return result; // EnsureInitialized가 끝난 후 반환
     }
+
+
 }
