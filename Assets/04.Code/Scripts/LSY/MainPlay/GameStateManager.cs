@@ -104,7 +104,6 @@ public class GameStateManager : MonoBehaviour
             // glTFast를 이용해 GLB 파일을 로드
             GltfImport gltfImport = new GltfImport();
             var success = await gltfImport.Load(filePath); // 비동기 로드 처리
-
             // 파일 로드에 성공하면 씬에 배치
             if (success)
             {
@@ -114,6 +113,7 @@ public class GameStateManager : MonoBehaviour
                 //glbObject.transform.SetParent(modelAreaObject.transform);
                 //glbObject.transform.localPosition = Vector3.zero;
                 //await
+                webApiData.ModelGltfImport = gltfImport;
                 await gltfImport.InstantiateMainSceneAsync(modelAreaObject.transform);
                 Debug.Log("GLB file instantiated in scene.");
                 GameObject generatedObject = modelAreaObject.transform.GetChild(modelAreaObject.transform.childCount - 1).gameObject;

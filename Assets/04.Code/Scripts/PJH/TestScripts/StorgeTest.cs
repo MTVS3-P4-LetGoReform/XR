@@ -8,13 +8,12 @@ public class StorgeTest : MonoBehaviour
 {
     public WebApiData webApiData;
     public DebugModeData debugModeData;
-    private StorageDatabase _storageDatabase;
 
     private string _selecetImageName = "241112_204518_8962318021d9594b534a29d0358c8d9c_0.png";
     public Image image;
     private async void Start()
     {
-        _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+        StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
         await RealtimeDatabase.InitializeFirebaseAsync();
         SetImage(_selecetImageName,image);
     }
@@ -32,7 +31,7 @@ public class StorgeTest : MonoBehaviour
         Debug.Log("url : " + url);
         
         Debug.Log("다운로드 시작");
-        await _storageDatabase.DownLoadImage(imageName, url);
+        await StorageDatabase.DownLoadImage(imageName, url);
         UpdateImage(url,modelImage).Forget();
     } 
     
