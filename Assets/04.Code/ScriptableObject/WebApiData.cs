@@ -1,3 +1,4 @@
+using GLTFast;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -99,5 +100,24 @@ public class WebApiData : ScriptableObject
     public string TempModelName
     {
         get { return tempModelName; }
+    }
+    
+    [SerializeField] private Sprite modelSprite;
+
+    public Sprite ModelSprite
+    {
+        set { modelSprite = value; }
+        get { return modelSprite; }
+    }
+
+    [SerializeField] private GltfImport modelGltfImport;
+    public GltfImport ModelGltfImport
+    {
+        set {
+            modelGltfImport = value;
+        }
+        get {
+            return modelGltfImport;
+        }
     }
 }

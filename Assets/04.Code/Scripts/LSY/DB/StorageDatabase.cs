@@ -6,26 +6,24 @@ using Firebase.Storage;
 using Application = UnityEngine.Device.Application;
 
 
-public class StorageDatabase
+public static class StorageDatabase
 {
-    private FirebaseStorage storage;
-    private StorageReference storage_ref;
-    private StorageReference isstorage_ref;
-    private string local_url;
-    private WebApiData webApiData;
-    public DebugModeData _debugModeData;
+    private static FirebaseStorage storage;
+    private static StorageReference storage_ref;
+    private static StorageReference isstorage_ref;
+    private static string local_url;
+    private static WebApiData webApiData;
+    public static DebugModeData _debugModeData;
 
-    public StorageDatabase(WebApiData webapi, DebugModeData debugmodedata)
+    public static void InitializStorageDatabase(WebApiData webapi, DebugModeData debugmodedata)
     {
         webApiData = webapi;
         _debugModeData = debugmodedata;
         storage = FirebaseStorage.DefaultInstance;
         storage_ref = storage.GetReferenceFromUrl(webApiData.StorageBaseUrl);
-        //isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint+"/"+webApiData.TempModelName);
-        //local_url = Application.persistentDataPath + webApiData.TempModelName;
     }
     
-    public async UniTask DownModel(string modelName)
+    public static async UniTask DownModel(string modelName)
     {
         if (_debugModeData.DebugMode == true)
         {
@@ -42,7 +40,7 @@ public class StorageDatabase
         await isstorage_ref.GetFileAsync(local_url);
     }
     
-    public async UniTask DownImage(string imageName)
+    public static async UniTask DownImage(string imageName)
     {
         if (_debugModeData.DebugMode == true)
         {
@@ -62,7 +60,7 @@ public class StorageDatabase
         Debug.Log("다운로드 완료");
     }
     
-    public async UniTask DownLoadImage(string imageName, string localPath)
+    public static async UniTask DownLoadImage(string imageName, string localPath)
     {
         if (_debugModeData.DebugMode)
         {
@@ -94,7 +92,7 @@ public class StorageDatabase
     }
 
     
-    public async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
+    public static async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
     {
         if (_debugModeData.DebugMode == false)
         {
@@ -108,9 +106,4 @@ public class StorageDatabase
         
         _sessionUIManager.CreatePlaySession();
     }
-    // public async UniTask DownModelPlaySessionDebug(string modelName, SessionUIManager _sessionUIManager)
-    // {
-    //     
-    //     _sessionUIManager.CreatePlaySession();
-    // }
 }

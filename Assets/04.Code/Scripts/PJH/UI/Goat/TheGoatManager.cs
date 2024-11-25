@@ -12,7 +12,6 @@ public class TheGoatManager : MonoBehaviour
 {
     public WebApiData webApiData;
     public DebugModeData debugModeData;
-    private StorageDatabase _storageDatabase;
     
     public GoatItem topItemPrefab;
     public GoatItem secItemPrefab;
@@ -26,7 +25,7 @@ public class TheGoatManager : MonoBehaviour
         FirebaseDatabase.DefaultInstance.GoOffline();
         FirebaseDatabase.DefaultInstance.GoOnline();
         
-        _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+        StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
         await RealtimeDatabase.InitializeFirebaseAsync();
         
         GetTopRankings().Forget();
@@ -82,7 +81,7 @@ public class TheGoatManager : MonoBehaviour
                 imageName = "DebugModeImage.png";
             }
             string url  = Path.Combine(Application.persistentDataPath,"Images",imageName);
-            await _storageDatabase.DownLoadImage(imageName,url);
+            await StorageDatabase.DownLoadImage(imageName,url);
             UpdateImage(url,modelImage).Forget();
         }
         catch (Exception e)

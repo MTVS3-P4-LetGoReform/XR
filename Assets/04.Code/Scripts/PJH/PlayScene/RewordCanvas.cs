@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using Fusion;
+using GLTFast;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,9 +18,10 @@ public class RewordCanvas : MonoBehaviour
 
     [SerializeField]
     private WebApiData webApiData;
-    private StorageDatabase _storageDatabase;
+    //private StorageDatabase _storageDatabase;
     private SessionInfo _sessionInfo;
     public DebugModeData debugModeData;
+    public StatueInventoryController _statueInventoryController;
 
     private const int DelayMilliseconds = 10000;
 
@@ -29,11 +32,12 @@ public class RewordCanvas : MonoBehaviour
             Debug.LogError("WebApiData 또는 DebugModeData가 초기화되지 않았습니다.");
             return;
         }
-        
+
+        StartCoroutine(FindStatueInventoryController());
         masterRewordButton.onClick.AddListener(MasterRewordHandler);
         userRewordButton.onClick.AddListener(UserRewordHandler);
-        
-        _storageDatabase = new StorageDatabase(webApiData, debugModeData);
+        // TESTME : storagedatabase static 변경
+        StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
         
         await LoadSessionInfo();
     }
@@ -78,7 +82,8 @@ public class RewordCanvas : MonoBehaviour
             webApiData.ImageName = imageName;
 
             // 이미지 다운로드
-            await _storageDatabase.DownImage(webApiData.ImageName);
+            // TESTME : storagedatabase static 변경
+            await StorageDatabase.DownImage(webApiData.ImageName);
             
             if (!File.Exists(url))
             {
@@ -120,16 +125,47 @@ public class RewordCanvas : MonoBehaviour
                 return;
             }
 
-            string modelId = GetModelId(_sessionInfo);
-            RealtimeDatabase.CopyModelToUser(userId, modelId);
+            if (webApiData == null)
+            {
+                Debug.LogError("webApiData가 초기화되지 않았습니다.");
+                return;
+            }
 
+            string modelId = GetModelId(_sessionInfo);
             Debug.Log("보상 획득: 스태츄");
+
+            if (debugModeData.DebugMode == true)
+            {
+                if (_statueInventoryController == null)
+                {
+                    Debug.LogError("Reword Canvas : _statueInventoryControll is null");
+                }
+                _statueInventoryController.StatueInvenTestBtn();
+            }
+            else
+            {
+                try
+                {
+                    Sprite sprite = SpriteConverter.ConvertFromPNG(webApiData.ImageName);
+                    GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath(webApiData.ModelName));
+                    _statueInventoryController.AddStatueToInven(modelId, sprite, gltfImport);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"스태츄 인벤토리 추가 실패: {ex.Message}");
+                    return;
+                }
+            }
 
             await RunnerManager.Instance.JoinPublicSession();
         }
         catch (Exception ex)
         {
             Debug.LogError($"MasterReword 처리 중 오류 발생: {ex.Message}");
+        }
+        finally
+        {
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
@@ -187,5 +223,15 @@ public class RewordCanvas : MonoBehaviour
             Debug.LogError($"UserReword 처리 중 오류 발생: {ex.Message}");
         }
         
+    }
+
+    IEnumerator FindStatueInventoryController()
+    {
+        while (_statueInventoryController == null)
+        {
+            Debug.Log($"RewordCanvas statueInventoryController : {_statueInventoryController}");
+            _statueInventoryController = GameObject.FindWithTag("StatueInventoryController").GetComponent<StatueInventoryController>();
+            yield return null;
+        }
     }
 }
