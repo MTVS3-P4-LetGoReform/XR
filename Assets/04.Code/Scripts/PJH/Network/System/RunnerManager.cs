@@ -67,6 +67,7 @@ public class RunnerManager : MonoBehaviour
          if (SceneManager.GetActiveScene().name == "Alpha_PlayScene")
          {
             await SharedGameDataSpawn();
+            await MicUISpawn();
             Debug.Log("공유게임정보 생성");
          }
       }
@@ -181,6 +182,12 @@ public class RunnerManager : MonoBehaviour
       await UniTask.WaitUntil(() => sharedGameDataOp.Status == NetworkSpawnStatus.Spawned);
       _sharedGameData = sharedGameDataOp.Object;
       _sharedGameData.name = $"Player: {_sharedGameData.Id}";
+   }
+
+   private async UniTask MicUISpawn()
+   {
+      var micCanvas = FindAnyObjectByType<MicCanvas>();
+      await micCanvas.SpawnOp();
    }
    
    private void InstantiateRunner()

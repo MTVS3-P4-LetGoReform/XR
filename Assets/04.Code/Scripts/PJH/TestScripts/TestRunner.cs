@@ -1,3 +1,4 @@
+/*
 using System;
 using Cysharp.Threading.Tasks;
 using Fusion;
@@ -17,7 +18,7 @@ public class TestRunner : MonoBehaviour
 
     private async UniTask FirstStartGame()
     {
-      
+        micCanvas = FindAnyObjectByType<MicCanvas>();
         var startArgs = new StartGameArgs
         {
             GameMode = GameMode.Shared,
@@ -31,3 +32,4 @@ public class TestRunner : MonoBehaviour
         }
     }
 }
+*/

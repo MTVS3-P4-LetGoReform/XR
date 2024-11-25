@@ -15,10 +15,14 @@ public class MicController : NetworkBehaviour
     private bool _micOn;
     private bool _micStatus;
     
-    private void Start()
+    public override void Spawned()
     {
         if (!HasStateAuthority)
+        {
+            this.enabled = false;
             return;
+        }
+           
         
         recorder = RunnerManager.Instance.runner.GetComponentInChildren<Recorder>();
         recorder.TransmitEnabled = false;
@@ -33,8 +37,8 @@ public class MicController : NetworkBehaviour
         
         _micStatus = (voiceNetworkObject.SpeakerInUse && voiceNetworkObject.IsSpeaking) || 
                      (voiceNetworkObject.RecorderInUse && voiceNetworkObject.IsRecording);
-        
-        //Debug.Log(_micStatus);
+
+        Debug.Log("마이크 입력체크 : " + _micStatus);
         IsPlaying?.Invoke(_micStatus);
     }
 
