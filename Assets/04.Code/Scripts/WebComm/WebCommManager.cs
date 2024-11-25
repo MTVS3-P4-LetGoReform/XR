@@ -162,6 +162,7 @@ public class WebCommManager : MonoBehaviour
         {
             ActiveModelCommLoading();
             webApiData.ImageName = genImageNameList[selectedImageIndex];
+            webApiData.ModelSprite = genImageList[selectedImageIndex].GetComponent<Image>().sprite;
             yield return StartCoroutine(_modelGen.RequestModelGen(genImageNameList[selectedImageIndex], modelId));
             Debug.Log(_modelGen._modelGenRes.model_filename);
             if (_modelGen.request.result == UnityWebRequest.Result.Success)

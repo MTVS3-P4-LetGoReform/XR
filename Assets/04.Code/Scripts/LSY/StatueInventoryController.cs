@@ -36,20 +36,28 @@ public class StatueInventoryController : MonoBehaviour
     
     // 인벤토리에 StatueData 추가 후 UI 보여주기
     public void AddStatueToInven(string modelId, Sprite sprite, GltfImport gltfImport)
-    { 
+    {
+        
+        Debug.Log("AddStatueToInven");
         // 새로운 StatueData 선언
         StatueData newStatueData = new StatueData(modelId, sprite, gltfImport);
+        Debug.Log($"modelId - {modelId} / sprite - {sprite.name}");
         // 리스트에 새로운 StatueData 추가
         statueDatas.Add(newStatueData);
         // 
         //GameObject childObject = inventoryTargetList[curIndex].transform.GetChild(0).gameObject;
         //Debug.Log($"childObject : {childObject.name}");
+        if (inventoryTargetList[curIndex] == null)
+        {
+            Debug.LogError("inventoryTargetList[curIndex] is null!");
+        }
+        inventoryTargetList[curIndex].SetActive(true);
         Image curImage = inventoryTargetList[curIndex].transform.GetChild(0).GetComponent<Image>(); ;
         curImage.sprite = sprite;
         Color color = curImage.color;
         color.a = 1.0f;
         curImage.color = color;
-        inventoryTargetList[curIndex].SetActive(true);
+        
         curIndex++;
     }
 
