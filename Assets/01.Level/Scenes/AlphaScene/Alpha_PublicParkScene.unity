@@ -23749,6 +23749,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: -0.0000038146973, y: 1.0000019, z: -0.0000038146973}
+--- !u!1 &943547563
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 943547565}
+  - component: {fileID: 943547564}
+  m_Layer: 0
+  m_Name: BridgeCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &943547564
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943547563}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.22, y: 1, z: 8.66}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &943547565
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943547563}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.25, y: 1.55, z: 15.92}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &943764225
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36043,7 +36096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6626146001214664914, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -36996.152
+      value: -41623.66
       objectReference: {fileID: 0}
     - target: {fileID: 7231041622573154680, guid: b05f9d6a757cab64588158aa864135d9, type: 3}
       propertyPath: m_AnchorMax.y
@@ -41323,3 +41376,4 @@ SceneRoots:
   - {fileID: 154452834}
   - {fileID: 83874472}
   - {fileID: 1945127838}
+  - {fileID: 943547565}
