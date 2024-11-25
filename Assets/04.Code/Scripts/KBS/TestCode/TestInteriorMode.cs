@@ -8,7 +8,6 @@ using UnityEngine.EventSystems;
 public class TestInteriorMode : MonoBehaviour
 {
     public GameObject craftHammer;
-    public TMP_Text stateText;
 
     public Canvas interiorCanvas;
     [SerializeField] private GameObject newPreviewPrefab;
