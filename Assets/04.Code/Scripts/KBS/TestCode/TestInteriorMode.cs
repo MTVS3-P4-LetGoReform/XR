@@ -28,13 +28,14 @@ public class TestInteriorMode : MonoBehaviour
 
 
     private Vector3 pos;
-    public event Action OnClicked, OnExit; // Action 델리게이트를 사용하여 메소드 선언
+    public event Action OnClicked, OnExit, OnPushed; // Action 델리게이트를 사용하여 메소드 선언
 
     [SerializeField] private ObjectDatabase objectDatabase; // ScriptableObject 호출
     private int selectedObjectIndex = -1;
 
     private bool isHammer;
     [SerializeField] private LayerMask IPLayerMask;
+    [SerializeField] private LayerMask IILayerMask;
     
 
     void Start()
@@ -55,6 +56,11 @@ public class TestInteriorMode : MonoBehaviour
         {
             OnExit?.Invoke();
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            OnPushed?.Invoke();
         }
 
         if (selectedObjectIndex < 0)
@@ -86,6 +92,7 @@ public class TestInteriorMode : MonoBehaviour
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
         OnExit += StopPlacement; // StopPlacement 메소드 구독
+       // OnPushed += DestroyStructure;
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -146,6 +153,7 @@ public class TestInteriorMode : MonoBehaviour
         selectedObjectIndex = -1;
         OnClicked -= PlaceStructure;
         OnExit -= StopPlacement;
+        //OnPushed -= DestroyStructure;
 
         if (currentCoroutine != null)
         {
@@ -200,7 +208,7 @@ public class TestInteriorMode : MonoBehaviour
 
         }
     }
-
+    
     private IEnumerator FindUserCamera()
     {
         newUserCamera = null;
