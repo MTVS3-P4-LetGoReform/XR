@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Firebase.Storage;
@@ -53,11 +54,45 @@ public static class StorageDatabase
         {
             Debug.LogWarning("이미 파일이 존재합니다. 파일명 :" + local_url);
         }
-        Debug.Log("로컬 다운로드 주소 : "+local_url);
+
+        Debug.Log("로컬 다운로드 주소 : " + local_url);
         await isstorage_ref.GetFileAsync(local_url);
+        Debug.Log("다운로드 완료");
     }
     
-    public static async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
+    public async UniTask DownLoadImage(string imageName, string localPath)
+    {
+        if (_debugModeData.DebugMode)
+        {
+            Debug.Log("현재 DebugMode입니다.");
+            return;
+        }
+
+        isstorage_ref = storage_ref.Child("images").Child(imageName);
+        Debug.Log("StorageDatabase : isstorage_ref - " + isstorage_ref);
+        Debug.Log("로컬 다운로드 주소 : " + localPath);
+
+        // 로컬 파일 경로 확인
+        if (File.Exists(localPath))
+        {
+            Debug.LogWarning("이미 파일이 존재합니다. 파일명: " + localPath);
+            return; // 파일이 존재하면 다운로드를 중단합니다.
+        }
+
+        try
+        {
+            // Firebase에서 파일 다운로드
+            await isstorage_ref.GetFileAsync(localPath);
+            Debug.Log("다운로드 완료");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"다운로드 중 오류 발생: {e.Message}");
+        }
+    }
+
+    
+    public async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
     {
         if (_debugModeData.DebugMode == false)
         {

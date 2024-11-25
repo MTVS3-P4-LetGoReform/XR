@@ -150,7 +150,7 @@ public static partial class RealtimeDatabase
     /// );
     /// </code>
     /// </example>
-    public static void ReadData<T>(string path, Action<T> onSuccess, Action<Exception> onFailure = null)
+    public static async void ReadData<T>(string path, Action<T> onSuccess, Action<Exception> onFailure = null)
     {
         EnsureInitialized(() =>
         {
@@ -178,6 +178,26 @@ public static partial class RealtimeDatabase
                 }
             });
         }, onFailure);
+    }
+    
+    /// <summary>
+    /// Firebase 경로에서 데이터를 읽습니다.
+    /// </summary>
+    /// <typeparam name="T">읽을 데이터의 타입</typeparam>
+    /// <param name="path">Firebase 데이터베이스 경로</param>
+    /// <returns>읽은 데이터 객체</returns>
+    public static async UniTask<T> ReadDataAsync<T>(string path)
+    {
+        try
+        {
+            var snapshot = await databaseReference.Child(path).GetValueAsync();
+            return JsonConvert.DeserializeObject<T>(snapshot.GetRawJsonValue());
+        }
+        catch (Exception e)
+        {
+            //Debug.LogWarning($"ReadDataAsync 실패: {e.Message}");
+            throw new Exception(e.Message); // 예외를 다시 던져 호출자에게 알림
+        }
     }
     
     
@@ -267,21 +287,45 @@ public static partial class RealtimeDatabase
             {
                 if (task.IsFaulted)
                 {
-                    Debug.LogError("데이터 업데이트 실패");
                     onFailure?.Invoke(task.Exception);
+                    Debug.LogError("데이터 업데이트 실패");
                 }
                 else if (task.IsCanceled)
                 {
-                    Debug.LogError("데이터 업데이트 취소됨");
                     onFailure?.Invoke(new Exception("데이터 업데이트가 취소되었습니다."));
+                    Debug.LogError("데이터 업데이트 취소됨");
                 }
                 else
                 {
-                    Debug.Log("데이터 업데이트 완료");
                     onSuccess?.Invoke();
+                    Debug.Log("데이터 업데이트 완료");
                 }
             });
         }, onFailure);
+    }
+    
+    public static async UniTask UpdateDataAsync(string path, Dictionary<string, object> updates, Action onSuccess = null, Action<Exception> onFailure = null)
+    {
+        await EnsureInitializedAsync(() => { }, onFailure);
+        
+        await databaseReference.Child(path).UpdateChildrenAsync(updates).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                onFailure?.Invoke(task.Exception);
+                Debug.LogError("데이터 업데이트 실패");
+            }
+            else if (task.IsCanceled)
+            {
+                onFailure?.Invoke(new Exception("데이터 업데이트가 취소되었습니다."));
+                Debug.LogError("데이터 업데이트 취소됨");
+            }
+            else
+            {
+                onSuccess?.Invoke();
+                Debug.Log("데이터 업데이트 완료");
+            }
+        });
     }
 
 
@@ -450,6 +494,18 @@ public static partial class RealtimeDatabase
     /// <param name="onInitialized">Firebase가 초기화되었을 때 호출되는 콜백입니다.</param>
     /// <param name="onFailure">초기화에 실패하면 호출되는 콜백입니다.</param>
     private static void EnsureInitialized(Action onInitialized, Action<Exception> onFailure)
+    {
+        if (isInitialized)
+        {
+            onInitialized?.Invoke();
+        }
+        else
+        {
+            InitializeFirebase(() => onInitialized?.Invoke(), onFailure);
+        }
+    }
+    
+    private static async UniTask EnsureInitializedAsync(Action onInitialized, Action<Exception> onFailure)
     {
         if (isInitialized)
         {

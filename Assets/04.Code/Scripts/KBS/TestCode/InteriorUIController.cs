@@ -28,6 +28,8 @@ public class InteriorUIController : MonoBehaviour
     }
     
     
+    
+    
 
   /*  private void Update()
     {

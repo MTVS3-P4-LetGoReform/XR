@@ -23,6 +23,7 @@ public class FriendRequestItem : MonoBehaviour
         friendNameText.text = friend.name;
         _requesterId = requesterId;
 
+        Debug.Log("reqId : " + requesterId);
         acceptButton.onClick.AddListener(() => onAccept(_requesterId));
         rejectButton.onClick.AddListener(() => onReject(_requesterId));
     }

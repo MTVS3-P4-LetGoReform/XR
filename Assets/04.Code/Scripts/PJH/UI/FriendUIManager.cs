@@ -87,7 +87,7 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
                 requesterPaths.Add($"users/{request.Key}");
                 Debug.Log($"users/{request.Key}");
             }
-            
+        
             RealtimeDatabase.ReadMultipleData<User>(requesterPaths,
                 onSuccess: users =>
                 {
@@ -95,7 +95,12 @@ public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIMana
                     {
                         GameObject friendRequestItem = Instantiate(friendRequestItemPrefab, friendRequestListParent);
                         FriendRequestItem itemScript = friendRequestItem.GetComponent<FriendRequestItem>();
-                        itemScript.SetFriendRequestData(userEntry.Value, userEntry.Key, AcceptFriendRequest, RejectFriendRequest);
+                    
+                        // userEntry.Key에서 'users/' 부분을 제거
+                        string userId = userEntry.Key.Replace("users/", "");
+                    
+                        Debug.Log("유저 밸류값 : " + userEntry.Value + " 유저 키 값 : " + userId);
+                        itemScript.SetFriendRequestData(userEntry.Value, userId, AcceptFriendRequest, RejectFriendRequest);
                         Debug.Log("친구 요청 생성됨");
                     }
                 },

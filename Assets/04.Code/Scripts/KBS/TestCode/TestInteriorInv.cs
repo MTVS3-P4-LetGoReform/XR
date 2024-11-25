@@ -65,6 +65,13 @@ public class TestInteriorInv : MonoBehaviour
                     images[1].SetActive(false);
                     images[2].SetActive(false);
                     break;
+                case 4:
+                    Debug.Log("즐겨찾기 탭");
+                    images[0].SetActive(false);
+                    images[1].SetActive(false);
+                    images[2].SetActive(false);
+                    images[3].SetActive(false);
+                    break;
             }
         }
     }
