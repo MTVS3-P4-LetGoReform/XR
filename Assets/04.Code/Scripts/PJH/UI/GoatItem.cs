@@ -10,7 +10,6 @@ public class GoatItem : MonoBehaviour
 {
     public WebApiData webApiData;
     public DebugModeData debugModeData;
-    private StorageDatabase _storageDatabase;
     
     public Button likeButton;
     public Image modelImage;
