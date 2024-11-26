@@ -10,7 +10,7 @@ public class InteriorUIController : MonoBehaviour
 
     public Canvas canvasInterior;
     public Image userInterface;
-    public Button buttonInteGuide;
+    public Image imageInterGuide;
 
     private bool isPushed = false;
 
@@ -30,7 +30,7 @@ public class InteriorUIController : MonoBehaviour
 
     public void CloseInteriorGuideButtonOnClick()
     {
-        buttonInteGuide.gameObject.SetActive(false);
+        imageInterGuide.gameObject.SetActive(false);
     }
     
     
