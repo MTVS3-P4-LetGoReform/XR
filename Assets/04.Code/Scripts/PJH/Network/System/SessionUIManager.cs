@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class SessionUIManager : MonoBehaviour
 {
@@ -24,8 +25,9 @@ public class SessionUIManager : MonoBehaviour
     public WebCommManager _webCommManager;
     public DebugModeData _debugModeData;
 
-    public GameObject popUpParent;
-   
+    public Transform popUpParent;
+    public GameObject popUpPrefab;
+
     private void Awake()
     {
         if (Instance == null)
@@ -93,17 +95,23 @@ public class SessionUIManager : MonoBehaviour
             await StorageDatabase.DownImage(webApiData.ImageName);
 
             UpdateImage(url, targetImage).Forget();
-
+            
+            var popUpObject = Instantiate(popUpPrefab, popUpParent);
+            var popUpInfo = popUpObject.GetComponent<PopUpInfo>();
+            
+            //info 할당
+            popUpInfo.roomName.text = session.Name;
+            popUpInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+            
             roomInfo.roomName.text = session.Name;
             roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
 
-            roomInfo.Parent = popUpParent;
-
-            Button button = roomInfo.button;
+            Button roomInfoButton = roomInfo.button;
+            roomInfoButton.onClick.AddListener(() => popUpObject.SetActive(true));
             
+            Button popUpInfoButton = popUpInfo.button;
+            popUpInfoButton.onClick.AddListener(() => JoinPlaySession(session));
             
-            
-            button.onClick.AddListener(() => JoinPlaySession(session));
         }
     }
 
@@ -224,5 +232,10 @@ public class SessionUIManager : MonoBehaviour
 
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,2);
+    }
+
+    private void PopUp()
+    {
+        
     }
 }
