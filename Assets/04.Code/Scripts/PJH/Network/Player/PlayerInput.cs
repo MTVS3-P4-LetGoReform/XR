@@ -10,14 +10,14 @@ public class PlayerInput : NetworkBehaviour
     public static event Action<bool> MicMute;
     public static event Action<bool> OnPlayerReady;
     public static event Action<bool> OnGameStart;
-    public static event Action<bool> OnMessenger;
+    public static Action<bool> OnMessenger;
 
     private bool _mouseOn = false;
     private bool _chatOn = false;
     private bool _micOn = false;
     private bool _onReady = false;
     private bool _onGameStart = false;
-    private bool _onMessenger = false;
+    private bool _onMessenger = true;
 
     private const string ParkScene = "Alpha_PublicParkScene";
     private const string GameScene = "Alpha_PlayScene";
@@ -31,6 +31,8 @@ public class PlayerInput : NetworkBehaviour
         {
             Debug.LogError("PlayerStatus가 부모 객체에 없습니다.");
         }
+
+        OnMessenger += MessengerStatus;
     }
 
     private void Update()
@@ -116,9 +118,13 @@ public class PlayerInput : NetworkBehaviour
 
     private void ToggleMessenger()
     {
-        _onMessenger = !_onMessenger;
         OnMessenger?.Invoke(_onMessenger);
-        Debug.Log(_onMessenger ? "메신저 활성화" : "메신저 비활성화");
+    }
+
+    private void MessengerStatus(bool active)
+    {
+        Debug.Log(!active ? "메신저 활성화" : "메신저 비활성화");
+        _onMessenger = !active;
     }
 
     private void ToggleMic()

@@ -11,14 +11,13 @@ GameObject:
   - component: {fileID: 2660653715468370357}
   - component: {fileID: 4939486764801665366}
   - component: {fileID: 342463334584883410}
-  - component: {fileID: 8796248275188703573}
   m_Layer: 5
   m_Name: Panel -FriendReq
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2660653715468370357
 RectTransform:
   m_ObjectHideFlags: 0
@@ -79,20 +78,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8796248275188703573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 259911312959162202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 984bdbfdbfab7aa4899e942dcd8a8b84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onReq: {fileID: 1835898006735859160}
-  reqObject: {fileID: 5789321263512744573}
 --- !u!1 &446188139643078338
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +89,7 @@ GameObject:
   - component: {fileID: 325241952732996925}
   - component: {fileID: 4424762450471859833}
   - component: {fileID: 4948898550258998567}
+  - component: {fileID: 6320741039219938823}
   m_Layer: 5
   m_Name: Panel - FriendList
   m_TagString: Untagged
@@ -124,8 +110,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3292822197721552053}
-  - {fileID: 6734086207434273302}
   - {fileID: 1647840249820340910}
+  - {fileID: 6734086207434273302}
   - {fileID: 2660653715468370357}
   m_Father: {fileID: 5062717653079547654}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -172,6 +158,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6320741039219938823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446188139643078338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 984bdbfdbfab7aa4899e942dcd8a8b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onReqFriend: {fileID: 1835898006735859160}
+  reqObject: {fileID: 259911312959162202}
 --- !u!1 &499292201002846999
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,8 +813,8 @@ MonoBehaviour:
   statusDropdown: {fileID: 6881438713898487912}
   statusImage: {fileID: 6029995248411112619}
   sprites:
-  - {fileID: 21300000, guid: f8e64051f6dcff74b9404a82b1094a87, type: 3}
-  - {fileID: 21300000, guid: 9aff9fd61e0ef674daf60500943b8525, type: 3}
+  - {fileID: 21300000, guid: 5534ecaed06ef49459b962b4e26a4b4f, type: 3}
+  - {fileID: 21300000, guid: f7ed472079f5556449d5951b82bcb7f7, type: 3}
 --- !u!114 &1488020641267167747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -830,6 +830,8 @@ MonoBehaviour:
   friendListParent: {fileID: 8447702082899245909}
   friendItemPrefab: {fileID: 5114419980914419294, guid: 45187b7536ffd6141acdd18b614c7c9f, type: 3}
   friendListCanvas: {fileID: 7093564071366601669}
+  closeCanvas:
+  - {fileID: 2369181778950999307}
 --- !u!114 &1054653831730615652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1001,7 +1003,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC628\uB77C\uC778"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
   m_sharedMaterial: {fileID: -1225052150326047499, guid: fb585fb3f4e65dd42805d7ec8d568e83, type: 2}
@@ -3679,7 +3681,7 @@ GameObject:
   - component: {fileID: 8902566267133244881}
   - component: {fileID: 1835898006735859160}
   m_Layer: 5
-  m_Name: Button - OnAddFriend
+  m_Name: Button - OnReqFriend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4368,18 +4370,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SoundBox, Assembly-CSharp
-        m_MethodName: ButtonSoundOnClick
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6153,10 +6143,10 @@ MonoBehaviour:
   m_MultiSelect: 0
   m_Options:
     m_Options:
-    - m_Text: "\uC628\uB77C\uC778"
+    - m_Text: 
       m_Image: {fileID: 21300000, guid: 5534ecaed06ef49459b962b4e26a4b4f, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: "\uC624\uD504\uB77C\uC778"
+    - m_Text: 
       m_Image: {fileID: 21300000, guid: 43f913aecd53da04f8be429ffd10956b, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
