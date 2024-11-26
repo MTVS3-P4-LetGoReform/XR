@@ -38,7 +38,7 @@ public class MicController : NetworkBehaviour
         _micStatus = (voiceNetworkObject.SpeakerInUse && voiceNetworkObject.IsSpeaking) || 
                      (voiceNetworkObject.RecorderInUse && voiceNetworkObject.IsRecording);
 
-        Debug.Log("마이크 입력체크 : " + _micStatus);
+        //Debug.Log("마이크 입력체크 : " + _micStatus);
         IsPlaying?.Invoke(_micStatus);
     }
 
