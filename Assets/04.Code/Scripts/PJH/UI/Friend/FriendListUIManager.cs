@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class FriendListUIManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class FriendListUIManager : MonoBehaviour
     private string _currentUserId; // 로그인한 유저의 ID
     
     [SerializeField] private Canvas friendListCanvas; // Inspector에서 캔버스를 할당
+
+    public Button[] closeCanvas;
     
     private void Start()
     {
@@ -23,9 +26,14 @@ public class FriendListUIManager : MonoBehaviour
             }
         }
 
+        foreach (var button in closeCanvas)
+        {
+            button.onClick.AddListener(OffMessenger);
+        }
+
         friendListCanvas.enabled = false; // 초기 상태 설정
         FriendRequestUIManager.RefreshList += RefreshList;
-        PlayerInput.OnMessenger += OpenMessenger;
+        PlayerInput.OnMessenger += ToggleFriendCanvas;
         UserData.ChangeName += OnChangedUserId;
         OnChangedUserId();
         RefreshList();
@@ -38,10 +46,15 @@ public class FriendListUIManager : MonoBehaviour
     
     private void OnDestroy()
     {
-        PlayerInput.OnMessenger -= OpenMessenger; // 이벤트 구독 해제
+        PlayerInput.OnMessenger -= ToggleFriendCanvas; // 이벤트 구독 해제
     }
 
-    private void OpenMessenger(bool isActive)
+    private void OffMessenger()
+    {
+        PlayerInput.OnMessenger?.Invoke(false);
+    }
+
+    public void ToggleFriendCanvas(bool isActive)
     {
         if (friendListCanvas != null)
         {
@@ -85,7 +98,7 @@ public class FriendListUIManager : MonoBehaviour
                                 GameObject friendItem = Instantiate(friendItemPrefab, friendListParent);
                                 FriendItem itemScript = friendItem.GetComponent<FriendItem>();
                                 Debug.Log("FriendListUIManager - userEntry.Value : "+ userEntry.Value);
-                                itemScript.friendId = userEntry.Key;
+                                itemScript.FriendId = userEntry.Key;
                                 itemScript.SetFriendData(userEntry.Value); // UI에 친구 정보 설정
                             }
                         },

@@ -11,6 +11,8 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 	public Button chatOn;
 	public Button chatOff;
+
+	public GameObject chatOnPanel;
 	public GameObject chatPanel;
 
 	private Canvas _canvas;
@@ -48,7 +50,7 @@ public class ChatController : MonoBehaviour, IChatClientListener
 
 	private void ToggleChatPanel(bool active)
 	{
-		chatOn.gameObject.SetActive(!active);
+		chatOnPanel.SetActive(!active);
 		chatPanel.SetActive(active);
 	}
 

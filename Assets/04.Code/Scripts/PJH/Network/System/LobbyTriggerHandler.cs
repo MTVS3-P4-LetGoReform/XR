@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LobbyTriggerHandler : MonoBehaviour
 {
     public Canvas npcCanvas;
+    public GameObject npcChoose;
     public Transform viewPoint;
     public Button[] closeButton;
     
@@ -71,6 +72,12 @@ public class LobbyTriggerHandler : MonoBehaviour
             OpenNpcCanvas();
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            _canInteract = false;
+            CloseNpcCanvas();
+        }
+
         // 카메라 이동 처리
         if (_isCameraTransitioning && _playerCamera != null)
         {
@@ -88,6 +95,7 @@ public class LobbyTriggerHandler : MonoBehaviour
     private void CloseNpcCanvas()
     {
         npcCanvas.enabled = false;
+        npcChoose.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         ReturnPlayerCameraToOriginal();
         _canInteract = true;
