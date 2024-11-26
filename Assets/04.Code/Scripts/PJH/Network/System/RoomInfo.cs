@@ -8,4 +8,8 @@ public class RoomInfo : MonoBehaviour
     public TMP_Text roomName;
     public TMP_Text count;
     public Button button;
+
+    public GameObject Parent { get; set; }
+    
+    
 }

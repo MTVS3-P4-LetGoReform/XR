@@ -23,7 +23,8 @@ public class SessionUIManager : MonoBehaviour
     public WebApiData webApiData;
     public WebCommManager _webCommManager;
     public DebugModeData _debugModeData;
-    
+
+    public GameObject popUpParent;
    
     private void Awake()
     {
@@ -96,7 +97,12 @@ public class SessionUIManager : MonoBehaviour
             roomInfo.roomName.text = session.Name;
             roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
 
+            roomInfo.Parent = popUpParent;
+
             Button button = roomInfo.button;
+            
+            
+            
             button.onClick.AddListener(() => JoinPlaySession(session));
         }
     }
