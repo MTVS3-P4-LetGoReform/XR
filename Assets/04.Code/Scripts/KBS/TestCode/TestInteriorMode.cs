@@ -7,8 +7,6 @@ using UnityEngine.EventSystems;
 
 public class TestInteriorMode : MonoBehaviour
 {
-    public GameObject craftHammer;
-
     public Canvas interiorCanvas;
     [SerializeField] private GameObject newPreviewPrefab;
 
