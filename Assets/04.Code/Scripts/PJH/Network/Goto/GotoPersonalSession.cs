@@ -27,7 +27,7 @@ public class GotoPersonalSession : MonoBehaviour
 
     public void GotoPersonalOnClick()
     {
-        GotoPersonal(UserData.Instance.UserName);
+        GotoPersonal(UserData.Instance.UserId);
         canvasHeartPing.gameObject.SetActive(false);
     }
     
