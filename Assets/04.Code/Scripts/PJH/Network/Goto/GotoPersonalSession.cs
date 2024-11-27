@@ -18,6 +18,11 @@ public class GotoPersonalSession : MonoBehaviour
             Debug.Log("눌렀다");
             canvasHeartPing.gameObject.SetActive(true);
         }
+
+        if (other.CompareTag("Player") && Input.GetKeyDown(KeyCode.Escape))
+        {
+            canvasHeartPing.gameObject.SetActive(false);
+        }
     }
 
     public void GotoPersonalOnClick()
