@@ -187,6 +187,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f443317d0ec3ac4d891aee124b96c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &189503964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 189503966}
+  - component: {fileID: 189503965}
+  m_Layer: 0
+  m_Name: BakcToPublicCon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &189503965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189503964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f87ebad760eae194d9e8293a87a2ee79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &189503966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189503964}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &189693507 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7584269923024128165, guid: 33c21c6282a40224ab74578c8d89863c, type: 3}
@@ -877,9 +921,17 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 140414449}
+    - target: {fileID: 2444535593925911301, guid: 6cef71d46f73aac418274b9cdfa956bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 189503965}
     - target: {fileID: 4774747360439957267, guid: 6cef71d46f73aac418274b9cdfa956bf, type: 3}
       propertyPath: m_Name
       value: UserInfoCanvas (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4774747360439957267, guid: 6cef71d46f73aac418274b9cdfa956bf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5287461048634329680, guid: 6cef71d46f73aac418274b9cdfa956bf, type: 3}
       propertyPath: m_Pivot.x
@@ -11946,3 +11998,4 @@ SceneRoots:
   - {fileID: 4717378626969375536}
   - {fileID: 5472242878473843970}
   - {fileID: 2031623902}
+  - {fileID: 189503966}
