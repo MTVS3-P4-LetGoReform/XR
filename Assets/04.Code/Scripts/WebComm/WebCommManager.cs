@@ -16,7 +16,7 @@ public class WebCommManager : MonoBehaviour
     public WebApiData webApiData;
     public TMP_Text promptInput;
     public List<GameObject> genImageList;
-    private string prompt;
+    public string prompt;
     public string[] genImageNameList;
     public int selectedImageIndex;
     public string modelName;
@@ -61,9 +61,11 @@ public class WebCommManager : MonoBehaviour
     // 초기 이미지 생성
     public void DoImageGenDown()
     {
+        Debug.Log("DoImageGenDown()");
         // 디버그 모드 시 통신하지 않음.
         if (debugModeData.DebugMode == true)
         {
+            Debug.Log("DoImageGenDown() debugMode true");
             StartCoroutine(ShowImageCommLoading());
         }
         prompt = promptInput.text;
