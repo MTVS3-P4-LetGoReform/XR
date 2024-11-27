@@ -8,6 +8,7 @@ public class ToyPickUI : MonoBehaviour
 {
     public GameObject pressE;
     public GameObject statue;
+    public GameObject emote;
     public Button[] closeButton;
     
     private bool _canInteract = true;
@@ -79,6 +80,7 @@ public class ToyPickUI : MonoBehaviour
     {
         statue.SetActive(true);
         pressE.SetActive(false);
+        emote.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         PlayerInput.PlayerLockCamera(true);
     }
@@ -86,6 +88,7 @@ public class ToyPickUI : MonoBehaviour
     private void CloseNpcCanvas()
     {
         statue.SetActive(false);
+        emote.SetActive(false);
         pressE.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         PlayerInput.PlayerLockCamera(false); 
