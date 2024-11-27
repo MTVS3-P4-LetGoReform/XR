@@ -62,12 +62,15 @@ public class FriendItem : MonoBehaviour
     
     private async void GotoPersonal(string userId)
     {
-        Debug.Log("userid: "+ userId);
+        string input = userId;
+        string result = input.Substring(6); // "users/"가 6글자이므로 6번째 인덱스부터 끝까지 추출
+        
+        Debug.Log("[FriendItem] - UserId: "+ result);
         var args = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
             //Scene = SceneRef.FromIndex(2),
-            SessionName = userId
+            SessionName = result
         };
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(args,3);
