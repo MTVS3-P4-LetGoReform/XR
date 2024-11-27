@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using GLTFast;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 public class StatueInventoryController : MonoBehaviour
 {
     // 초기 인덱스 - 시연용으로 2개의 스태츄를 미리 넣어 놓음.
-    private const int Initial_Index = 0;
+    private const int Initial_Index = 2;
     // 인벤토리 한 장 최대 크기
     private const int Max_Inventory_Num = 20;
     // 현재 빈 인벤토리 칸 인덱스
@@ -18,9 +19,18 @@ public class StatueInventoryController : MonoBehaviour
 
     public List<Button> installBtns;
 
-    public void Start()
+    public Sprite mockDataSprite1;
+    public Sprite mockDataSprite2;
+    public async void Start()
     {
         statueDatas = new List<StatueData>();
+        GltfImport gltfImport1 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath,"Models", "inven0.glb"));
+        GltfImport gltfImport2 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath,"Models", "inven1.glb"));
+        AddStatueToInven("m_id_0001", mockDataSprite1, gltfImport1);
+        AddStatueToInven("m_id_0002", mockDataSprite2, gltfImport2);
+        
+        
+
     }
     // /* FIXME : 인벤토리 아이템 수에 맞게 아이템 생성하도록 메서드 */
     // // 인벤토리 칸의 부모 객체
