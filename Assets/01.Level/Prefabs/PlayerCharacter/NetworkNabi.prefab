@@ -342,6 +342,7 @@ MonoBehaviour:
   - {fileID: 6813934248853361493}
   - {fileID: 5066739239523798654}
   - {fileID: 8998007303900195917}
+  - {fileID: 8118825393845710901}
   - {fileID: 555152790313160310}
   - {fileID: 7829270486596955658}
   - {fileID: 3889997988247503336}
@@ -682,13 +683,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3116817956098743064, guid: 1fa76534bf56b2e4e828bd46b79de9b2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8118825393845710901}
   m_SourcePrefab: {fileID: 100100000, guid: 1fa76534bf56b2e4e828bd46b79de9b2, type: 3}
 --- !u!4 &149694721809612809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5039588766546757411, guid: 1fa76534bf56b2e4e828bd46b79de9b2, type: 3}
   m_PrefabInstance: {fileID: 5180236635679688490}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &2439290134354667420 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7366196507520016566, guid: 1fa76534bf56b2e4e828bd46b79de9b2, type: 3}
+  m_PrefabInstance: {fileID: 5180236635679688490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7828044145539423282 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3116817956098743064, guid: 1fa76534bf56b2e4e828bd46b79de9b2, type: 3}
+  m_PrefabInstance: {fileID: 5180236635679688490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8118825393845710901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7828044145539423282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 2439290134354667420}
+  TotalWords: 1
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 00000000612d1f90c469f82fb2e1dedd17a53962f19dfcf754d91b48336e528eb1211e0bdfb1dac07af53d7f53211ee949b024036430cdedd4c172b3fadaf95a7ef92fb5
+  TriggerHashes: 00000000bcd2f0e5d9d04068d37504ec24eebaf04d4e35baa86934a5
 --- !u!1001 &9061579166351596937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -770,9 +802,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 612107c43e2cf2f46ba129de976b6f89, type: 3}
     - target: {fileID: 6781913167605715928, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
+      propertyPath: NMAni
+      value: 
+      objectReference: {fileID: 8118825393845710901}
+    - target: {fileID: 6781913167605715928, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
       propertyPath: userCamera
       value: 
       objectReference: {fileID: 6702178581967847908}
+    - target: {fileID: 8002084985475537019, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
+      propertyPath: NMAni
+      value: 
+      objectReference: {fileID: 8118825393845710901}
     - target: {fileID: 8002084985475537019, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
       propertyPath: userCamera
       value: 
