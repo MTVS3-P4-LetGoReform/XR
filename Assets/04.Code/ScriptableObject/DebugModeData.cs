@@ -10,4 +10,12 @@ public class DebugModeData : ScriptableObject
         set { debugMode = value;}
         get { return debugMode; }
     }
+
+    [SerializeField] private bool previewMode;
+
+    public bool PreviewMode
+    {
+        set { previewMode = value; }
+        get { return previewMode; }
+    }
 }
