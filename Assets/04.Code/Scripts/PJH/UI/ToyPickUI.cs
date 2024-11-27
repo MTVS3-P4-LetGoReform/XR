@@ -96,7 +96,6 @@ public class ToyPickUI : MonoBehaviour
     // 창닫기 버튼에서 호출할 메서드
     private void OnCloseButtonClicked()
     {
-        _canInteract = false;
         CloseNpcCanvas();
     }
 }
