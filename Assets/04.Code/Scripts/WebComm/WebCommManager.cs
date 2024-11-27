@@ -89,10 +89,6 @@ public class WebCommManager : MonoBehaviour
             }
             DeactiveImageCommLoading();
         }
-        else if (debugModeData.DebugMode == true)
-        {
-            
-        }
     }
     
     // 이미지 재생성
