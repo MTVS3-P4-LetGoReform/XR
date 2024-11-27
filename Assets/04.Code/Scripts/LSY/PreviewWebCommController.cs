@@ -20,7 +20,7 @@ public class PreviewWebCommController : MonoBehaviour
     void Start()
     {
         StartCoroutine(FindWebCommManager());
-        if (_debugModeData.PreviewMode == true)
+        if (_debugModeData.DebugMode == true)
         {
             for (int i = 0; i < regenBtns.Count; i++)
             {
