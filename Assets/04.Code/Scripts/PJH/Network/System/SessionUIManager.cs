@@ -25,8 +25,8 @@ public class SessionUIManager : MonoBehaviour
     public WebCommManager _webCommManager;
     public DebugModeData _debugModeData;
 
-    public Transform popUpParent;
     public GameObject popUpPrefab;
+    public Transform popUpParent;
 
     private void Awake()
     {
