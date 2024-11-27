@@ -78,13 +78,17 @@ public class ToyPickUI : MonoBehaviour
     private void OpenNpcCanvas()
     {
         statue.SetActive(true);
+        pressE.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
+        PlayerInput.PlayerLockCamera(true);
     }
 
     private void CloseNpcCanvas()
     {
         statue.SetActive(false);
+        pressE.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
+        PlayerInput.PlayerLockCamera(false); 
         _canInteract = true;
     }
     
