@@ -157,7 +157,11 @@ public class WebCommManager : MonoBehaviour
     public IEnumerator ModelGenDown()
     {
         ModelGen _modelGen = new ModelGen(webApiData);
-        
+        if (debugModeData.PreviewMode == true)
+        {
+            StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
+            StorageDatabase.DownModelPlaySession(webApiData.ModelName, _sessionUIManager).Forget();
+        }
         if (debugModeData.DebugMode == false)
         {
             ActiveModelCommLoading();
