@@ -63,9 +63,9 @@ public class StatueInventoryController : MonoBehaviour
 
     public async void StatueInvenTestBtn()
     {
-        Sprite imageSprite = SpriteConverter.ConvertFromPNG("DebugModeImage.png");
+        Sprite imageSprite = SpriteConverter.ConvertFromPNG("MainMockDataImage.png");
         Debug.Log($"{imageSprite}");
-        GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath("DebugModeModel.glb"));
+        GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath("MainMockDataModel.glb"));
         Debug.Log("flag2");
         AddStatueToInven("m_0000", imageSprite, gltfImport);
         Debug.Log("flag3");

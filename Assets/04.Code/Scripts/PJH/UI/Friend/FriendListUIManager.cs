@@ -1,13 +1,17 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class FriendListUIManager : MonoBehaviour
 {
     public Transform friendListParent;  // 친구 목록을 보여줄 부모 오브젝트 (스크롤뷰의 Content)
     public GameObject friendItemPrefab; // 친구 항목 프리팹
-    
+
+    public Transform popUpParent;
+    public GameObject popUpPrefab;
+        
     private string _currentUserId; // 로그인한 유저의 ID
     
     [SerializeField] private Canvas friendListCanvas; // Inspector에서 캔버스를 할당
@@ -99,7 +103,10 @@ public class FriendListUIManager : MonoBehaviour
                                 FriendItem itemScript = friendItem.GetComponent<FriendItem>();
                                 Debug.Log("FriendListUIManager - userEntry.Value : "+ userEntry.Value);
                                 itemScript.FriendId = userEntry.Key;
-                                itemScript.SetFriendData(userEntry.Value); // UI에 친구 정보 설정
+                                
+                                itemScript.SetFriendData(userEntry.Value,popUpParent); // UI에 친구 정보 설정
+                                
+                                //popUpScript.popUpText.text = itemScript.popupText.text;
                             }
                         },
                         onFailure: exception =>

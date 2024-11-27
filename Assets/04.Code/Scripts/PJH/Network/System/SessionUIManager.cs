@@ -25,7 +25,7 @@ public class SessionUIManager : MonoBehaviour
     public WebCommManager _webCommManager;
     public DebugModeData _debugModeData;
 
-    public GameObject popUpPrefab;
+    public GameObject SessionPopUpPrefab;
     public Transform popUpParent;
 
     private void Awake()
@@ -96,8 +96,10 @@ public class SessionUIManager : MonoBehaviour
 
             UpdateImage(url, targetImage).Forget();
             
-            var popUpObject = Instantiate(popUpPrefab, popUpParent);
-            var popUpInfo = popUpObject.GetComponent<PopUpInfo>();
+            var popUpObject = Instantiate(SessionPopUpPrefab, popUpParent);
+            var popUpInfo = popUpObject.GetComponent<SessionPopUpInfo>();
+            
+            await UniTask.Yield();
             
             //info 할당
             popUpInfo.roomName.text = session.Name;

@@ -38,6 +38,11 @@ public class WebCommManager : MonoBehaviour
     private bool isGenerating = false;
     public DebugModeData debugModeData;
     private NetworkRunner _networkRunner;
+
+    public Sprite mockSprite0;
+    public Sprite mockSprite1;
+    public Sprite mockSprite2;
+    
     private void Start()
     {
         if (UserData.Instance ==null)
@@ -59,29 +64,35 @@ public class WebCommManager : MonoBehaviour
         // 디버그 모드 시 통신하지 않음.
         if (debugModeData.DebugMode == true)
         {
-            return;
+            StartCoroutine(ShowImageCommLoading());
         }
         prompt = promptInput.text;
         StartCoroutine(ImageGenDown());
     }
     private IEnumerator ImageGenDown()
     {
-        //yield return null;
-        ActiveImageCommLoading();
-        ImageGen _imageGen = new ImageGen(webApiData);
+        if(debugModeData.DebugMode == false){
+            //yield return null;
+            ActiveImageCommLoading();
+            ImageGen _imageGen = new ImageGen(webApiData);
 
-        yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
-        modelId = _imageGen._imageGenRes.id;
-        webApiData.ModelId = modelId;
-        genImageNameList = _imageGen._imageGenRes.filenames;
+            yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
+            modelId = _imageGen._imageGenRes.id;
+            webApiData.ModelId = modelId;
+            genImageNameList = _imageGen._imageGenRes.filenames;
 
-        ImageDownload _imageDownload = new ImageDownload(webApiData);
-        for (int i = 0; i < GenImageNum; i++)
-        {
-            yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
-            ConvertSpriteFromPNG(genImageList[i].GetComponent<Image>(), genImageNameList[i]);
+            ImageDownload _imageDownload = new ImageDownload(webApiData);
+            for (int i = 0; i < GenImageNum; i++)
+            {
+                yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
+                ConvertSpriteFromPNG(genImageList[i].GetComponent<Image>(), genImageNameList[i]);
+            }
+            DeactiveImageCommLoading();
         }
-        DeactiveImageCommLoading();
+        else if (debugModeData.DebugMode == true)
+        {
+            
+        }
     }
     
     // 이미지 재생성
@@ -157,7 +168,11 @@ public class WebCommManager : MonoBehaviour
     public IEnumerator ModelGenDown()
     {
         ModelGen _modelGen = new ModelGen(webApiData);
-        
+        if (debugModeData.PreviewMode == true)
+        {
+            StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
+            StorageDatabase.DownModelPlaySession(webApiData.ModelName, _sessionUIManager).Forget();
+        }
         if (debugModeData.DebugMode == false)
         {
             ActiveModelCommLoading();
@@ -217,5 +232,16 @@ public class WebCommManager : MonoBehaviour
     public void DeactiveModelCommLoading()
     {
         ModelCommLoadingObject.SetActive(false);
+    }
+
+    IEnumerator ShowImageCommLoading()
+    {
+        ModelCommLoadingObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        ModelCommLoadingObject.SetActive(false);
+        genImageList[0].GetComponent<Image>().sprite = mockSprite0;
+        genImageList[1].GetComponent<Image>().sprite = mockSprite1;
+        genImageList[2].GetComponent<Image>().sprite = mockSprite2;
+        
     }
 }
