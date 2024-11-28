@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class BlockCreateRaycastController : NetworkBehaviour
@@ -22,7 +23,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     public AudioSource audioDropBox;
     
     private RaycastHit Hit;
-    private GameObject BasicBlockParent;
+    private GameObject _basicBlockParent;
     [SerializeField] private Camera userCamera;
     [SerializeField] private NetworkMecanimAnimator NMAni;
 
@@ -35,9 +36,10 @@ public class BlockCreateRaycastController : NetworkBehaviour
             return;
         }
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
-        BasicBlockParent = GameObject.Find("BasicBlockParent");
         
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
+        _basicBlockParent = Instantiate(new GameObject());
+        _basicBlockParent.name = "BasicBlockParent";
     }
 
     private void Awake()
@@ -185,24 +187,32 @@ public class BlockCreateRaycastController : NetworkBehaviour
     
     private HashSet<NetworkObject> _pendingDeletionBlocks = new HashSet<NetworkObject>();
 
-
-    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void CreateBlockRpc(Vector3 pos)
+    //SpawnAsync를 쓰기 때문에 Rpc사용 XX
+    private async void CreateBlockRpc(Vector3 pos)
     {
         if (RunnerManager.Instance.runner != null)
         {
-            RunnerManager.Instance.runner.SpawnAsync(
+            var spawnObject = await RunnerManager.Instance.runner.SpawnAsync(
                 blockData.BasicBlockPrefab, 
-                //BlockPrefab,
                 pos, 
                 Quaternion.identity
             );
-
-            // 부모 설정을 원할 경우 유효성 체크 후 추가
-            // if (spawnObject != null && BasicBlockParent != null)
-            // {
-            //     spawnObject.Object.transform.SetParent(BasicBlockParent.transform);
-            // }
+            
+            SharedGameData.Instance.BlockCountRpc();
+            
+            // 이름 설정
+            spawnObject.name = $"BasicBlock : {SharedGameData.BlockCount}";
+            
+            // 부모 설정
+            if (spawnObject != null && _basicBlockParent != null)
+            {
+                spawnObject.transform.SetParent(_basicBlockParent.transform,true);
+            }
+            else
+            {
+                Debug.Log($"SpawnObject : {spawnObject.name} or _basicBlockParent : {_basicBlockParent.name}= null");
+            }
+            
         }
         else
         {
@@ -210,7 +220,12 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
+    private void BlockSetPpc(NetworkObject spawnObject)
+    {
+        
+    }
+    
     private void DeleteBlockRpc(NetworkObject networkObject)
     {
         // networkObject가 null인지 확인
