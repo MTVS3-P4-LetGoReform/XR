@@ -98,6 +98,9 @@ public class SessionUIManager : MonoBehaviour
             
             var popUpObject = Instantiate(SessionPopUpPrefab, popUpParent);
             var popUpInfo = popUpObject.GetComponent<SessionPopUpInfo>();
+            var popUpImage = popUpInfo.image;
+            
+            UpdateImage(url, popUpImage).Forget();
             
             await UniTask.Yield();
             
@@ -144,6 +147,7 @@ public class SessionUIManager : MonoBehaviour
         {
             Debug.LogWarning($"{session.Name}: 이미지를 불러오지 못했습니다.");
         }
+        
         Debug.Log("결괏값: " + imageName);
         string url = Path.Combine(Application.persistentDataPath,"Images",imageName);
         webApiData.ImageName = imageName;
@@ -152,6 +156,12 @@ public class SessionUIManager : MonoBehaviour
 
     private async UniTaskVoid UpdateImage(string url, Image targetImage)
     {
+        if (_debugModeData.DebugMode)
+        {
+            Debug.Log("디버그 모드입니다. 기본 이미지를 노출합니다.");
+            return;
+        }
+        
         if (targetImage == null)
         {
             Debug.LogWarning("targetImage가 null입니다. 스프라이트를 설정할 수 없습니다.");
