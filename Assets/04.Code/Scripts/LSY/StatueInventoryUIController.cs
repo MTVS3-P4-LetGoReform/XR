@@ -20,8 +20,8 @@ public class StatueInventoryUIController : MonoBehaviour
     public RectTransform CategoryBG;
     // imageBtns 영역
     public RectTransform imageBtnsArea;
-    // 중간 컨투어 경계
-    public CanvasGroup contourLine;
+    // // 중간 컨투어 경계
+    // public CanvasGroup contourLine;
     // 뒤로가기 버튼
     public CanvasGroup bakcBtn;
 
@@ -68,7 +68,7 @@ public class StatueInventoryUIController : MonoBehaviour
         Debug.Log("interiorModePoint : "+ interiorModePoint.anchoredPosition);
         Debug.Log("listinteriorModePoint : "+ listInteriorModePoint.anchoredPosition);
         // 이동 애니메이션
-        contourLine.DOFade(0f, duration).OnComplete(()=> contourLine.gameObject.SetActive(false));
+        //contourLine.DOFade(0f, duration).OnComplete(()=> contourLine.gameObject.SetActive(false));
         bakcBtn.DOFade(0f, duration).OnComplete(()=> bakcBtn.gameObject.SetActive(false));
         statueInventoryInfo.DOFade(0f, duration).OnComplete(()=> statueInventoryInfo.gameObject.SetActive(false));
         statueInventoryUI.DOAnchorPos(interiorModePoint.anchoredPosition, duration);
@@ -83,10 +83,10 @@ public class StatueInventoryUIController : MonoBehaviour
 
     public void SetInventoryMode()
     {
-        contourLine.gameObject.SetActive(true);
+        //contourLine.gameObject.SetActive(true);
         bakcBtn.gameObject.SetActive(true);
         statueInventoryInfo.gameObject.SetActive(true);
-        contourLine.DOFade(1f, duration);
+        //contourLine.DOFade(1f, duration);
         bakcBtn.DOFade(1f, duration);
         statueInventoryInfo.DOFade(1f, duration);
         statueInventoryUI.DOAnchorPos(inventoryModePoint.anchoredPosition, duration);
