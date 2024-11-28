@@ -11,7 +11,8 @@ public class SharedGameData : NetworkBehaviour
    
    public static int ReadyCount { get; private set; }
    public static int GameEndCount { get; private set; }
-   public static bool StartGame { get; private set; } 
+   public static bool StartGame { get; private set; }
+   public static int BlockCount { get; private set; }
 
    private void Start()
    {
@@ -56,6 +57,13 @@ public class SharedGameData : NetworkBehaviour
       RunnerManager.Instance.runner.SessionInfo.IsOpen = false;
       RunnerManager.Instance.runner.SessionInfo.IsVisible = false;
       Debug.Log($"ReadyCount Changed : {ReadyCount}");
+   }
+   
+   [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+   public void BlockCountRpc(RpcInfo info = default)
+   {
+      BlockCount++;
+      Debug.Log($"ReadyCount Changed : {BlockCount}");
    }
 
    
