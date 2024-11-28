@@ -52,10 +52,10 @@ public class WebCommManager : MonoBehaviour
         createRoomStart.onClick.AddListener(DoModelGenDown);
         ImageGenBtn.onClick.AddListener(DoImageGenDown);
         ImageRengenBtn.onClick.AddListener(DoImageRegen);
-        
-        genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
-        genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
-        genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
+        // FIX
+        // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
+        // genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
+        // genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
     }
 
     // 초기 이미지 생성
@@ -87,7 +87,11 @@ public class WebCommManager : MonoBehaviour
             for (int i = 0; i < GenImageNum; i++)
             {
                 yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
-                ConvertSpriteFromPNG(genImageList[i].GetComponent<Image>(), genImageNameList[i]);
+                Image genImage = genImageList[i].GetComponent<Image>();
+                ConvertSpriteFromPNG(genImage, genImageNameList[i]);
+                Color color = genImage.color;
+                color.a = 1f;
+                genImage.color = color;
             }
             DeactiveImageCommLoading();
         }
@@ -234,12 +238,25 @@ public class WebCommManager : MonoBehaviour
 
     IEnumerator ShowImageCommLoading()
     {
+        Image image;
+        Color color;
         ModelCommLoadingObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         ModelCommLoadingObject.SetActive(false);
-        genImageList[0].GetComponent<Image>().sprite = mockSprite0;
-        genImageList[1].GetComponent<Image>().sprite = mockSprite1;
-        genImageList[2].GetComponent<Image>().sprite = mockSprite2;
-        
+        image = genImageList[0].GetComponent<Image>();
+        image.sprite = mockSprite0;
+        color = image.color;
+        color.a = 1f;
+        image.color = color;
+        image = genImageList[1].GetComponent<Image>();
+        image.sprite = mockSprite1;
+        color = image.color;
+        color.a = 1f;
+        image.color = color;
+        image = genImageList[2].GetComponent<Image>();
+        image.sprite = mockSprite2;
+        color = image.color;
+        color.a = 1f;
+        image.color = color;
     }
 }

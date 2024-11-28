@@ -72,7 +72,7 @@ public class BlockShot : NetworkBehaviour
                     audioThrow.Play();
                     blockData.BlockNumber -= 1;
                     blockCountText.text = $"{blockData.BlockNumber}";
-                    Vector3 throwDirection = (userCamera.transform.forward * 10f) + (Vector3.up * 5f);
+                    Vector3 throwDirection = (userCamera.transform.forward * 3f) + (Vector3.up * 5f);
                     Vector3 force = throwDirection * currentGauge;
                     
                     NMAni.SetTrigger("IsThrowing");

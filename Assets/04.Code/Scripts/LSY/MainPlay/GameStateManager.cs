@@ -10,6 +10,7 @@ public class GameStateManager : MonoBehaviour
     public WebApiData webApiData;
     private ModelgenerateController _modelgenerateController;
     private static GameStateManager _instance;
+    public CompleteVFXController _completeVFXController;
     public GameObject completeScreen;
     public GameObject otherScreen;
     public GameObject guideObjects;
@@ -66,7 +67,7 @@ public class GameStateManager : MonoBehaviour
         guideObjects.SetActive(false);
         otherScreen.SetActive(false);
         pedestral.SetActive(false);
-        yield return new WaitForSeconds(5f);
+        yield return _completeVFXController.PlayFireWorkEffect();
         Cursor.lockState = CursorLockMode.None;
         completeScreen.SetActive(true);
         Complete?.Invoke(true);
