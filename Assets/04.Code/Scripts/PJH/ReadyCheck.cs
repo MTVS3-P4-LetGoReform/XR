@@ -2,7 +2,6 @@ using System;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ReadyCheck : MonoBehaviour
@@ -11,6 +10,9 @@ public class ReadyCheck : MonoBehaviour
     public GameObject progressInfo;
     public TMP_Text readyText; 
     public Button gameStartButton;
+
+    public GameObject readyButton;
+    public GameObject unReadyButton;
     
     private void Start()
     {
@@ -23,10 +25,14 @@ public class ReadyCheck : MonoBehaviour
     {
         if (status)
         {
+            readyButton.SetActive(true);
+            unReadyButton.SetActive(false);
             SharedGameData.Instance.RpcReady();
         }
         else
         {
+            readyButton.SetActive(false);
+            unReadyButton.SetActive(true);
             SharedGameData.Instance.RpcWait();
         }
     }
