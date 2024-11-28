@@ -60,14 +60,8 @@ public static class StorageDatabase
         Debug.Log("다운로드 완료");
     }
     
-    public static async UniTask DownLoadImage(string imageName, string localPath)
+    public static async UniTask RankingImageDownLoad(string imageName, string localPath)
     {
-        if (_debugModeData.DebugMode)
-        {
-            Debug.Log("현재 DebugMode입니다.");
-            return;
-        }
-
         isstorage_ref = storage_ref.Child("images").Child(imageName);
         Debug.Log("StorageDatabase : isstorage_ref - " + isstorage_ref);
         Debug.Log("로컬 다운로드 주소 : " + localPath);
