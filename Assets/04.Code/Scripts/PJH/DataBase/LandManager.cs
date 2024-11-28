@@ -15,6 +15,7 @@ public class LandManager : MonoBehaviour
             userId = sessionProperty;
         }
 
+        Debug.Log($"DB에서 정보를 불러옵니다. 현재 영지 : {userId}");
         RunnerManager.Instance.IsSpawned += AfterSpawn;
     }
 
