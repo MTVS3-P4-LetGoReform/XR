@@ -186,13 +186,14 @@ public class BlockCreateRaycastController : NetworkBehaviour
     private HashSet<NetworkObject> _pendingDeletionBlocks = new HashSet<NetworkObject>();
 
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    // [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void CreateBlockRpc(Vector3 pos)
     {
         if (RunnerManager.Instance.runner != null)
         {
             RunnerManager.Instance.runner.SpawnAsync(
                 blockData.BasicBlockPrefab, 
+                //BlockPrefab,
                 pos, 
                 Quaternion.identity
             );
