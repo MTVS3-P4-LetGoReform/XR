@@ -219,12 +219,6 @@ public class BlockCreateRaycastController : NetworkBehaviour
             Debug.LogError("Runner is null. Cannot spawn block.");
         }
     }
-
-    [Rpc(RpcSources.StateAuthority,RpcTargets.All)]
-    private void BlockSetPpc(NetworkObject spawnObject)
-    {
-        
-    }
     
     private void DeleteBlockRpc(NetworkObject networkObject)
     {
