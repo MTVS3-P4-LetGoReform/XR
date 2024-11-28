@@ -84,7 +84,11 @@ public class RewordCanvas : MonoBehaviour
             // 이미지 다운로드
             // TESTME : storagedatabase static 변경
             await StorageDatabase.DownImage(webApiData.ImageName);
-            
+
+            if (debugModeData.DebugMode)
+            {
+                return;
+            }
             if (!File.Exists(url))
             {
                 Debug.LogWarning($"파일이 존재하지 않습니다: {url}");
