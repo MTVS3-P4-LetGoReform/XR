@@ -3,6 +3,7 @@ using System.IO;
 using GLTFast;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class StatueInventoryController : MonoBehaviour
 {
@@ -21,6 +22,12 @@ public class StatueInventoryController : MonoBehaviour
 
     public Sprite mockDataSprite1;
     public Sprite mockDataSprite2;
+    public Sprite mockDataSprite3;
+    public Sprite mockDataSprite4;
+
+    private GltfImport gltfImport3;
+    private GltfImport gltfImport4;
+    
     public async void Start()
     {
         statueDatas = new List<StatueData>();
@@ -28,9 +35,21 @@ public class StatueInventoryController : MonoBehaviour
         GltfImport gltfImport2 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath,"Models", "inven1.glb"));
         AddStatueToInven("m_id_0001", mockDataSprite1, gltfImport1);
         AddStatueToInven("m_id_0002", mockDataSprite2, gltfImport2);
-        
-        
+        gltfImport3 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath, "Models", "MainMockDataModel.glb"));
+        gltfImport4 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath, "Models", "hamo.glb"));
+    }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            AddStatueToInven("m_id_0003", mockDataSprite3, gltfImport3);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            AddStatueToInven("m_id_0004", mockDataSprite4, gltfImport4);
+        }
     }
     // /* FIXME : 인벤토리 아이템 수에 맞게 아이템 생성하도록 메서드 */
     // // 인벤토리 칸의 부모 객체
@@ -45,7 +64,7 @@ public class StatueInventoryController : MonoBehaviour
     /* FIXME : DB랑 연결 */
     
     // 인벤토리에 StatueData 추가 후 UI 보여주기
-    public void AddStatueToInven(string modelId, Sprite sprite, GltfImport gltfImport)
+   public void AddStatueToInven(string modelId, Sprite sprite, GltfImport gltfImport)
     {
         
         Debug.Log("AddStatueToInven");
