@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4739173073854883109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2296441652957141004}
+  - component: {fileID: 5597969081294041573}
+  m_Layer: 0
+  m_Name: WebCommManger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2296441652957141004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739173073854883109}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5597969081294041573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739173073854883109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f940ce202d34f09ad088aaf627c9d57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  webApiData: {fileID: 11400000, guid: 887fdf7ab03dc5540a31c3b7882642dd, type: 2}
+  promptInput: {fileID: 0}
+  genImageList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  prompt: 
+  genImageNameList: []
+  selectedImageIndex: 0
+  modelName: 
+  modelId: 
+  createRoomStart: {fileID: 0}
+  ImageGenBtn: {fileID: 0}
+  ImageRengenBtn: {fileID: 0}
+  ImageCommLoadingObject: {fileID: 0}
+  ModelCommLoadingObject: {fileID: 0}
+  debugModeData: {fileID: 11400000, guid: ec65e151e22563b4e8cb6b7afde4d96a, type: 2}
+  mockSprite0: {fileID: 21300000, guid: 46d230e84f9577442b029b49e5b1c915, type: 3}
+  mockSprite1: {fileID: 21300000, guid: b33d478899fd78a4ca9f86b1caad5693, type: 3}
+  mockSprite2: {fileID: 21300000, guid: ed053a52f65a59f44a71d5c896498702, type: 3}
