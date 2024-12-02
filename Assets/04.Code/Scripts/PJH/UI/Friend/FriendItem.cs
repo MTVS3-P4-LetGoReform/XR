@@ -69,8 +69,11 @@ public class FriendItem : MonoBehaviour
         var args = new StartGameArgs()
         {
             GameMode = GameMode.Shared,
-            //Scene = SceneRef.FromIndex(2),
-            SessionName = result
+            SessionName = result,
+            SessionProperties = new Dictionary<string, SessionProperty>
+            {
+                { "UserId", result },
+            },
         };
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(args,3);

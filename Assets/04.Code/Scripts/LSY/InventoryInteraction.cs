@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InventoryInteraction : MonoBehaviour
 {
-    public Canvas StatueInventory;
+    public GameObject StatueInventory;
 
     // public void Start()
     // {
@@ -17,13 +17,13 @@ public class InventoryInteraction : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            StatueInventory.enabled = true;
+            StatueInventory.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            StatueInventory.enabled = false;
+            StatueInventory.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;
         }
     }

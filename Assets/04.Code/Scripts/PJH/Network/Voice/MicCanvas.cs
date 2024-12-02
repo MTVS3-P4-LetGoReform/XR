@@ -11,7 +11,7 @@ public class MicCanvas : MonoBehaviour
 
     public async UniTask SpawnOp()
     {
-        var spawnObject = await RunnerManager.Instance.runner.SpawnAsync(uIPrefab,Vector3.zero,quaternion.identity);
+        var spawnObject = await RunnerManager.Instance.runner.SpawnAsync(uIPrefab);
         spawnObject.transform.SetParent(parent);
     }
 }

@@ -40,7 +40,7 @@ public class SouvenirMarketController : MonoBehaviour
     public void PurchaseButtonOnClick()
     {
         imagePurchase.gameObject.SetActive(true);
-        BuyToyPick();
+        //BuyToyPick();
     }
 
     public void ConfirmPurchaseButtonOnClick()

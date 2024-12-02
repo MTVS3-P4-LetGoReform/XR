@@ -84,7 +84,11 @@ public class RewordCanvas : MonoBehaviour
             // 이미지 다운로드
             // TESTME : storagedatabase static 변경
             await StorageDatabase.DownImage(webApiData.ImageName);
-            
+
+            if (debugModeData.DebugMode)
+            {
+                return;
+            }
             if (!File.Exists(url))
             {
                 Debug.LogWarning($"파일이 존재하지 않습니다: {url}");
@@ -140,22 +144,22 @@ public class RewordCanvas : MonoBehaviour
                 {
                     Debug.LogError("Reword Canvas : _statueInventoryControll is null");
                 }
-                _statueInventoryController.StatueInvenTestBtn();
+                //_statueInventoryController.StatueInvenTestBtn();
             }
-            else
-            {
-                try
-                {
-                    Sprite sprite = SpriteConverter.ConvertFromPNG(webApiData.ImageName);
-                    GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath(webApiData.ModelName));
-                    _statueInventoryController.AddStatueToInven(modelId, sprite, gltfImport);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"스태츄 인벤토리 추가 실패: {ex.Message}");
-                    return;
-                }
-            }
+            // else
+            // {
+            //     try
+            //     {
+            //         Sprite sprite = SpriteConverter.ConvertFromPNG(webApiData.ImageName);
+            //         GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath(webApiData.ModelName));
+            //         _statueInventoryController.AddStatueToInven(modelId, sprite, gltfImport);
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         Debug.LogError($"스태츄 인벤토리 추가 실패: {ex.Message}");
+            //         return;
+            //     }
+            // }
 
             await RunnerManager.Instance.JoinPublicSession();
         }

@@ -31,7 +31,7 @@ public class StorgeTest : MonoBehaviour
         Debug.Log("url : " + url);
         
         Debug.Log("다운로드 시작");
-        await StorageDatabase.DownLoadImage(imageName, url);
+        await StorageDatabase.RankingImageDownLoad(imageName, url);
         UpdateImage(url,modelImage).Forget();
     } 
     
