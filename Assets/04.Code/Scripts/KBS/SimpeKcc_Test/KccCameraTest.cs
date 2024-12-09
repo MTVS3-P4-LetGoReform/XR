@@ -1,4 +1,5 @@
 using Fusion;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,7 @@ public class KccCameraTest : NetworkBehaviour
     public Transform TpCameraPoint;
     public Transform FpCameraPoint;
     public static bool togglePov = false;
+    public static bool toggleFaceCam = false;
     
     [SerializeField] 
     private float rotationSpeed = 5f;
@@ -99,9 +101,12 @@ public class KccCameraTest : NetworkBehaviour
             
             float adjustedHeight = Mathf.Lerp(3f, 0f, (-mouseY + 45f) / 75f); // 회전 각도에 따라 카메라 높이 조정
             targetPosition.y -= adjustedHeight;
+            
+            
         }
         
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * positionLerpSpeed);
     }
+    
 }
 
