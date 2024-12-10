@@ -8,7 +8,7 @@ using UnityEngine.XR;
 public class StatueInventoryController : MonoBehaviour
 {
     // 초기 인덱스 - 시연용으로 2개의 스태츄를 미리 넣어 놓음.
-    private const int Initial_Index = 2;
+    private const int Initial_Index = 0;
     // 인벤토리 한 장 최대 크기
     private const int Max_Inventory_Num = 20;
     // 현재 빈 인벤토리 칸 인덱스
@@ -80,6 +80,7 @@ public class StatueInventoryController : MonoBehaviour
         {
             Debug.LogError("inventoryTargetList[curIndex] is null!");
         }
+        Debug.Log($"curIndex : {curIndex}");
         inventoryTargetList[curIndex].SetActive(true);
         Image curImage = inventoryTargetList[curIndex].transform.GetChild(0).GetComponent<Image>(); ;
         curImage.sprite = sprite;

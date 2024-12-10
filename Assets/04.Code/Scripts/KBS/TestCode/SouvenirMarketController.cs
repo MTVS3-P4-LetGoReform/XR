@@ -19,7 +19,7 @@ public class SouvenirMarketController : MonoBehaviour
     public void Start()
     {
         StartCoroutine(FindStatueInventoryController());
-        //purchaseBtn.onClick.AddListener(BuyToyPick);
+        purchaseBtn.onClick.AddListener(BuyToyPick);
     }
 
     public void ExitButtonOnClick()
@@ -40,7 +40,6 @@ public class SouvenirMarketController : MonoBehaviour
     public void PurchaseButtonOnClick()
     {
         imagePurchase.gameObject.SetActive(true);
-        //BuyToyPick();
     }
 
     public void ConfirmPurchaseButtonOnClick()
@@ -48,6 +47,7 @@ public class SouvenirMarketController : MonoBehaviour
         imageEndPurchase.gameObject.SetActive(true);
         Vector2 newVec = new Vector2(290, -200);
         imageEndPurchase.rectTransform.anchoredPosition = newVec;
+        BuyToyPick();
     }
 
     public void FinishPurchaseButtonOnClick()
