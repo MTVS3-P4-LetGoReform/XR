@@ -10,12 +10,14 @@ public class CameraOverlayController : MonoBehaviour
     private GameObject newOverlayCamera;
 
     private Coroutine currentCoroutine;
+    private Coroutine findMainUICamCoroutine;
 
     private bool isCameraOn = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         currentCoroutine = StartCoroutine(FindCamera());
+        findMainUICamCoroutine = StartCoroutine(FindMainUICamera());
     }
 
     // Update is called once per frame
@@ -51,10 +53,35 @@ public class CameraOverlayController : MonoBehaviour
 
                 isCameraOn = true;
             }
-            
         }
+    }
+    
+    private IEnumerator FindMainUICamera()
+    {
+        newOverlayCamera = null;
         
+        while (newOverlayCamera == null)
+        {
+            newOverlayCamera = GameObject.FindWithTag("MainUICamera");
+
+            if (newOverlayCamera == null)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+            else
+            {
+                overlayCamera = newOverlayCamera.GetComponent<Camera>();
         
+                var baseCameraData = baseCamera.GetUniversalAdditionalCameraData();
         
+                var overlayCameraData = overlayCamera.GetUniversalAdditionalCameraData();
+                overlayCameraData.renderType = CameraRenderType.Overlay;
+            
+                // Base 카메라의 스택에 Overlay 카메라를 추가합니다.
+                baseCameraData.cameraStack.Add(overlayCamera);
+
+                isCameraOn = true;
+            }
+        }
     }
 }
