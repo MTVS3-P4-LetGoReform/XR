@@ -20,11 +20,12 @@ public class PreviewWebCommController : MonoBehaviour
     void Start()
     {
         StartCoroutine(FindWebCommManager());
-        if (_debugModeData.PreviewMode == true)
+        if (_debugModeData.DebugMode == true)
         {
             for (int i = 0; i < regenBtns.Count; i++)
             {
-                regenBtns[i].onClick.AddListener(() => DoPreviewRegen(targetImages[i]));
+                int index = i;
+                regenBtns[i].onClick.AddListener(() => DoPreviewRegen(targetImages[index]));
             }
             
             imageGenBtn.onClick.AddListener(DoPreviewImageGen);
@@ -39,8 +40,8 @@ public class PreviewWebCommController : MonoBehaviour
 
     public void DoPreviewImageGen()
     {
-        _webApiData.ImageName = Path.Combine("MockData","MainMockDataImage.png");
-        _webApiData.ModelName = Path.Combine("MockData", "MainMockDataModel.glb");
+        // _webApiData.ImageName = "MainMockDataImage.png";
+        // _webApiData.ModelName = "MainMockDataModel.glb";
         _webCommManager.DoImageGenDown();
     }
 

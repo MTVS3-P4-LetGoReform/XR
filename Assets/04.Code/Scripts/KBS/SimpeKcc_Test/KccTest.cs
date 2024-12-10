@@ -22,6 +22,7 @@ public class KccTest : NetworkBehaviour
     [SerializeField]
     private float rotSpeed = 200f;
 
+    
     private float mx = 0f;
     
     private bool _jump;

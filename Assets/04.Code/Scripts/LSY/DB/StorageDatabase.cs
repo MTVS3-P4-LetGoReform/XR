@@ -94,7 +94,7 @@ public static class StorageDatabase
     
     public static async UniTask DownModelPlaySession(string modelName, SessionUIManager _sessionUIManager)
     {
-        if (_debugModeData.DebugMode == false)
+        if (_debugModeData.DebugMode == false && _debugModeData.PreviewMode == false)
         {
             isstorage_ref = storage_ref.Child(webApiData.StorageModelsPoint).Child(modelName);
             local_url = Path.Combine(Application.persistentDataPath,"Models",modelName);

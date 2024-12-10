@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class TestInteriorMode : MonoBehaviour
 {
     public Canvas interiorCanvas;
+    public AudioSource audioPlaceSound;
     [SerializeField] private GameObject newPreviewPrefab;
 
 
@@ -48,6 +49,7 @@ public class TestInteriorMode : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             OnClicked?.Invoke(); // 마우스 좌클릭시, OnClicked에 구독된 모든 메서드 호출
+            
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -177,9 +179,9 @@ public class TestInteriorMode : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
-
-
-
+        
+        audioPlaceSound.Play();
+        
         Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
         if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
         {
