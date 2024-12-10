@@ -44,36 +44,22 @@ public class SessionUIManager : MonoBehaviour
     
     private void Start()
     {
-        /*create.onClick.AddListener(ActiveCreateRoom);
-        join.onClick.AddListener(ActiveRoomList);
-        
-        roomListBack.onClick.AddListener(OffRoomList);
-        
-        createRoomBack.onClick.AddListener(OffCreateRoom);*/
-        //createRoomRecreate.onClick.AddListener(ImageCraft);
-        //createRoomStart.onClick.AddListener(CreatePlaySession);
         // TESTME : storagedatabase static 변경
+        
         StorageDatabase.InitializStorageDatabase(webApiData, _debugModeData);
         
         for (int i = 0; i < maxPlayerCountButton.Length; i++)
         {
-            maxPlayerCountButton[i].onClick.AddListener(() => CheckPlayerCounts(i+1));
+            int playerCount = i + 1; 
+            maxPlayerCountButton[i].onClick.AddListener(() => CheckPlayerCounts(playerCount));
         }
-        
     }
-
 
     private void CheckPlayerCounts(int count)
     {
         Debug.Log(count);
         currentPlayerCount = count;
     }
-    
-    // private void ImageCraft()
-    // {
-    //     test.SetActive(true);
-    // }
-    //
 
     // 세션 목록 UI 업데이트
     public async UniTask UpdateSessionList(List<SessionInfo> sessionList)

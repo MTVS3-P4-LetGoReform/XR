@@ -67,7 +67,7 @@ public class RunnerManager : MonoBehaviour
          if (SceneManager.GetActiveScene().name == "Alpha_PlayScene")
          {
             await SharedGameDataSpawn();
-            //await MicUISpawn();
+            await MicUISpawn();
             Debug.Log("공유게임정보 생성");
          }
       }

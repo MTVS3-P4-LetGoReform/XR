@@ -25,14 +25,14 @@ public class ReadyCheck : MonoBehaviour
     {
         if (status)
         {
-            readyButton.SetActive(true);
-            unReadyButton.SetActive(false);
+            readyButton.SetActive(false);
+            unReadyButton.SetActive(true);
             SharedGameData.Instance.RpcReady();
         }
         else
         {
-            readyButton.SetActive(false);
-            unReadyButton.SetActive(true);
+            readyButton.SetActive(true);
+            unReadyButton.SetActive(false);
             SharedGameData.Instance.RpcWait();
         }
     }
@@ -47,7 +47,8 @@ public class ReadyCheck : MonoBehaviour
         var wfs = 0.5f;
         while (true)
         {
-            var totalCount = RunnerManager.Instance.runner.SessionInfo.PlayerCount;
+            //var totalCount = RunnerManager.Instance.runner.SessionInfo.PlayerCount;
+            var totalCount = RunnerManager.Instance.runner.SessionInfo.MaxPlayers;
             var currentCount = SharedGameData.ReadyCount;
             readyText.text = $"현재 인원\n{currentCount}/{totalCount}";
 

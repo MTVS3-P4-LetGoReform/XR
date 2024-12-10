@@ -179,8 +179,9 @@ GameObject:
   - component: {fileID: 3995287533510763750}
   - component: {fileID: 6622913924792638890}
   - component: {fileID: 8242898712350212997}
+  - component: {fileID: 6769959420272531345}
   m_Layer: 5
-  m_Name: Panel - UIPrefab
+  m_Name: Panel - MicUIPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,6 +265,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8242898712350212997}
+  - {fileID: 6769959420272531345}
 --- !u!114 &8242898712350212997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,6 +280,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   micImage: {fileID: 4570722216870923166}
   highLightImage: {fileID: 2939741985474774259}
+--- !u!114 &6769959420272531345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7439515996170593033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 234f969d1a6237d4d804b6d3ebd47c31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userName: {fileID: 7059820915183054495}
 --- !u!1 &7759824076355431057
 GameObject:
   m_ObjectHideFlags: 0
