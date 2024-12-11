@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
@@ -59,7 +60,7 @@ public class NetworkCallbackHandler : INetworkRunnerCallbacks
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         Debug.Log("세션 목록이 업데이트되었습니다.");
-        SessionUIManager.Instance.UpdateSessionList(sessionList);
+        SessionUIManager.Instance.UpdateSessionList(sessionList).Forget();
     }
 
     // 로딩화면 구현시 사용 예정

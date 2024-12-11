@@ -12,17 +12,18 @@ public class PlayerInput : NetworkBehaviour
     public static event Action<bool> OnGameStart;
     public static Action<bool> OnMessenger;
 
-    private bool _mouseOn = false;
-    private bool _chatOn = false;
-    private bool _micOn = false;
-    private bool _onReady = false;
-    private bool _onGameStart = false;
+    private bool _mouseOn;
+    private bool _chatOn;
+    private bool _micOn;
+    private bool _onReady;
+    private bool _onGameStart;
     private bool _onMessenger = true;
 
     private const string ParkScene = "Alpha_PublicParkScene";
     private const string GameScene = "Alpha_PlayScene";
+    private const string PersonalScene = "Alpha_PersonalScene";
     
-    public PlayerStatus PlayerStatus { get; private set; }
+    private PlayerStatus PlayerStatus { get; set; }
 
     public override void Spawned()
     {
@@ -66,7 +67,7 @@ public class PlayerInput : NetworkBehaviour
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        if (sceneName == ParkScene)
+        if (sceneName is ParkScene or PersonalScene)
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
@@ -116,7 +117,7 @@ public class PlayerInput : NetworkBehaviour
         Debug.Log(_chatOn ? "채팅 활성화" : "채팅 비활성화");
     }
 
-    private void ToggleMessenger()
+    public void ToggleMessenger()
     {
         OnMessenger?.Invoke(_onMessenger);
     }

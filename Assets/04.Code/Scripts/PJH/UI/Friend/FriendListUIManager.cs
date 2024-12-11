@@ -37,10 +37,15 @@ public class FriendListUIManager : MonoBehaviour
 
         friendListCanvas.enabled = false; // 초기 상태 설정
         FriendRequestUIManager.RefreshList += RefreshList;
-        PlayerInput.OnMessenger += ToggleFriendCanvas;
+        RunnerManager.Instance.IsSpawned += AfterSpawn;
         UserData.ChangeName += OnChangedUserId;
         OnChangedUserId();
         RefreshList();
+    }
+
+    private void AfterSpawn()
+    {
+        PlayerInput.OnMessenger += ToggleFriendCanvas;
     }
 
     private void OnChangedUserId()

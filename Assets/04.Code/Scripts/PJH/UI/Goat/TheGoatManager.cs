@@ -81,7 +81,7 @@ public class TheGoatManager : MonoBehaviour
                 imageName = "DebugModeImage.png";
             }
             string url  = Path.Combine(Application.persistentDataPath,"Images",imageName);
-            await StorageDatabase.DownLoadImage(imageName,url);
+            await StorageDatabase.RankingImageDownLoad(imageName,url);
             UpdateImage(url,modelImage).Forget();
         }
         catch (Exception e)

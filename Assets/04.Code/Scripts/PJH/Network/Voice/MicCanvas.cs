@@ -4,14 +4,13 @@ using Fusion;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class MicCanvas : MonoBehaviour
+public class MicCanvas : MonoBehaviourSingleton<MicCanvas>
 {
     public NetworkObject uIPrefab;
-    public Transform parent;
+    public Transform playerContainer;
 
     public async UniTask SpawnOp()
     {
-        var spawnObject = await RunnerManager.Instance.runner.SpawnAsync(uIPrefab,Vector3.zero,quaternion.identity);
-        spawnObject.transform.SetParent(parent);
+        await RunnerManager.Instance.runner.SpawnAsync(uIPrefab);
     }
 }

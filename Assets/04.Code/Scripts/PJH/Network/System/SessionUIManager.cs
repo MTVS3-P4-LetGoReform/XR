@@ -16,10 +16,10 @@ public class SessionUIManager : MonoBehaviour
     //public StorageDatabase _storageDatabase;
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPromptInput;
+    public Button[] maxPlayerCountButton;
     
     public Transform sessionListParent;
     public GameObject sessionPrefab;
-    
     
     public WebApiData webApiData;
     public WebCommManager _webCommManager;
@@ -27,7 +27,9 @@ public class SessionUIManager : MonoBehaviour
 
     public GameObject SessionPopUpPrefab;
     public Transform popUpParent;
-
+    
+    private int currentPlayerCount;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -42,26 +44,25 @@ public class SessionUIManager : MonoBehaviour
     
     private void Start()
     {
-        /*create.onClick.AddListener(ActiveCreateRoom);
-        join.onClick.AddListener(ActiveRoomList);
-        
-        roomListBack.onClick.AddListener(OffRoomList);
-        
-        createRoomBack.onClick.AddListener(OffCreateRoom);*/
-        //createRoomRecreate.onClick.AddListener(ImageCraft);
-        //createRoomStart.onClick.AddListener(CreatePlaySession);
         // TESTME : storagedatabase static 변경
+        
         StorageDatabase.InitializStorageDatabase(webApiData, _debugModeData);
+        
+        for (int i = 0; i < maxPlayerCountButton.Length; i++)
+        {
+            int playerCount = i + 1; 
+            maxPlayerCountButton[i].onClick.AddListener(() => CheckPlayerCounts(playerCount));
+        }
     }
 
-    // private void ImageCraft()
-    // {
-    //     test.SetActive(true);
-    // }
-    //
+    private void CheckPlayerCounts(int count)
+    {
+        Debug.Log(count);
+        currentPlayerCount = count;
+    }
 
     // 세션 목록 UI 업데이트
-    public async void UpdateSessionList(List<SessionInfo> sessionList)
+    public async UniTask UpdateSessionList(List<SessionInfo> sessionList)
     {
         // 기존 목록 삭제 같은 목록이 겹치는걸 방지함.
         foreach (Transform child in sessionListParent)
@@ -135,6 +136,7 @@ public class SessionUIManager : MonoBehaviour
         Debug.Log("결괏값: " + userId);
         return userId;
     }
+    
     private string GetImageUrl(SessionInfo session)
     {
         string imageName = "";
@@ -190,19 +192,27 @@ public class SessionUIManager : MonoBehaviour
     
     public async void CreatePlaySession()
     {
-        Debug.Log("SeissionUIManager : CreatePlaySession()");
+        Debug.Log("SessionUIManager : CreatePlaySession()");
         string sessionName = sessionNameInput.text;
-        Debug.Log("SeissionUIManager : flag1");
+        Debug.Log("SessionUIManager : flag1");
+        
         if (string.IsNullOrEmpty(sessionName))
         {
             Debug.LogWarning("세션 이름이 비어있습니다.");
             return;
         }
+
+        if (currentPlayerCount == 0)
+        {
+            Debug.LogWarning("인원수가 선택되지 않았습니다.");
+            return;
+        }
+        
         var startArgs = new StartGameArgs
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = 4,
+            PlayerCount = currentPlayerCount,
             //Scene = sceneInfo,
             SessionProperties = new Dictionary<string, SessionProperty>
             {
@@ -244,10 +254,5 @@ public class SessionUIManager : MonoBehaviour
 
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,2);
-    }
-
-    private void PopUp()
-    {
-        
     }
 }

@@ -7,7 +7,7 @@ public class DelayedLoad : MonoBehaviour
 {
     public float delayTime = 1f;
 
-    private async UniTaskVoid Start()
+    private async void Start()
     {
         Debug.Log("로딩 대기중");
 

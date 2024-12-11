@@ -38,7 +38,6 @@ public class GotoPersonalSession : MonoBehaviour
         var args = new StartGameArgs
         {
             GameMode = GameMode.Shared,
-            //Scene = SceneRef.FromIndex(2),
             SessionName = userId,
             SessionProperties = new Dictionary<string, SessionProperty>
             {

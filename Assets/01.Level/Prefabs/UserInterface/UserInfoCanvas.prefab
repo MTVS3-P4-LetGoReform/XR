@@ -736,11 +736,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5287461048634329680}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1620.2, y: 937}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -26, y: 119.4}
   m_SizeDelta: {x: 290, y: 90}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 1, y: 0}
 --- !u!222 &2176984188062517841
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -899,7 +899,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4774747360439957267}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -968,6 +968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 7489577338300123242}
+  friendButton: {fileID: 4348266273290689735}
   username: {fileID: 6754244012859851039}
 --- !u!1 &8322973265041084465
 GameObject:

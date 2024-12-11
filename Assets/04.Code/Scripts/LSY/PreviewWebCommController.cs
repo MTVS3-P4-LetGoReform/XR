@@ -35,7 +35,8 @@ public class PreviewWebCommController : MonoBehaviour
 
     public void DoPreviewRegen(Image targetImage)
     {
-        targetImage.sprite = regenImage;
+        StartCoroutine(ImageRegenLoading(targetImage));
+        
     }
 
     public void DoPreviewImageGen()
@@ -54,4 +55,11 @@ public class PreviewWebCommController : MonoBehaviour
         }
     }
 
+    IEnumerator ImageRegenLoading(Image targetImage)
+    {
+        _webCommManager.ActiveModelCommLoading();
+        yield return new WaitForSeconds(1f);
+        _webCommManager.DeactiveModelCommLoading();
+        targetImage.sprite = regenImage;
+    }
 }

@@ -1,14 +1,14 @@
-using System;
-using Cysharp.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
-public class PlayerStatus : NetworkBehaviour,IPlayerJoined
+public class PlayerStatus : NetworkBehaviour,IPlayerJoined,IPlayerLeft
 {
     [Networked, OnChangedRender(nameof(OnMasterClientChanged))]
     public NetworkBool IsMasterClient { get; set; }
+    private UserInfoCanvas _userInfo;
+    
+    public string playerName;
     
     public override void Spawned()
     {
@@ -18,13 +18,12 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
         
         IsMasterClient = Runner.IsSharedModeMasterClient;
         Debug.Log("마스터 클라이언트 여부 :"+IsMasterClient);
-
+        
         UserData.ChangeName += OnChangedUserName;
         
-        if (SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 3)
-        {
-            SetUserName();
-        }
+        playerName = UserData.Instance.UserName;
+        
+        FindUserInfoCanvas();
 
         if (SceneManager.GetActiveScene().buildIndex == 2)
         {
@@ -34,26 +33,37 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
 
     private void OnChangedUserName()
     {
-        SetUserName();
+        playerName = UserData.Instance.UserName;
+        
+        FindUserInfoCanvas();
+    }
+
+    private void FindUserInfoCanvas()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 3)
+        {
+            _userInfo = FindAnyObjectByType<UserInfoCanvas>();
+            _userInfo.canvas.enabled = true;
+            
+            SetUserName();
+        }
     }
 
     private void SetUserName()
     {
-
-        UserInfoCanvas userInfo = FindAnyObjectByType<UserInfoCanvas>();
-        userInfo.canvas.enabled = true;
-        userInfo.username.text = UserData.Instance.UserName;
-        Debug.Log("이름 변경 : " + UserData.Instance.UserName);
-
+        _userInfo.username.text = playerName;
+        
+        Debug.Log("이름 변경 : " + playerName);
     }
 
     private void FindReadyCanvas()
     {
-
         ReadyCheck readyCheck = FindAnyObjectByType<ReadyCheck>();
         readyCheck.readyCanvas.enabled = true;
         readyCheck.progressInfo.SetActive(true);
+        
         GameStateManager.Instance.Complete += Reword;
+        
         if (IsMasterClient)
         {
             readyCheck.gameStartButton.gameObject.SetActive(true);
@@ -86,6 +96,11 @@ public class PlayerStatus : NetworkBehaviour,IPlayerJoined
     }
 
     public void PlayerJoined(PlayerRef player)
+    {
+        IsMasterClient = RunnerManager.Instance.runner.IsSharedModeMasterClient;
+    }
+    
+    public void PlayerLeft(PlayerRef player)
     {
         IsMasterClient = RunnerManager.Instance.runner.IsSharedModeMasterClient;
     }
