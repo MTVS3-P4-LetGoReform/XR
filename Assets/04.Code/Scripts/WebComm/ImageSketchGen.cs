@@ -24,7 +24,7 @@ public class ImageSketchGen
         
         // // JSON 데이터 생성
         // UnityWebRequest Post요청 생성
-        Debug.Log(webApiData.Baseurl+webApiData.ImageGenPoint);
+        Debug.Log(webApiData.Baseurl+webApiData.ImageSketchGenPoint);
         UnityWebRequest request = new UnityWebRequest( webApiData.Baseurl+webApiData.ImageSketchGenPoint, "POST");
         // 요청 데이터 직렬화
         string jsonData = JsonUtility.ToJson(imageSketchGenReq);

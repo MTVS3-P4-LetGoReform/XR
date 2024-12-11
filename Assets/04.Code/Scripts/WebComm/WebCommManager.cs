@@ -54,7 +54,7 @@ public class WebCommManager : MonoBehaviour
         createRoomStart.onClick.AddListener(DoModelGenDown);
         //TxtImageGenBtn.onClick.AddListener(DoImageGenDown);
         SketchImageGenBtn.onClick.AddListener(DoSketchImageGenDown);
-        PngFileUploadBtn.onClick.AddListener(GetSketchFile);
+        PngFileUploadBtn.onClick.AddListener(GetSketchFileAndShow);
         ImageRengenBtn.onClick.AddListener(DoImageRegen);
         // FIX
         // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
@@ -306,8 +306,12 @@ public class WebCommManager : MonoBehaviour
         image.color = color;
     }
 
-    public void GetSketchFile()
+    public void GetSketchFileAndShow()
     {
-        prompt = PngFileDialog.ConvertPngStreamToBase64(PngFileDialog.FileOpen());
+        Stream stream = PngFileDialog.FileOpen();
+        byte[] buffer = PngFileDialog.ConvertPngStreamToByte(stream);
+        PngFileUploadBtn.GetComponent<RectTransform>().sizeDelta = new Vector2(420f, 467f);
+        PngFileUploadBtn.GetComponent<Image>().sprite = PngFileDialog.ConvertByteToSprite(buffer);
+        prompt = PngFileDialog.ConvertByteTOBase64(buffer);
     }
 }
