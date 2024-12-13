@@ -1,16 +1,15 @@
 using System;
 using UnityEngine;
 using Firebase.Auth;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
 {
-    public string UserId => _user.UserId;
+    public string UserId => _user?.UserId;
 
     public Action<bool> LoginState;
     public Action<string> NickName;
-
     public Action<string> OnLoginResult;
     public Action<string> OnSignUpResult;
 
@@ -23,7 +22,6 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
         _auth.StateChanged += OnChanged;
     }
 
-    //
     private void OnChanged(object sender, EventArgs e)
     {
         if (_auth.CurrentUser != _user)
@@ -45,138 +43,101 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
     }
 
     /// <summary>
-/// 회원가입 후 사용자 정보를 데이터베이스에 저장합니다.
-/// </summary>
-public void CreateAccount(string email, string password, string nickname)
-{
-    // 닉네임 중복 확인
-    RealtimeDatabase.FindUserIdByUsername(nickname,
-        onSuccess: existingUserId =>
+    /// 회원가입 후 사용자 정보를 데이터베이스에 저장합니다.
+    /// </summary>
+    public async UniTask CreateAccountAsync(string email, string password, string nickname)
+    {
+        try
         {
-            if (string.IsNullOrEmpty(existingUserId))  // 닉네임이 중복되지 않으면
+            var existingUserId = await RealtimeDatabase.FindUserIdByUsernameAsync(nickname);
+            
+            if (!string.IsNullOrEmpty(existingUserId))
             {
-                // Firebase Authentication을 통해 사용자 생성
-                _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
-                {
-                    if (task.IsCanceled)
-                    {
-                        Debug.LogError("회원가입 취소");
-                        OnSignUpResult.Invoke("회원가입이 취소되었습니다.");
-                        return;
-                    }
-
-                    if (task.IsFaulted)
-                    {
-                        Debug.LogError("회원가입 실패: " + task.Exception);
-                        OnSignUpResult.Invoke("회원가입에 실패했습니다." + task.Exception);
-                        return;
-                    }
-
-                    FirebaseUser newUser = task.Result.User;
-                    Debug.Log("회원가입 완료");
-
-                    // 사용자 객체 생성
-                    User user = new User(nickname, email, "default_profile_image_url", true, DateTimeOffset.UtcNow.AddHours(9).ToUnixTimeSeconds());
-
-                    // 사용자 정보와 닉네임 저장
-                    RealtimeDatabase.CreateUserWithUsername(newUser.UserId, user,
-                        onSuccess: () =>
-                        {
-                            Debug.Log("사용자 정보 저장 완료");
-                            OnSignUpResult.Invoke("회원가입이 완료되었습니다.");
-                        },
-                        onFailure: (exception) =>
-                        {
-                            Debug.LogError("사용자 정보 저장 실패: " + exception.Message);
-                            OnSignUpResult.Invoke("사용자 정보 저장에 실패했습니다.");
-                        });
-                });
+                OnSignUpResult?.Invoke("이미 사용 중인 닉네임입니다.");
+                return;
             }
-            else
-            {
-                // 닉네임 중복 시 오류 처리
-                Debug.LogError("이미 사용 중인 닉네임입니다.");
-                OnSignUpResult.Invoke("이미 사용 중인 닉네임입니다.");
-            }
-        },
-        onFailure: exception =>
+
+            var authResult = await _auth.CreateUserWithEmailAndPasswordAsync(email, password);
+            var newUser = authResult.User;
+            
+            var user = new User(
+                nickname, 
+                email, 
+                "default_profile_image_url", 
+                true, 
+                DateTimeOffset.UtcNow.AddHours(9).ToUnixTimeSeconds()
+            );
+
+            await RealtimeDatabase.CreateUserWithUsernameAsync(newUser.UserId, user);
+            Debug.Log("회원가입 및 사용자 정보 저장 완료");
+            OnSignUpResult?.Invoke("회원가입이 완료되었습니다.");
+        }
+        catch (Exception e)
         {
-            // 닉네임 확인 중 오류 발생
-            Debug.LogError("닉네임 확인 실패: " + exception.Message);
-            OnSignUpResult.Invoke("닉네임 확인 중 오류가 발생했습니다.");
-        });
-}
-
-
+            Debug.LogError($"회원가입 실패: {e.Message}");
+            OnSignUpResult?.Invoke($"회원가입에 실패했습니다: {e.Message}");
+        }
+    }
 
     /// <summary>
     /// 로그인 후 사용자 데이터를 불러옵니다.
     /// </summary>
-    public void Login(string email, string password)
+    public async UniTask LoginAsync(string email, string password)
     {
-        _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
+        try
         {
-            if (task.IsCanceled)
-            {
-                Debug.LogError("로그인 취소");
-                OnLoginResult.Invoke("로그인이 취소되었습니다.");
-                return;
-            }
-
-            if (task.IsFaulted)
-            {
-                Debug.LogError($"로그인 실패: {task.Exception?.Message}");
-                foreach (var inner in task.Exception?.InnerExceptions)
-                {
-                    Debug.LogError($"상세 오류: {inner.Message}");
-                }
-                Debug.LogError("로그인 실패");
-                OnLoginResult.Invoke("로그인에 실패했습니다.");
-                return;
-            }
-
-            FirebaseUser newUser = task.Result.User;
+            var authResult = await _auth.SignInWithEmailAndPasswordAsync(email, password);
+            var newUser = authResult.User;
             Debug.Log("로그인 성공");
 
-            RealtimeDatabase.GetUser(newUser.UserId, user =>
-                {
-                    if (user != null)
-                    {
-                        Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
-                        NickName?.Invoke(user.name);
-                        OnLoginResult.Invoke("로그인 성공");
-                    }
-                    else
-                    {
-                        NickName?.Invoke("알 수 없는 사용자");
-                        Debug.Log("사용자 데이터를 찾을 수 없습니다.");
-                        OnLoginResult.Invoke("이메일 또는 비밀번호를 잘못되었습니다.");
-
-                    }
-                },
-                onFailure: (exception) => Debug.LogError("사용자 데이터 로드 실패: " + exception.Message));
-            var updates = new Dictionary<string, object>
+            var user = await RealtimeDatabase.GetUserAsync(newUser.UserId);
+            if (user != null)
             {
-                { "onlineStatus", true },
-                { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
-            };
-            RealtimeDatabase.UpdateUser(newUser.UserId, updates);
-        });
+                Debug.Log($"사용자 데이터 로드 성공: {user.name}, {user.email}");
+                NickName?.Invoke(user.name);
+                OnLoginResult?.Invoke("로그인 성공");
+
+                var updates = new Dictionary<string, object>
+                {
+                    { "onlineStatus", true },
+                    { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+                };
+                await RealtimeDatabase.UpdateDataAsync($"users/{newUser.UserId}", updates);
+            }
+            else
+            {
+                NickName?.Invoke("알 수 없는 사용자");
+                OnLoginResult?.Invoke("이메일 또는 비밀번호가 잘못되었습니다.");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"로그인 실패: {e.Message}");
+            OnLoginResult?.Invoke("로그인에 실패했습니다.");
+        }
     }
 
-    public void LogOut()
+    /// <summary>
+    /// 로그아웃을 수행합니다.
+    /// </summary>
+    public async UniTask LogOutAsync()
     {
-
-        var id = UserData.Instance.UserId;
-
-        var updates = new Dictionary<string, object>
+        try
         {
-            { "onlineStatus", false },
-            { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
-        };
-        RealtimeDatabase.UpdateUser(id + "/", updates);
-
-        _auth.SignOut();
-        Debug.Log("로그아웃");
+            var updates = new Dictionary<string, object>
+            {
+                { "onlineStatus", false },
+                { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
+            };
+            await RealtimeDatabase.UpdateDataAsync($"users/{UserData.Instance.UserId}", updates);
+            
+            _auth.SignOut();
+            Debug.Log("로그아웃 완료");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"로그아웃 실패: {e.Message}");
+            throw;
+        }
     }
 }

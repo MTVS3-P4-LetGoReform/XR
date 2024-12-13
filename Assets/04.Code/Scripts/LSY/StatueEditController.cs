@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GLTFast;
@@ -8,7 +9,8 @@ using UnityEngine.UI;
 
 public class StatueEditController : MonoBehaviour
 {
-    
+    [SerializeField] private LandObjectController objectController;
+
     private int selectedObjectIndex = -1;
     public event Action OnClicked, OnExit;
     private Coroutine currentCoroutine;
@@ -179,8 +181,8 @@ public class StatueEditController : MonoBehaviour
 
             // 설치한 모델 정보 DB에 저장
             var landObject = LandObjectConverter.ConvertToModelObject(glbObject);
-            LandManager.PlacedObjects[landObject.key] = glbObject;
-            RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); //실제코드 
+            LandObjectController.AddPlacedObject(landObject.key,glbObject);
+            RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId,landObject).Forget(); //실제코드 
         }
     }
 

@@ -1,24 +1,34 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class FriendListUIManager : MonoBehaviour
 {
-    public Transform friendListParent;  // 친구 목록을 보여줄 부모 오브젝트 (스크롤뷰의 Content)
-    public GameObject friendItemPrefab; // 친구 항목 프리팹
-
-    public Transform popUpParent;
-    public GameObject popUpPrefab;
-        
-    private string _currentUserId; // 로그인한 유저의 ID
+    [Header("UI References")]
+    public Transform friendListParent;        // 친구 목록을 표시할 부모 Transform
+    public GameObject friendItemPrefab;       // 친구 항목 프리팹
+    public Transform popUpParent;             // 팝업을 표시할 부모 Transform
+    public GameObject popUpPrefab;            // 팝업 프리팹
+    public Button[] closeCanvas;              // 캔버스를 닫는 버튼 배열
     
-    [SerializeField] private Canvas friendListCanvas; // Inspector에서 캔버스를 할당
-
-    public Button[] closeCanvas;
+    [SerializeField] private Canvas friendListCanvas;  // 친구 목록 캔버스
+    
+    private string _currentUserId;            // 현재 로그인한 사용자 ID
     
     private void Start()
+    {
+        InitializeCanvas();
+        SetupEventListeners();
+        friendListCanvas.enabled = false;
+        RefreshListAsync().Forget();
+    }
+
+    /// <summary>
+    /// Canvas 컴포넌트 초기화 및 검증
+    /// </summary>
+    private void InitializeCanvas()
     {
         if (friendListCanvas == null)
         {
@@ -29,40 +39,60 @@ public class FriendListUIManager : MonoBehaviour
                 return;
             }
         }
+    }
 
+    /// <summary>
+    /// 이벤트 리스너 설정
+    /// </summary>
+    private void SetupEventListeners()
+    {
         foreach (var button in closeCanvas)
         {
             button.onClick.AddListener(OffMessenger);
         }
 
-        friendListCanvas.enabled = false; // 초기 상태 설정
-        FriendRequestUIManager.RefreshList += RefreshList;
+        FriendRequestUIManager.RefreshList += () => RefreshListAsync().Forget();
         RunnerManager.Instance.IsSpawned += AfterSpawn;
         UserData.ChangeName += OnChangedUserId;
         OnChangedUserId();
-        RefreshList();
     }
 
+    /// <summary>
+    /// 플레이어 스폰 후 메신저 이벤트 연결
+    /// </summary>
     private void AfterSpawn()
     {
         PlayerInput.OnMessenger += ToggleFriendCanvas;
     }
 
+    /// <summary>
+    /// 사용자 ID 변경 시 호출되는 메서드
+    /// </summary>
     private void OnChangedUserId()
     {
         _currentUserId = UserData.Instance.UserId;
     }
     
+    /// <summary>
+    /// 컴포넌트 제거 시 이벤트 정리
+    /// </summary>
     private void OnDestroy()
     {
-        PlayerInput.OnMessenger -= ToggleFriendCanvas; // 이벤트 구독 해제
+        PlayerInput.OnMessenger -= ToggleFriendCanvas;
     }
 
+    /// <summary>
+    /// 메신저 UI를 비활성화합니다.
+    /// </summary>
     private void OffMessenger()
     {
         PlayerInput.OnMessenger?.Invoke(false);
     }
 
+    /// <summary>
+    /// 친구 목록 캔버스의 활성화 상태를 토글합니다.
+    /// </summary>
+    /// <param name="isActive">활성화 여부</param>
     public void ToggleFriendCanvas(bool isActive)
     {
         if (friendListCanvas != null)
@@ -78,48 +108,74 @@ public class FriendListUIManager : MonoBehaviour
     /// <summary>
     /// 친구 목록을 새로고침합니다.
     /// </summary>
-    public void RefreshList()
+    private async UniTask RefreshListAsync()
     {
-        FriendRequestManager.GetFriends(_currentUserId,
-            onSuccess: friendIds =>
+        try
+        {
+            var friendIds = await FriendRequestManager.GetFriendsAsync(_currentUserId);
+            ClearFriendList();
+
+            if (friendIds.Count > 0)
             {
-                // 기존 UI 정리
-                foreach (Transform child in friendListParent)
-                {
-                    Destroy(child.gameObject);
-                }
+                await LoadFriendDataAsync(friendIds);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"친구 목록 로드 실패: {e.Message}");
+        }
+    }
 
-                if (friendIds.Count > 0)
-                {
-                    List<string> friendPaths = new List<string>();
-                    foreach (var friendId in friendIds)
-                    {
-                        friendPaths.Add($"users/{friendId}");
-                        Debug.Log($"FriendListUIManager - userEntry.Value : users/{friendId}");
-                    }
+    /// <summary>
+    /// 기존 친구 목록 UI를 정리합니다.
+    /// </summary>
+    private void ClearFriendList()
+    {
+        foreach (Transform child in friendListParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
-                    // 친구 정보를 한 번에 로드
-                    RealtimeDatabase.ReadMultipleData<User>(friendPaths,
-                        onSuccess: users =>
-                        {
-                            foreach (var userEntry in users)
-                            {
-                                GameObject friendItem = Instantiate(friendItemPrefab, friendListParent);
-                                FriendItem itemScript = friendItem.GetComponent<FriendItem>();
-                                Debug.Log("FriendListUIManager - userEntry.Value : "+ userEntry.Value);
-                                itemScript.FriendId = userEntry.Key;
-                                
-                                itemScript.SetFriendData(userEntry.Value,popUpParent); // UI에 친구 정보 설정
-                                
-                                //popUpScript.popUpText.text = itemScript.popupText.text;
-                            }
-                        },
-                        onFailure: exception =>
-                        {
-                            Debug.LogError($"친구 정보 일괄 로드 실패: {exception.Message}");
-                        });
-                }
-            },
-            onFailure: exception => Debug.LogError($"친구 목록 로드 실패: {exception.Message}"));
+    /// <summary>
+    /// 친구 데이터를 비동기적으로 로드합니다.
+    /// </summary>
+    /// <param name="friendIds">친구 ID 목록</param>
+    private async UniTask LoadFriendDataAsync(List<string> friendIds)
+    {
+        try
+        {
+            var friendPaths = new List<string>();
+            foreach (var friendId in friendIds)
+            {
+                friendPaths.Add($"users/{friendId}");
+            }
+
+            var users = await RealtimeDatabase.ReadMultipleDataAsync<User>(friendPaths);
+            foreach (var userEntry in users)
+            {
+                CreateFriendListItem(userEntry);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"친구 정보 일괄 로드 실패: {e.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 친구 목록 항목을 생성합니다.
+    /// </summary>
+    /// <param name="userEntry">사용자 정보</param>
+    private void CreateFriendListItem(KeyValuePair<string, User> userEntry)
+    {
+        GameObject friendItem = Instantiate(friendItemPrefab, friendListParent);
+        FriendItem itemScript = friendItem.GetComponent<FriendItem>();
+        
+        itemScript.FriendId = userEntry.Key;
+        itemScript.SetFriendData(userEntry.Value, popUpParent);
+        
+        Debug.Log($"친구 항목 생성: {userEntry.Value.name}");
     }
 }
+
