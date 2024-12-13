@@ -35,6 +35,7 @@ public class TestInteriorMode : MonoBehaviour
     private bool isHammer;
     [SerializeField] private LayerMask IPLayerMask;
     [SerializeField] private LayerMask IILayerMask;
+    [SerializeField] private LayerMask STLayerMask;
     
 
     void Start()
@@ -52,17 +53,17 @@ public class TestInteriorMode : MonoBehaviour
             
         }
 
+        if (Input.GetMouseButtonDown(1))
+        {
+            OnPushed?.Invoke();
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnExit?.Invoke();
             Cursor.lockState = CursorLockMode.None;
         }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            OnPushed?.Invoke();
-        }
-
+        
         if (selectedObjectIndex < 0)
         {
             return;
@@ -91,8 +92,8 @@ public class TestInteriorMode : MonoBehaviour
 
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
-        OnExit += StopPlacement; // StopPlacement 메소드 구독
-       // OnPushed += DestroyStructure;
+        OnExit += StopPlacement; // StopPlacement
+        OnPushed += DestroyInstallation;
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -153,7 +154,7 @@ public class TestInteriorMode : MonoBehaviour
         selectedObjectIndex = -1;
         OnClicked -= PlaceStructure;
         OnExit -= StopPlacement;
-        //OnPushed -= DestroyStructure;
+        OnPushed -= DestroyInstallation;
 
         if (currentCoroutine != null)
         {
@@ -206,6 +207,15 @@ public class TestInteriorMode : MonoBehaviour
             newPreviewPrefab.transform.rotation = originRotation;
             // 추후 설치 방향 재 정립, 설치되는 위치 값을 pivot 기준으로 분류할것인지, 물건 위주로 분류할것인지 구상(후자일 가능성 높음)
 
+        }
+    }
+
+    private void DestroyInstallation()
+    {
+        Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
+        if (Physics.Raycast(ray, out Hit, 5f, STLayerMask))
+        {
+            
         }
     }
     
