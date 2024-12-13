@@ -45,7 +45,7 @@ public class StatueEditController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             OnClicked?.Invoke();
-            OnExit.Invoke();
+            OnExit?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.X))
