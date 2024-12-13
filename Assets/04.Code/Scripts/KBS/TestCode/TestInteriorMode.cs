@@ -103,7 +103,7 @@ public class TestInteriorMode : MonoBehaviour
         while (true)
         {
             Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
-            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
+            if (Physics.Raycast(ray, out Hit, 5f, IPLayerMask))
             {
                 pos = Hit.point;
 
@@ -183,7 +183,7 @@ public class TestInteriorMode : MonoBehaviour
         audioPlaceSound.Play();
         
         Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
-        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
+        if (Physics.Raycast(ray, out Hit, 5f, IPLayerMask))
         {
             pos = Hit.point;
 
