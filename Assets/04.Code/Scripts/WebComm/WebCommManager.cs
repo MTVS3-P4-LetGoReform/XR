@@ -28,7 +28,9 @@ public class WebCommManager : MonoBehaviour
     private string _userId;
     
     public Button createRoomStart;
-    public Button ImageGenBtn;
+    public Button TxtImageGenBtn;
+    public Button SketchImageGenBtn;
+    public Button PngFileUploadBtn;
     public Button ImageRengenBtn;
     private SessionUIManager _sessionUIManager;
 
@@ -42,6 +44,8 @@ public class WebCommManager : MonoBehaviour
     public Sprite mockSprite0;
     public Sprite mockSprite1;
     public Sprite mockSprite2;
+
+    public Image selectedImage;
     
     private void Start()
     {
@@ -50,7 +54,9 @@ public class WebCommManager : MonoBehaviour
         _userId = UserData.Instance.UserId;
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
-        ImageGenBtn.onClick.AddListener(DoImageGenDown);
+        TxtImageGenBtn.onClick.AddListener(DoImageGenDown);
+        SketchImageGenBtn.onClick.AddListener(DoSketchImageGenDown);
+        PngFileUploadBtn.onClick.AddListener(GetSketchFileAndShow);
         ImageRengenBtn.onClick.AddListener(DoImageRegen);
         // FIX
         // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
@@ -58,6 +64,48 @@ public class WebCommManager : MonoBehaviour
         // genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
     }
 
+    // sketch 프롬프트 이미지 생성
+    public void DoSketchImageGenDown()
+    {
+        /* FIXME : 디버그 모드 로직 추가 */
+        if (debugModeData.DebugMode == true)
+        {
+            Debug.Log("DoSketchImageGen : DebugMode");
+        }
+        
+        StartCoroutine(SketchImageGenDown());
+    }
+
+    private IEnumerator SketchImageGenDown()
+    {
+        /* FIXME : 디버그 모드 로직 추가 */
+        if (debugModeData.DebugMode == true)
+        {
+            Debug.Log("SketchImageGen : DebugMode");
+        }
+        ActiveImageCommLoading();
+        ImageSketchGen _sketchImageGen = new ImageSketchGen(webApiData);
+
+        yield return StartCoroutine(_sketchImageGen.RequestImageGen(prompt, GenImageNum, _userId));
+        modelId = _sketchImageGen.imageSketchGenRes.id;
+        webApiData.ModelId = modelId;
+        genImageNameList = _sketchImageGen.imageSketchGenRes.filenames;
+        
+        ImageDownload _imageDownload = new ImageDownload(webApiData);
+        for (int i = 0; i < GenImageNum; i++)
+        {
+            yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
+            Image genImage = genImageList[i].GetComponent<Image>();
+            ConvertSpriteFromPNG(genImage, genImageNameList[i]);
+            Color color = genImage.color;
+            color.a = 1f;
+            genImage.color = color;
+        }
+        
+        DeactiveImageCommLoading();
+
+
+    }
     // 초기 이미지 생성
     public void DoImageGenDown()
     {
@@ -118,16 +166,19 @@ public class WebCommManager : MonoBehaviour
     public void SetIndex0()
     {
         selectedImageIndex = 0;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[0]);
         Debug.Log("index 0");
     }
     public void SetIndex1()
     {
         selectedImageIndex = 1;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[1]);
         Debug.Log("index 1");
     }
     public void SetIndex2()
     {
         selectedImageIndex = 2;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[2]);
         Debug.Log("index 2");
     }
     
@@ -258,5 +309,14 @@ public class WebCommManager : MonoBehaviour
         color = image.color;
         color.a = 1f;
         image.color = color;
+    }
+
+    public void GetSketchFileAndShow()
+    {
+        Stream stream = PngFileDialog.FileOpen();
+        byte[] buffer = PngFileDialog.ConvertPngStreamToByte(stream);
+        PngFileUploadBtn.GetComponent<RectTransform>().sizeDelta = new Vector2(420f, 467f);
+        PngFileUploadBtn.GetComponent<Image>().sprite = PngFileDialog.ConvertByteToSprite(buffer);
+        prompt = PngFileDialog.ConvertByteTOBase64(buffer);
     }
 }

@@ -3792,10 +3792,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cce205a28c448a9ae8415c3b7b2aa1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCamera: {fileID: 0}
+  scaleFactor: 3
+  previewMat: {fileID: 0}
   BFLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  IPLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _testInteriorMode: {fileID: 0}
+  newPreviewPrefab: {fileID: 0}
 --- !u!1 &3666157552470678175
 GameObject:
   m_ObjectHideFlags: 0
@@ -3919,13 +3925,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 388bd5e4fa534bbeab026a713e1a2835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statueInventoryCanvas: {fileID: 0}
   statueInventoryUI: {fileID: 9039595569801687894}
   statueInventoryInfo: {fileID: 2070355104847338068}
   statueIvnentoryList: {fileID: 2228800344642861967}
   ContentBG: {fileID: 1503260605386964451}
   CategoryBG: {fileID: 2585830659424566412}
   imageBtnsArea: {fileID: 3456988153743301593}
-  contourLine: {fileID: 4594499826851516165}
   bakcBtn: {fileID: 4288527986815630465}
   installBtns:
   - {fileID: 2913857214628942878}
@@ -3952,6 +3958,7 @@ MonoBehaviour:
   imageBtnsInventoryModePoint: {fileID: 2616343696177775806}
   interiorModePoint: {fileID: 0}
   listInteriorModePoint: {fileID: 7843529166274878214}
+  imageBtnsInteriorModePoint: {fileID: 0}
   duration: 1
 --- !u!1 &3829679728661911272
 GameObject:
@@ -8528,3 +8535,8 @@ MonoBehaviour:
   - {fileID: 3172623101116437097}
   - {fileID: 330948382547530171}
   - {fileID: 6861509571026376159}
+  installBtns: []
+  mockDataSprite1: {fileID: 0}
+  mockDataSprite2: {fileID: 0}
+  mockDataSprite3: {fileID: 0}
+  mockDataSprite4: {fileID: 0}

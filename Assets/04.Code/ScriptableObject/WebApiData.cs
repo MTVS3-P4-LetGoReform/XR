@@ -81,6 +81,13 @@ public class WebApiData : ScriptableObject
         get { return modelDownPoint; }
     }
 
+    [SerializeField] 
+    private string imageSketchGenPoint;
+
+    public string ImageSketchGenPoint
+    {
+        get { return imageSketchGenPoint; }
+    }
     [SerializeField] private string storageBaseUrl;
 
     public string StorageBaseUrl
