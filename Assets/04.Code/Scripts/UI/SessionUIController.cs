@@ -9,11 +9,16 @@ public class SessionUIController : MonoBehaviour
     
     public GameObject sketchPromptTab;
     public GameObject txtPromptTab;
-    
+
+    // public Button CreateRoomBtn;
+    //
+    // public GameObject CreateRoomPanel;
+    // public WebCommManager _webCommManager;
     void Start()
     {
         sketchPromptTabBtn.onClick.AddListener(ActivateSkectchPromptTab);
         txtPromptTabBtn.onClick.AddListener(ActivateTxtPromptTab);
+        //CreateRoomBtn.onClick.AddListener();
     }
 
     /* 스케치 프롬프트 탭 활성화 */
@@ -28,4 +33,9 @@ public class SessionUIController : MonoBehaviour
         sketchPromptTab.SetActive(false);
         txtPromptTab.SetActive(true);
     }
+
+    // public void ActivateCreateRoomPanel()
+    // {
+    //     _
+    // }
 }

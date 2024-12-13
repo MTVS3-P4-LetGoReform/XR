@@ -44,6 +44,8 @@ public class WebCommManager : MonoBehaviour
     public Sprite mockSprite0;
     public Sprite mockSprite1;
     public Sprite mockSprite2;
+
+    public Image selectedImage;
     
     private void Start()
     {
@@ -52,7 +54,7 @@ public class WebCommManager : MonoBehaviour
         _userId = UserData.Instance.UserId;
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
-        //TxtImageGenBtn.onClick.AddListener(DoImageGenDown);
+        TxtImageGenBtn.onClick.AddListener(DoImageGenDown);
         SketchImageGenBtn.onClick.AddListener(DoSketchImageGenDown);
         PngFileUploadBtn.onClick.AddListener(GetSketchFileAndShow);
         ImageRengenBtn.onClick.AddListener(DoImageRegen);
@@ -164,16 +166,19 @@ public class WebCommManager : MonoBehaviour
     public void SetIndex0()
     {
         selectedImageIndex = 0;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[0]);
         Debug.Log("index 0");
     }
     public void SetIndex1()
     {
         selectedImageIndex = 1;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[1]);
         Debug.Log("index 1");
     }
     public void SetIndex2()
     {
         selectedImageIndex = 2;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[2]);
         Debug.Log("index 2");
     }
     
