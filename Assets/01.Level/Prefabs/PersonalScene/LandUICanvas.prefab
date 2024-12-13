@@ -483,6 +483,8 @@ GameObject:
   - component: {fileID: 8194406544118693627}
   - component: {fileID: 2747435377772632279}
   - component: {fileID: 1423417572349125226}
+  - component: {fileID: 8902859723552710379}
+  - component: {fileID: 5469094123517564144}
   m_Layer: 0
   m_Name: LandUICanvas
   m_TagString: Untagged
@@ -588,8 +590,34 @@ MonoBehaviour:
   landMakerName: {fileID: 4525575028413804694}
   visitors: {fileID: 8784558777810373023}
   likes: {fileID: 5720454340515943969}
-  like: {fileID: 7697060131218482659}
-  addFriend: {fileID: 7856845234483378028}
+  likeButton: {fileID: 7697060131218482659}
+--- !u!114 &8902859723552710379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2953321971444743816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcc443fe58a7844dab3bc9e144d58c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiController: {fileID: 1423417572349125226}
+  objectController: {fileID: 5469094123517564144}
+--- !u!114 &5469094123517564144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2953321971444743816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a972eded89724aaf81a82efaa7780a60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabDatabase: {fileID: 11400000, guid: b3da83efa350eac438c7f64cb2ca5f84, type: 2}
 --- !u!1 &3196204150710764851
 GameObject:
   m_ObjectHideFlags: 0

@@ -144,7 +144,7 @@ public class RewordCanvas : MonoBehaviour
                 {
                     Debug.LogError("Reword Canvas : _statueInventoryControll is null");
                 }
-                //_statueInventoryController.StatueInvenTestBtn();
+                _statueInventoryController.StatueInvenTestBtn();
             }
             // else
             // {
