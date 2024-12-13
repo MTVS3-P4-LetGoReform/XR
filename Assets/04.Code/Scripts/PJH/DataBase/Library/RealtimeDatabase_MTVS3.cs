@@ -216,6 +216,11 @@ public static partial class RealtimeDatabase
     {
         CreateData($"user_land/{userId}", userLand, onSuccess, onFailure);
     }
+    
+    public static void SetUserLandInfo(string userId, LandInfo landInfo, Action onSuccess = null, Action<Exception> onFailure = null)
+    {
+        CreateData($"user_land/{userId}/landInfo", landInfo, onSuccess, onFailure);
+    }
 
     /// <summary>
     /// 특정 유저의 영지 데이터를 읽어옵니다.
@@ -237,10 +242,13 @@ public static partial class RealtimeDatabase
     /// <param name="onFailure">작업이 실패하면 호출되는 콜백입니다.</param>
     public static void AddObjectToUserLand(string userId, LandObject landObject, Action onSuccess = null, Action<Exception> onFailure = null)
     {
-        GetUserLand(userId, userLand =>
+        GetUserLand(userId, async userLand =>
         {
             if (userLand == null)
-                userLand = new UserLand();
+            {
+                string userName = await FindNameByIdAsync(userId);
+                userLand = new UserLand(userName);
+            }
             
             userLand.AddObject(landObject);
 

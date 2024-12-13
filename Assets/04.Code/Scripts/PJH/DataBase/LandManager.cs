@@ -1,13 +1,18 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class LandManager : MonoBehaviour
 {
     public string userId = "TestUser"; // 유저 ID
+    public string userName;
     public ObjectDatabase prefab; // LandObject에 맞는 프리팹
     public static Dictionary<string, GameObject> PlacedObjects = new Dictionary<string, GameObject>(); // 이미 배치된 오브젝트 목록
-
-    private void Start()
+    
+    public LandUIController uIController;
+    
+   
+    private async void Start()
     {
         var properties = RunnerManager.Instance.runner.SessionInfo.Properties;
         if (properties.TryGetValue("UserId", out var sessionProperty))
@@ -15,6 +20,8 @@ public class LandManager : MonoBehaviour
             userId = sessionProperty;
         }
 
+        userName = await RealtimeDatabase.FindNameByIdAsync(userId);
+        
         Debug.Log($"DB에서 정보를 불러옵니다. 현재 영지 : {userId}");
         RunnerManager.Instance.IsSpawned += AfterSpawn;
     }
@@ -27,12 +34,39 @@ public class LandManager : MonoBehaviour
 
     private void UpdateLandObjects(UserLand updatedUserLand)
     {
-        if (updatedUserLand == null || updatedUserLand.objects == null)
+        if (updatedUserLand == null)
+        {
+            Debug.LogWarning("updatedUserLand가 null입니다. 업데이트를 건너뜁니다.");
+            return;
+        }
+        
+        // 데이터 구조 디버깅
+        Debug.Log($"UserLand 데이터: {JsonUtility.ToJson(updatedUserLand)}");
+        
+        if (updatedUserLand.landInfo == null)
+        {
+            Debug.Log("LandInfo 초기화 중...");
+            var newLandInfo = new LandInfo(userName);
+        
+            // Firebase에 LandInfo 저장
+            RealtimeDatabase.SetUserLandInfo(userId, newLandInfo, 
+                onSuccess: () => {
+                    Debug.Log("LandInfo 저장 성공");
+                    updatedUserLand.landInfo = newLandInfo;
+                    uIController.SetInfo(userId, userName, newLandInfo);
+                },
+                onFailure: (error) => {
+                    Debug.LogError($"LandInfo 저장 실패: {error.Message}");
+                });
+            return;
+        }
+        
+        if (updatedUserLand.objects == null)
         {
             Debug.LogWarning("updatedUserLand 또는 updatedUserLand.objects가 null입니다. 업데이트를 건너뜁니다.");
             return;
         }
-        
+
         foreach (LandObject landObject in updatedUserLand.objects)
         {
             if (string.IsNullOrEmpty(landObject.key))
