@@ -42,15 +42,15 @@ public class StatueInventoryUIController : MonoBehaviour
     public RectTransform listInteriorModePoint;
     // 인테리어 모드 ImageBtns 이동 포인트
     public RectTransform imageBtnsInteriorModePoint;
-    
-
     public float duration = 1.0f;
 
     public void Start()
     {
         for (int i = 0; i < imageBtns.Count; i++)
         {
-            //imageBtns[i].onClick.AddListener(() => ActivateInstallBtn(i));
+
+            int curI = i;
+            imageBtns[i].onClick.AddListener(() => ActivateInstallBtn(curI));
             installBtns[i].GetComponent<Button>().onClick.AddListener(SetInteriorMode);
             
         }

@@ -41,7 +41,7 @@ public static class PngFileDialog{
     }
 
     /* stream데이터로 png의 base64데이터 가져오기 */
-    public static string ConvertPngStreamToBase64(Stream stream)
+    public static byte[] ConvertPngStreamToByte(Stream stream)
     {
         int len = (int)stream.Length;
         // stream 현재 위치를 처음으로 이동.
@@ -51,9 +51,28 @@ public static class PngFileDialog{
         byte[] buffer = new byte[len];
         stream.Read(buffer, 0, len);
 
-        // 바이트 배열을 base64로 변환.
-        string base64String = Convert.ToBase64String(buffer);
         stream.Close();
+        return buffer;
+    }
+    
+    /* 바이트 배열을 base64로 변환. */
+    public static string ConvertByteTOBase64(byte[] buffer){
+        
+        string base64String = Convert.ToBase64String(buffer);
         return base64String;
+    }
+    
+    /* Stream 데이터를 Sprite로 변환 */
+    public static Sprite ConvertByteToSprite(byte[] buffer)
+    {
+        // Texture2D 생성
+        Texture2D texture = new Texture2D(1, 1);
+        texture.LoadImage(buffer);
+        
+        // Sprite 생성
+        Rect rect = new Rect(0, 0, texture.width, texture.height);
+        Vector2 pivot = new Vector2(0.5f, 0.5f);
+        Sprite sprite = Sprite.Create(texture, rect, pivot);
+        return sprite;
     }
 }

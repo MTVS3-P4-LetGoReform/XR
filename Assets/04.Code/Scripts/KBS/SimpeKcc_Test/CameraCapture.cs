@@ -14,7 +14,7 @@ public class CameraCapture : MonoBehaviour
 
     private Texture2D screenShot;
     
-    string customPath = "C:/Users/Admin/Desktop/MTVS_P4/XR/Assets/ScreenShot";
+    
 
     
     
@@ -34,6 +34,12 @@ public class CameraCapture : MonoBehaviour
 
     public void CaptureAndSave()
     {
+        string customPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "BlockBusters");
+        if (!Directory.Exists(customPath))
+        {
+            Directory.CreateDirectory(customPath);
+        }
+        
         FaceCamera.targetTexture = renderTexture;
         FaceCamera.Render();
 
