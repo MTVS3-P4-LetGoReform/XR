@@ -168,7 +168,7 @@ public class TestInteriorMode : MonoBehaviour
     public bool IsPointerOnUI()
         => EventSystem.current.IsPointerOverGameObject(); // EventSystem에서 현재 마우스위치가 UI위에 있는지 판별
 
-    private void PlaceStructure()
+    private async void PlaceStructure()
     {
         if (IsPointerOnUI())
         {
@@ -195,7 +195,7 @@ public class TestInteriorMode : MonoBehaviour
             var landObject = LandObjectConverter.ConvertToLandObject(instantiateObject, selectedObjectIndex);
             
             LandObjectController.AddPlacedObject(landObject.key, instantiateObject);
-            RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId, landObject).Forget();
+            await RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId, landObject);
 
             newPreviewPrefabRatate = originRotation;
             newPreviewPrefab.transform.rotation = originRotation;

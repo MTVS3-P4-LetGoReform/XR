@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LandObjectController : MonoBehaviour
 {
     [SerializeField] private ObjectDatabase prefabDatabase;
-    public static Dictionary<string, GameObject> _placedObjects = new Dictionary<string, GameObject>();
+    public static Dictionary<string, GameObject> PlacedObjects = new Dictionary<string, GameObject>();
 
     public void UpdateObjects(List<LandObject> objects)
     {
@@ -16,14 +17,44 @@ public class LandObjectController : MonoBehaviour
     
     public static void AddPlacedObject(string key, GameObject obj)
     {
-        if (_placedObjects.ContainsKey(key))
+        if (PlacedObjects.ContainsKey(key))
         {
             Debug.LogWarning($"Object with key {key} already exists. Updating instead.");
-            _placedObjects[key] = obj;
+            PlacedObjects[key] = obj;
         }
         else
         {
-            _placedObjects.Add(key, obj);
+            PlacedObjects.Add(key, obj);
+        }
+    }
+    
+    /// <summary>
+    /// 선택한 오브젝트를 삭제합니다.
+    /// </summary>
+    /// <param name="key">삭제할 오브젝트의 키</param>
+    public static async void DeleteSelectedObject(string key)
+    {
+        if (!PlacedObjects.TryGetValue(key, out GameObject obj))
+        {
+            Debug.LogWarning($"삭제할 오브젝트를 찾을 수 없습니다: {key}");
+            return;
+        }
+
+        try
+        {
+            // 씬에서 오브젝트 제거
+            Destroy(obj);
+            PlacedObjects.Remove(key);
+
+            // Firebase DB에서 오브젝트 삭제
+            var userId = UserData.Instance.UserId;
+            await RealtimeDatabase.DeleteDataAsync($"user_land/{userId}/objects/{key}");
+            
+            Debug.Log($"오브젝트 삭제 완료: {key}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"오브젝트 삭제 실패: {e.Message}");
         }
     }
 
@@ -34,7 +65,7 @@ public class LandObjectController : MonoBehaviour
         {
             if (string.IsNullOrEmpty(landObject.key)) continue;
 
-            if (_placedObjects.TryGetValue(landObject.key, out GameObject existingObject))
+            if (PlacedObjects.TryGetValue(landObject.key, out GameObject existingObject))
             {
                 UpdateObjectTransform(existingObject, landObject);
             }
@@ -49,7 +80,7 @@ public class LandObjectController : MonoBehaviour
     {
         if (obj == null)
         {
-            _placedObjects.Remove(landObject.key);
+            PlacedObjects.Remove(landObject.key);
             CreateNewObject(landObject);
             return;
         }
@@ -64,21 +95,27 @@ public class LandObjectController : MonoBehaviour
         if (!ValidateObjectIndex(landObject.objectIndex)) return;
 
         GameObject newObject = Instantiate(prefabDatabase.objectData[landObject.objectIndex].Prefab);
+    
+        // ObjectIdentifier 컴포넌트 추가 및 키 설정
+        var identifier = newObject.AddComponent<ObjectIdentifier>();
+        identifier.SetKey(landObject.key);
+    
         UpdateObjectTransform(newObject, landObject);
-        _placedObjects[landObject.key] = newObject;
+        PlacedObjects[landObject.key] = newObject;
     }
+
 
     private void RemoveDeletedObjects(List<LandObject> currentObjects)
     {
-        var keysToRemove = new List<string>(_placedObjects.Keys);
+        var keysToRemove = new List<string>(PlacedObjects.Keys);
         foreach (var key in keysToRemove)
         {
             if (!currentObjects.Exists(obj => obj.key == key))
             {
-                if (_placedObjects.TryGetValue(key, out GameObject obj))
+                if (PlacedObjects.TryGetValue(key, out GameObject obj))
                 {
                     Destroy(obj);
-                    _placedObjects.Remove(key);
+                    PlacedObjects.Remove(key);
                 }
             }
         }
@@ -93,6 +130,4 @@ public class LandObjectController : MonoBehaviour
         }
         return true;
     }
-    
-    
 }
