@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GLTFast;
@@ -8,7 +9,8 @@ using UnityEngine.UI;
 
 public class StatueEditController : MonoBehaviour
 {
-    
+    [SerializeField] private LandObjectController objectController;
+
     private int selectedObjectIndex = -1;
     public event Action OnClicked, OnExit;
     private Coroutine currentCoroutine;
@@ -43,7 +45,7 @@ public class StatueEditController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             OnClicked?.Invoke();
-            OnExit.Invoke();
+            OnExit?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.X))
@@ -77,6 +79,8 @@ public class StatueEditController : MonoBehaviour
             //해당 코루틴을 1번만 실행시켜주게 하는 코드
         }
 
+        //currentCoroutin = StartCoroutine(PreviewObjectMoveController());
+
         currentCoroutine = StartCoroutine(PreviewObjectMoveController());
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
@@ -103,10 +107,10 @@ public class StatueEditController : MonoBehaviour
     
 
     IEnumerator FindInventoryController()
-    {;
+    {
         while (statueInventoryController == null)
         {
-            Debug.Log("StatueEditController : FindInventoryController");
+            Debug.Log("FindInventoryController");
             statueInventoryController = FindObjectOfType<StatueInventoryController>();
             yield return null;
         }
@@ -117,11 +121,9 @@ public class StatueEditController : MonoBehaviour
     
     void InitializeInventoryTargets()
     {
-        Debug.Log("StatueEditController : InitializeInventoryTargets()");
         for (int i = 0; i < statueInventoryController.inventoryTargetList.Count; i++)
         {
             int curIndex = i;
-            Debug.Log($"StatueEditController : {curIndex} AddListner");
             statueInventoryController.installBtns[i].onClick.AddListener(() => StartPlacement(curIndex));
             statueInventoryController.inventoryTargetList[i].GetComponent<Button>().onClick
                 .AddListener(() => ActivateInstallBtn(curIndex));
@@ -184,8 +186,8 @@ public class StatueEditController : MonoBehaviour
 
             // 설치한 모델 정보 DB에 저장
             var landObject = LandObjectConverter.ConvertToModelObject(glbObject);
-            LandManager.PlacedObjects[landObject.key] = glbObject;
-            RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); //실제코드 
+            LandObjectController.AddPlacedObject(landObject.key,glbObject);
+            RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId,landObject).Forget(); //실제코드 
             
             newPreviewStatueRotate = originRotation;
             newPreviewPrefab.transform.rotation = originRotation;
