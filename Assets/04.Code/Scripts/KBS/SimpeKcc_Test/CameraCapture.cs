@@ -1,8 +1,9 @@
 using System;
 using System.IO;
+using Fusion;
 using UnityEngine;
 
-public class CameraCapture : MonoBehaviour
+public class CameraCapture : NetworkBehaviour
 {
     public Camera FaceCamera;
 
@@ -13,8 +14,8 @@ public class CameraCapture : MonoBehaviour
     private RenderTexture renderTexture;
 
     private Texture2D screenShot;
-    
-    
+
+    public Canvas CaptureCanvas;
 
     
     
@@ -34,6 +35,8 @@ public class CameraCapture : MonoBehaviour
 
     public void CaptureAndSave()
     {
+        CaptureCanvas.gameObject.SetActive(false);
+        
         string customPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "BlockBusters");
         if (!Directory.Exists(customPath))
         {
@@ -50,6 +53,7 @@ public class CameraCapture : MonoBehaviour
         FaceCamera.targetTexture = null;
         RenderTexture.active = null;
 
+        
         byte[] bytes = screenShot.EncodeToPNG();
         
         
@@ -61,5 +65,7 @@ public class CameraCapture : MonoBehaviour
         File.WriteAllBytes(filePath, bytes);
         
         Debug.Log($"스샷찍혔음 ㅋㅋ : {filePath}");
+        
+        CaptureCanvas.gameObject.SetActive(true);
     }
 }
