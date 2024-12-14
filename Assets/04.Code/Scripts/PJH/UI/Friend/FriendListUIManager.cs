@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 
-public class FriendListUIManager : MonoBehaviour
+public class FriendListUIManager : MonoBehaviourSingleton<FriendListUIManager>
 {
     [Header("UI References")]
     public Transform friendListParent;        // 친구 목록을 표시할 부모 Transform
     public GameObject friendItemPrefab;       // 친구 항목 프리팹
     public Transform popUpParent;             // 팝업을 표시할 부모 Transform
-    public GameObject popUpPrefab;            // 팝업 프리팹
     public Button[] closeCanvas;              // 캔버스를 닫는 버튼 배열
     
     [SerializeField] private Canvas friendListCanvas;  // 친구 목록 캔버스

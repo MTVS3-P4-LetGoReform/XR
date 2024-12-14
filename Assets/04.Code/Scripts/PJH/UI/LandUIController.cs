@@ -14,6 +14,7 @@ public class LandUIController : MonoBehaviour
 
     private string _lastLikeUserKey;
     private string _lastVisitUserKey;
+    private string _currentUserId;
     private LandInfo _currentLandInfo;
 
     private void Start()
@@ -56,10 +57,11 @@ public class LandUIController : MonoBehaviour
     }
 
 
-    public void UpdateLandInfo(LandInfo landInfo)
+    public void UpdateLandInfo(LandInfo landInfo,string userId)
     {
         if (landInfo == null) return;
         
+        _currentUserId = userId;
         _currentLandInfo = landInfo;
         UpdateUI();
         CheckVisitorCount().Forget(); // LandInfo가 업데이트될 때마다 방문자 체크
@@ -99,7 +101,7 @@ public class LandUIController : MonoBehaviour
     {
         try
         {
-            await RealtimeDatabase.SetUserLandInfoAsync(UserData.Instance.UserId, _currentLandInfo);
+            await RealtimeDatabase.SetUserLandInfoAsync(_currentUserId, _currentLandInfo);
         }
         catch (Exception e)
         {

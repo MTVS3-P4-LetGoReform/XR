@@ -10,7 +10,7 @@ public class GotoPersonalSession : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("닿았다");
+        //Debug.Log("닿았다");
         
         if (other.CompareTag("Player") && _interact && Input.GetKeyDown(KeyCode.E))
         {

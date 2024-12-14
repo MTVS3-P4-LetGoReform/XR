@@ -103,7 +103,7 @@ public class TheGoatManager : MonoBehaviour
                 gtObject = Instantiate(secItemPrefab, secParent);
 
             gtObject.SetGoatData(entry, ClickScore);
-            await SetImage(entry.selectImageName, gtObject.modelImage);
+            SetImage(entry.selectImageName, gtObject.modelImage).Forget();
             
             Debug.Log($"{entry.rank}위 - 모델 이름: {entry.modelName}, 제작자 이름: {entry.username}, 좋아요 수: {entry.score}");
         }
