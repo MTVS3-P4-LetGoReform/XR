@@ -4,7 +4,9 @@ using UnityEngine;
 public class CameraOnOff : NetworkBehaviour
 {
     public Camera FaceCamera;
-    public Camera PlayerCamera;
+    
+    [SerializeField]
+    private Camera PlayerCamera;
     
     public bool toggleFaceCam;
 
@@ -14,7 +16,10 @@ public class CameraOnOff : NetworkBehaviour
     
     void Start()
     {
-        
+        if (!HasStateAuthority)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
