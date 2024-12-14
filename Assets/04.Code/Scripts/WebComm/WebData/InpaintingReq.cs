@@ -9,7 +9,7 @@ public class InpaintingReq
     // 옷 수정 여부
     public bool is_clothes_change;
     // 옷 수정 프롬프트
-    public string clothers_prompt;
+    public string clothes_prompt;
     // 생성자 아이디
     public string creator_id; 
 }

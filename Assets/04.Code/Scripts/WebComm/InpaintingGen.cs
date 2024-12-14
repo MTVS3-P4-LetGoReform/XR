@@ -17,9 +17,9 @@ public class InpaintingGen
         webApiData = webapi;
     }
 
-    public IEnumerator RequestInpaintingGen(string orgImageName, string hair_prompt, string inpainting_prompt)
+    public IEnumerator RequestInpaintingGen(string orgImageName, string hair_prompt, string inpainting_prompt, string creatorId)
     {
-        
+        _inpaintingReq.creator_id = creatorId;
         // reqest 데이터 입력
         _inpaintingReq.image_filename = orgImageName;
         
@@ -42,14 +42,15 @@ public class InpaintingGen
         else
         {
             _inpaintingReq.is_clothes_change = true;
-            _inpaintingReq.clothers_prompt = inpainting_prompt;
+            _inpaintingReq.clothes_prompt = inpainting_prompt;
         }
         
         // UnityWebRequest Post 요청 생성
         Debug.Log(webApiData.Baseurl + webApiData.InpaintGenPoint);
-        UnityWebRequest request = new UnityWebRequest( webApiData.Baseurl+webApiData.ImageGenPoint, "POST");
+        UnityWebRequest request = new UnityWebRequest( webApiData.Baseurl+webApiData.InpaintGenPoint, "POST");
         // 요청 데이터 직렬화
         string jsonData = JsonUtility.ToJson(_inpaintingReq);
+        Debug.Log($"jsonData : {jsonData}");
         // 문자열 데이터를 UTF-8바이트로 변환(Post 요청 본문 형식으로 변환)
         byte[] jsonToSend = new UTF8Encoding().GetBytes(jsonData);
         
