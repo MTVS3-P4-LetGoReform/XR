@@ -7,9 +7,6 @@ using Cysharp.Threading.Tasks;
 
 public class FriendRequestUIManager : MonoBehaviourSingleton<FriendRequestUIManager>
 {
-    /// <summary>
-    /// 친구 목록 새로고침을 위한 이벤트
-    /// </summary>
     public static event Action RefreshList;
     
     [Header("UI References")]

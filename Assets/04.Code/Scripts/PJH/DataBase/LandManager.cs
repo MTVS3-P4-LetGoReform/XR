@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Firebase.Database;
 using UnityEngine;
 
 public class LandManager : MonoBehaviour
@@ -50,11 +51,11 @@ public class LandManager : MonoBehaviour
                 await RealtimeDatabase.CreateDataAsync($"user_land/{userId}/landInfo", newLandInfo);
                 Debug.Log("새로운 LandInfo 생성 완료");
                 
-                uiController.UpdateLandInfo(newLandInfo);
+                uiController.UpdateLandInfo(newLandInfo,userId);
             }
             else
             {
-                uiController.UpdateLandInfo(landInfo);
+                uiController.UpdateLandInfo(landInfo,userId);
             }
         }
         catch (Exception e)
@@ -68,7 +69,7 @@ public class LandManager : MonoBehaviour
         // LandInfo 변경 구독
         RealtimeDatabase.ListenForDataChanges<LandInfo>(
             $"user_land/{_userId}/landInfo",
-            landInfo => uiController.UpdateLandInfo(landInfo),
+            landInfo => uiController.UpdateLandInfo(landInfo,_userId),
             exception => Debug.LogError($"LandInfo 수신 오류: {exception.Message}")
         );
 
@@ -80,4 +81,9 @@ public class LandManager : MonoBehaviour
         );
     }
     
+    private void OnDestroy()
+    {
+        // 씬 전환 시 리스너 정리
+        RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}");
+    }
 }
