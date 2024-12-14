@@ -14,6 +14,16 @@ public class InteriorUIController : MonoBehaviour
 
     private bool isPushed = false;
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            closeInterior.gameObject.SetActive(true);
+            canvasInterior.gameObject.SetActive(true);
+            userInterface.gameObject.SetActive(false);
+        }
+    }
+
     public void OpenInteriorOnClick()
     {
         closeInterior.gameObject.SetActive(true);
