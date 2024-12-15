@@ -74,9 +74,9 @@ public class StatueInventoryUIController : MonoBehaviour
         statueInventoryUI.DOAnchorPos(interiorModePoint.anchoredPosition, duration);
         statueIvnentoryList.DOAnchorPos(listInteriorModePoint.anchoredPosition, duration);
         imageBtnsArea.DOAnchorPos(imageBtnsInteriorModePoint.anchoredPosition, duration);
-        statueIvnentoryList.DOSizeDelta(new Vector2(584f, 960f), duration);
-        ContentBG.DOSizeDelta(new Vector2(584f, 696f), duration);
-        CategoryBG.DOSizeDelta(new Vector2(584f, 793f), duration);
+        statueIvnentoryList.DOSizeDelta(new Vector2(443f, 713f), duration);
+        ContentBG.DOSizeDelta(new Vector2(443f, 517f), duration);
+        CategoryBG.DOSizeDelta(new Vector2(443f, 588f), duration);
         //bakcBtn.gameObject.GetComponent<RectTransform>().DOAnchorPos(listInteriorModePoint.anchoredPosition, duration);
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -92,9 +92,9 @@ public class StatueInventoryUIController : MonoBehaviour
         statueInventoryUI.DOAnchorPos(inventoryModePoint.anchoredPosition, duration);
         statueIvnentoryList.DOAnchorPos(listInventoryModePoint.anchoredPosition, duration);
         imageBtnsArea.DOAnchorPos(imageBtnsInventoryModePoint.anchoredPosition, duration);
-        statueIvnentoryList.DOSizeDelta(new Vector2(1194f, 960f), duration);
-        ContentBG.DOSizeDelta(new Vector2(1194f, 696f), duration);
-        CategoryBG.DOSizeDelta(new Vector2(1194f, 793f), duration);
+        statueIvnentoryList.DOSizeDelta(new Vector2(886f, 713f), duration);
+        ContentBG.DOSizeDelta(new Vector2(886f, 517f), duration);
+        CategoryBG.DOSizeDelta(new Vector2(886f, 588f), duration);
         Cursor.lockState = CursorLockMode.None;
         
     }
