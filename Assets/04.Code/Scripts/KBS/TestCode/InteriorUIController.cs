@@ -12,6 +12,8 @@ public class InteriorUIController : MonoBehaviour
     public Image userInterface;
     public Image imageInterGuide;
 
+    public Canvas landUiCanvas;
+    
     private bool isPushed = false;
 
     private void Update()
@@ -21,6 +23,7 @@ public class InteriorUIController : MonoBehaviour
             closeInterior.gameObject.SetActive(true);
             canvasInterior.gameObject.SetActive(true);
             userInterface.gameObject.SetActive(false);
+            landUiCanvas.enabled = false;
         }
     }
 
@@ -29,6 +32,7 @@ public class InteriorUIController : MonoBehaviour
         closeInterior.gameObject.SetActive(true);
         canvasInterior.gameObject.SetActive(true);
         userInterface.gameObject.SetActive(false);
+        landUiCanvas.enabled = false;
     }
 
     public void CloseInteriorOnClick()
@@ -36,6 +40,7 @@ public class InteriorUIController : MonoBehaviour
         closeInterior.gameObject.SetActive(false);
         canvasInterior.gameObject.SetActive(false);
         userInterface.gameObject.SetActive(true);
+        landUiCanvas.enabled = true;
     }
 
     public void CloseInteriorGuideButtonOnClick()
