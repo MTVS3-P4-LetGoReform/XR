@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 555152790313160310}
   - component: {fileID: 7829270486596955658}
   - component: {fileID: 2669776265061879086}
-  - component: {fileID: 3889997988247503336}
+  - component: {fileID: 6208435035403929663}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: PlayerCamera
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TpCameraPoint: {fileID: 7802696562954197171}
   FpCameraPoint: {fileID: 5105454577381515723}
-  collisionControllerScript: {fileID: 0}
+  collisionControllerScript: {fileID: 6208435035403929663}
   rotationSpeed: 5
   positionLerpSpeed: 10
 --- !u!114 &7829270486596955658
@@ -205,29 +205,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseCamera: {fileID: 6702178581967847908}
---- !u!114 &3889997988247503336
+--- !u!114 &6208435035403929663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683781343223553328}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06c3a322643159744bb79e19d8c6fb51, type: 3}
+  m_Script: {fileID: 11500000, guid: d37e51f72ef6e4149b1c2b84bbebda65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TpCameraPoint: {fileID: 7802696562954197171}
-  FpCameraPoint: {fileID: 5105454577381515723}
-  rotationSpeed: 5
-  springArmDistance: 5
-  minCameraDistance: 1
-  transitionSpeed: 5
-  characterHeight: 1.6
-  pivotOffset: 0.8
-  collisionLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  playerCamera: {fileID: 6702178581967847908}
+  invisibleLayerName: Invisible
+  exceptionLayerNames:
+  - PhysicsBlock
+  - Block
+  - Structure
+  - InteBlock
 --- !u!1 &1835794547321318733
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +343,6 @@ MonoBehaviour:
   - {fileID: 8118825393845710901}
   - {fileID: 555152790313160310}
   - {fileID: 7829270486596955658}
-  - {fileID: 3889997988247503336}
   - {fileID: 5511145431680322709}
   - {fileID: 497457868051413657}
   - {fileID: 6980411710644843380}
