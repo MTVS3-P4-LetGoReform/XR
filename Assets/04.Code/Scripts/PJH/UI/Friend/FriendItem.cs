@@ -57,7 +57,7 @@ public class FriendItem : MonoBehaviour
         
         friendPopUp.popUpText.text = friendNameText.text + "님의 테마파크로 이동하시겠습니까?";
         friendPopUp.yes.onClick.AddListener(() => GotoPersonal(FriendId));
-        friendPopUp.yes.onClick.AddListener(CloseFriendPopUp);
+        friendPopUp.yes.onClick.AddListener(() => CloseFriendPopUp(popUpItem));
 
         join.onClick.AddListener(()=> popUpItem.SetActive(true));
     }
@@ -81,8 +81,9 @@ public class FriendItem : MonoBehaviour
         await RunnerManager.Instance.RunnerStart(args,3);
     }
 
-    private void CloseFriendPopUp()
+    private void CloseFriendPopUp(GameObject popUp)
     {
+        popUp.SetActive(false);
         PlayerInput.OnMessenger.Invoke(false);
     }
 }

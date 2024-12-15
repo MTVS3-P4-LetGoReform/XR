@@ -31,7 +31,7 @@ public class WebCommManager : MonoBehaviour
     public Button TxtImageGenBtn;
     public Button SketchImageGenBtn;
     public Button PngFileUploadBtn;
-    public Button ImageRengenBtn;
+    //public Button ImageRengenBtn;
     private SessionUIManager _sessionUIManager;
 
     public GameObject ImageCommLoadingObject;
@@ -47,6 +47,8 @@ public class WebCommManager : MonoBehaviour
 
     public Image selectedImage;
     public List<Button> Regenbtns;
+    public List<Button> GenImageBtns;
+    
     private void Start()
     {
         if (UserData.Instance ==null)
@@ -59,9 +61,9 @@ public class WebCommManager : MonoBehaviour
         PngFileUploadBtn.onClick.AddListener(GetSketchFileAndShow);
         //ImageRengenBtn.onClick.AddListener(DoImageRegen);
         // FIX
-        // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
-        // genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
-        // genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
+        GenImageBtns[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
+        GenImageBtns[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
+        GenImageBtns[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
         Regenbtns[0].onClick.AddListener(DoImageRegen0);
         Regenbtns[1].onClick.AddListener(DoImageRegen1);
         Regenbtns[2].onClick.AddListener(DoImageRegen2);
@@ -153,18 +155,21 @@ public class WebCommManager : MonoBehaviour
     public void DoImageRegen0()
     {
         selectedImageIndex = 0;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[0]);
         StartCoroutine(RequestImageGen(0));
     }
     
     public void DoImageRegen1()
     {
         selectedImageIndex = 1;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[1]);
         StartCoroutine(RequestImageGen(1));
     }
     
     public void DoImageRegen2()
     {
         selectedImageIndex = 2;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[2]);
         StartCoroutine(RequestImageGen(2));
     }
     private IEnumerator RequestImageGen(int idx)
