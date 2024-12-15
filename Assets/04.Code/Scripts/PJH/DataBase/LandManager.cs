@@ -84,6 +84,7 @@ public class LandManager : MonoBehaviour
     private void OnDestroy()
     {
         // 씬 전환 시 리스너 정리
-        RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}");
+        RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}/landInfo");
+        RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}/objects");
     }
 }
