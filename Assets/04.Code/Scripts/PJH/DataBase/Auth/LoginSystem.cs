@@ -38,8 +38,8 @@ public class LoginSystem : MonoBehaviour
     
     private async void Start()
     {
-        await InitializeSystemAsync();
         SetupEventListeners();
+        await InitializeSystemAsync();
         FadeInAsync().Forget();
     }
 

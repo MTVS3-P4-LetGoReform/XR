@@ -78,12 +78,19 @@ public class SessionUIManager : MonoBehaviour
                 return;
             }
 
+            
+            /*
             string check = CheckSession(session);
-            if (check != null)
+            if (string.IsNullOrEmpty(check))
             {
+                Debug.LogWarning("유효하지 않은 세션입니다.");
                 return;
             }
+            */
 
+
+            // 현재 세션의 로컬 복사본 생성
+            var currentSession = session;
             string url = GetImageUrl(session);
             
             // 목록 생성
@@ -106,17 +113,17 @@ public class SessionUIManager : MonoBehaviour
             await UniTask.Yield();
             
             //info 할당
-            popUpInfo.roomName.text = session.Name;
-            popUpInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+            popUpInfo.roomName.text = currentSession.Name;
+            popUpInfo.count.text = $"{currentSession.PlayerCount}/{currentSession.MaxPlayers}";
             
-            roomInfo.roomName.text = session.Name;
-            roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+            roomInfo.roomName.text = currentSession.Name;
+            roomInfo.count.text = $"{currentSession.PlayerCount}/{currentSession.MaxPlayers}";
 
             Button roomInfoButton = roomInfo.button;
             roomInfoButton.onClick.AddListener(() => popUpObject.SetActive(true));
             
             Button popUpInfoButton = popUpInfo.button;
-            popUpInfoButton.onClick.AddListener(() => JoinPlaySession(session));
+            popUpInfoButton.onClick.AddListener(() => JoinPlaySession(currentSession));
             
         }
     }
@@ -124,18 +131,16 @@ public class SessionUIManager : MonoBehaviour
 
     private string CheckSession(SessionInfo session)
     {
-        var userId = "";
         if (session.Properties.TryGetValue("UserId", out var id))
         {
-            userId = id;
+            Debug.Log("UserId 찾음: " + id);
+            return id;
         }
-        else
-        {
-            userId = null;
-        }
-        Debug.Log("결괏값: " + userId);
-        return userId;
+    
+        Debug.Log("UserId를 찾을 수 없음");
+        return null;
     }
+
     
     private string GetImageUrl(SessionInfo session)
     {
@@ -232,12 +237,10 @@ public class SessionUIManager : MonoBehaviour
     
     private async void JoinPlaySession(SessionInfo session)
     {
-        string ModelName = "";
         if (session.Properties.TryGetValue("ModelName", out var sessionDescription))
         {
-            ModelName = sessionDescription;
             webApiData.ModelName = sessionDescription;
-            _webCommManager.JoinWebComm(ModelName);
+            _webCommManager.JoinWebComm(sessionDescription);
         }
         else
         {
