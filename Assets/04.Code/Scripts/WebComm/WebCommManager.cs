@@ -46,7 +46,7 @@ public class WebCommManager : MonoBehaviour
     public Sprite mockSprite2;
 
     public Image selectedImage;
-    
+    public List<Button> Regenbtns;
     private void Start()
     {
         if (UserData.Instance ==null)
@@ -62,6 +62,10 @@ public class WebCommManager : MonoBehaviour
         // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
         // genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
         // genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
+        Regenbtns[0].onClick.AddListener(DoImageRegen0);
+        Regenbtns[1].onClick.AddListener(DoImageRegen1);
+        Regenbtns[2].onClick.AddListener(DoImageRegen2);
+
     }
 
     // sketch 프롬프트 이미지 생성
@@ -146,9 +150,22 @@ public class WebCommManager : MonoBehaviour
     }
     
     // 이미지 재생성
-    public void DoImageRegen()
+    public void DoImageRegen0()
     {
-        StartCoroutine(RequestImageGen(selectedImageIndex));
+        selectedImageIndex = 0;
+        StartCoroutine(RequestImageGen(0));
+    }
+    
+    public void DoImageRegen1()
+    {
+        selectedImageIndex = 1;
+        StartCoroutine(RequestImageGen(1));
+    }
+    
+    public void DoImageRegen2()
+    {
+        selectedImageIndex = 2;
+        StartCoroutine(RequestImageGen(2));
     }
     private IEnumerator RequestImageGen(int idx)
     {
