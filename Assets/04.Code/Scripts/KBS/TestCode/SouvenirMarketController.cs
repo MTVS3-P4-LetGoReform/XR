@@ -19,7 +19,7 @@ public class SouvenirMarketController : MonoBehaviour
     public void Start()
     {
         StartCoroutine(FindStatueInventoryController());
-        purchaseBtn.onClick.AddListener(BuyToyPick);
+        //purchaseBtn.onClick.AddListener(BuyToyPick);
     }
 
     public void ExitButtonOnClick()

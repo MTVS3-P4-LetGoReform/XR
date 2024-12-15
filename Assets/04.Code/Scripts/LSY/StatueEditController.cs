@@ -192,7 +192,7 @@ public class StatueEditController : MonoBehaviour
             await gltfImport.InstantiateMainSceneAsync(glbObject.transform);
             //glbObject.transform.position = pos;
             
-            //glbObject.transform.rotation = newPreviewStatueRotate;
+            glbObject.transform.rotation = newPreviewStatueRotate;
             
             // glbObject의 부모를 toypicArea로 설정
             glbObject.transform.SetParent(toypicArea.transform);
