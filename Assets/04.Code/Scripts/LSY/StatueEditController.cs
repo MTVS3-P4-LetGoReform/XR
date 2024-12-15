@@ -195,12 +195,14 @@ public class StatueEditController : MonoBehaviour
             //glbObject.transform.rotation = newPreviewStatueRotate;
             
             // glbObject의 부모를 toypicArea로 설정
-            foreach (Transform child in glbObject.transform)
-            {
-                child.SetParent(toypicArea.transform, worldPositionStays: false);
-            }
+            glbObject.transform.SetParent(toypicArea.transform);
+            // foreach (Transform child in glbObject.transform)
+            // {
+            //     child.SetParent(toypicArea.transform, worldPositionStays: false);
+            // }
             
             glbObject.transform.localScale = new Vector3(3f, 3f, 3f);
+            glbObject.transform.localPosition = Vector3.zero;
             
             // 설치된 statueData 설정
             // FIXME : 왜 안되지
