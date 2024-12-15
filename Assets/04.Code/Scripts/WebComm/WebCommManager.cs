@@ -283,12 +283,11 @@ public class WebCommManager : MonoBehaviour
 
     }
 
-    public void JoinWebComm(string filename)
+    public async UniTask JoinWebComm(string filename)
     {
         //StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
         StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
-        StorageDatabase.DownModel(filename);
-
+        await StorageDatabase.DownModel(filename);
     }
 
     public void ActiveImageCommLoading()

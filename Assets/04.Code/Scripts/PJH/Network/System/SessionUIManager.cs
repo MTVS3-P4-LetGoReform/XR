@@ -240,7 +240,7 @@ public class SessionUIManager : MonoBehaviour
         if (session.Properties.TryGetValue("ModelName", out var sessionDescription))
         {
             webApiData.ModelName = sessionDescription;
-            _webCommManager.JoinWebComm(sessionDescription);
+            await _webCommManager.JoinWebComm(sessionDescription);
         }
         else
         {
