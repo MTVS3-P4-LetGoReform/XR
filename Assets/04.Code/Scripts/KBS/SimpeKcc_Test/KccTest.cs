@@ -18,10 +18,7 @@ public class KccTest : NetworkBehaviour
     private Camera camera;
 
     [SerializeField]
-    private float moveSpeed = 20f;
-    [SerializeField]
-    private float rotSpeed = 200f;
-
+    private float moveSpeed = 0f;
     
     private float mx = 0f;
     

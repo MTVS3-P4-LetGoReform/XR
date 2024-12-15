@@ -1,103 +1,107 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Firebase.Database;
 using UnityEngine;
 
 public class LandManager : MonoBehaviour
 {
-    public string userId = "TestUser"; // 유저 ID
-    public ObjectDatabase prefab; // LandObject에 맞는 프리팹
-    public static Dictionary<string, GameObject> PlacedObjects = new Dictionary<string, GameObject>(); // 이미 배치된 오브젝트 목록
+    public static Action OnLandChanged;
+    
+    [SerializeField] private LandUIController uiController;
+    [SerializeField] private LandObjectController objectController;
+    private static string _userId;
+    private string _userName;
 
     private void Start()
     {
-        var properties = RunnerManager.Instance.runner.SessionInfo.Properties;
-        if (properties.TryGetValue("UserId", out var sessionProperty))
-        {
-            userId = sessionProperty;
-        }
-
-        Debug.Log($"DB에서 정보를 불러옵니다. 현재 영지 : {userId}");
-        RunnerManager.Instance.IsSpawned += AfterSpawn;
+        RunnerManager.Instance.IsSpawned += InitializeLand;
     }
 
-    private void AfterSpawn()
+    private async void InitializeLand()
     {
-        RealtimeDatabase.ListenForUserLandChanges(userId, UpdateLandObjects, exception => Debug.LogError("실시간 데이터 수신 오류: " + exception.Message));
+        await StopListening();
+        
+        await InitializeLandAsync();
+        await InitializeLandInfoAsync(_userId, _userName);
+        StartListening();
     }
     
 
-    private void UpdateLandObjects(UserLand updatedUserLand)
+    private async UniTask InitializeLandAsync()
     {
-        if (updatedUserLand == null || updatedUserLand.objects == null)
+        try
         {
-            Debug.LogWarning("updatedUserLand 또는 updatedUserLand.objects가 null입니다. 업데이트를 건너뜁니다.");
-            return;
-        }
-        
-        foreach (LandObject landObject in updatedUserLand.objects)
-        {
-            if (string.IsNullOrEmpty(landObject.key))
+            var properties = RunnerManager.Instance.runner.SessionInfo.Properties;
+            if (properties.TryGetValue("UserId", out var sessionProperty))
             {
-                Debug.LogWarning("landObject.key가 null이거나 비어있습니다. 해당 오브젝트를 무시합니다.");
-                continue;
+                _userId = sessionProperty;
             }
 
-            if (PlacedObjects.TryGetValue(landObject.key, out var obj))
+            _userName = await RealtimeDatabase.FindNameByIdAsync(_userId);
+            Debug.Log($"DB에서 정보를 불러옵니다. 현재 영지: {_userId}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"영지 초기화 실패: {e.Message}");
+        }
+    }
+
+    private async UniTask InitializeLandInfoAsync(string userId, string userName)
+    {
+        try 
+        {
+            var landInfo = await RealtimeDatabase.ReadDataAsync<LandInfo>($"user_land/{userId}/landInfo");
+            
+            if (landInfo == null)
             {
-                if (obj != null)
-                {
-                    obj.transform.position = landObject.position.ToVector3();
-                    obj.transform.eulerAngles = landObject.rotation.ToVector3();
-                    obj.transform.localScale = landObject.scale.ToVector3();
-                }
-                else
-                {
-                    PlacedObjects.Remove(landObject.key);
-                    PlaceLandObject(landObject);
-                }
+                Debug.Log("LandInfo 초기화 중...");
+                var newLandInfo = new LandInfo(userName);
+                
+                await RealtimeDatabase.CreateDataAsync($"user_land/{userId}/landInfo", newLandInfo);
+                Debug.Log("새로운 LandInfo 생성 완료");
+                
+                uiController.UpdateLandInfo(newLandInfo,userId);
             }
             else
             {
-                Debug.Log("배치되었습니다."+landObject.key);
-                PlaceLandObject(landObject);
+                uiController.UpdateLandInfo(landInfo,userId);
             }
         }
-        
-        var keysToRemove = new List<string>(PlacedObjects.Keys);
-        foreach (var key in keysToRemove)
+        catch (Exception e)
         {
-            if (!updatedUserLand.objects.Exists(obj => obj.key == key))
-            {
-                GameObject objToDestroy = PlacedObjects[key];
-                if (objToDestroy != null)
-                {
-                    Destroy(objToDestroy);
-                    Debug.Log($"오브젝트 '{key}'가 씬에서 삭제되었습니다.");
-                    
-                    PlacedObjects.Remove(key);
-                }
-                else
-                {
-                    Debug.LogWarning($"오브젝트 '{key}'가 이미 씬에서 삭제되었거나 null입니다.");
-                    PlacedObjects.Remove(key);
-                }
-            }
+            Debug.LogError($"LandInfo 초기화 실패: {e.Message}");
         }
     }
-    
-    private void PlaceLandObject(LandObject landObject)
+
+    private void StartListening()
     {
-        var index = landObject.objectIndex;
-        if (index < 0 || index >= prefab.objectData.Count)
-        {
-            Debug.LogError($"인덱스 {index}가 범위를 벗어났습니다. prefab.objectData의 크기: {prefab.objectData.Count}");
-            return;
-        }
-        GameObject obj = Instantiate(prefab.objectData[index].Prefab);
+        // LandInfo 변경 구독
+        RealtimeDatabase.ListenForDataChanges<LandInfo>(
+            $"user_land/{_userId}/landInfo",
+            landInfo => uiController.UpdateLandInfo(landInfo,_userId),
+            exception => Debug.LogError($"LandInfo 수신 오류: {exception.Message}")
+        );
 
-        obj.transform.position = landObject.position.ToVector3();
-        obj.transform.eulerAngles = landObject.rotation.ToVector3();
-        obj.transform.localScale = landObject.scale.ToVector3();
+        // 오브젝트 변경 구독
+        RealtimeDatabase.ListenForDataChanges<List<LandObject>>(
+            $"user_land/{_userId}/objects",
+            objects => objectController.UpdateObjects(objects),
+            exception => Debug.LogError($"Objects 수신 오류: {exception.Message}")
+        );
+    }
+    
+    private void OnDestroy()
+    {
+        StopListening().Forget();
+    }
 
-        PlacedObjects[landObject.key] = obj;
+    private static async UniTask StopListening()  
+    {
+        // 씬 전환 시 리스너 정리
+        Debug.Log("리스너 정리");
+        RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}/landInfo");
+        RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}/objects");
+        await UniTask.Yield();
     }
 }

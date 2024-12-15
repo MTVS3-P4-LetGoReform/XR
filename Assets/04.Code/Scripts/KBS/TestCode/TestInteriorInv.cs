@@ -1,3 +1,5 @@
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,32 +7,41 @@ public class TestInteriorInv : MonoBehaviour
 {
     [SerializeField] 
     private GameObject[] images;
+    [SerializeField] 
+    private GameObject[] blockPages;
+    [SerializeField] 
+    private TMP_Text PagesCount;
 
     private int currentIndex = 0;
-   /* void Start()
+    void Start()
     {
         UpdateImage();
     }
 
     public void NextImageOnClick()
     {
-        currentIndex = (currentIndex + 1) % images.Length;  // 인덱스를 다음으로 넘김
+        currentIndex = (currentIndex + 1) % blockPages.Length;  // 인덱스를 다음으로 넘김
         UpdateImage();
     }
 
     public void PreviousImageOnClick()
     {
-        currentIndex = (currentIndex - 1 + images.Length) % images.Length;  // 인덱스를 다음으로
+        currentIndex = (currentIndex - 1 + blockPages.Length) % blockPages.Length;  // 인덱스를 다음으로
         UpdateImage();
     }
 
     private void UpdateImage()
     {
-        for (int i = 0; i < images.Length; i++)
+        for (int i = 0; i < blockPages.Length; i++)
         {
-            images[i].gameObject.SetActive(i == currentIndex);
+            blockPages[i].gameObject.SetActive(i == currentIndex);
         }
-    } */
+    }
+
+    private void Update()
+    {
+        PagesCount.text = $"{currentIndex+1}/2";
+    }
 
 
     public void ShowImg(int index)
@@ -78,5 +89,10 @@ public class TestInteriorInv : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void BlockTabPage()
+    {
+        
     }
 }

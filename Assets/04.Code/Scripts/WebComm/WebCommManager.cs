@@ -28,8 +28,10 @@ public class WebCommManager : MonoBehaviour
     private string _userId;
     
     public Button createRoomStart;
-    public Button ImageGenBtn;
-    public Button ImageRengenBtn;
+    public Button TxtImageGenBtn;
+    public Button SketchImageGenBtn;
+    public Button PngFileUploadBtn;
+    //public Button ImageRengenBtn;
     private SessionUIManager _sessionUIManager;
 
     public GameObject ImageCommLoadingObject;
@@ -42,6 +44,10 @@ public class WebCommManager : MonoBehaviour
     public Sprite mockSprite0;
     public Sprite mockSprite1;
     public Sprite mockSprite2;
+
+    public Image selectedImage;
+    public List<Button> Regenbtns;
+    public List<Button> GenImageBtns;
     
     private void Start()
     {
@@ -50,14 +56,62 @@ public class WebCommManager : MonoBehaviour
         _userId = UserData.Instance.UserId;
         _sessionUIManager = FindObjectOfType<SessionUIManager>();
         createRoomStart.onClick.AddListener(DoModelGenDown);
-        ImageGenBtn.onClick.AddListener(DoImageGenDown);
-        ImageRengenBtn.onClick.AddListener(DoImageRegen);
+        TxtImageGenBtn.onClick.AddListener(DoImageGenDown);
+        SketchImageGenBtn.onClick.AddListener(DoSketchImageGenDown);
+        PngFileUploadBtn.onClick.AddListener(GetSketchFileAndShow);
+        //ImageRengenBtn.onClick.AddListener(DoImageRegen);
         // FIX
-        // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
-        // genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
-        // genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
+        GenImageBtns[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
+        GenImageBtns[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
+        GenImageBtns[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
+        Regenbtns[0].onClick.AddListener(DoImageRegen0);
+        Regenbtns[1].onClick.AddListener(DoImageRegen1);
+        Regenbtns[2].onClick.AddListener(DoImageRegen2);
+
     }
 
+    // sketch 프롬프트 이미지 생성
+    public void DoSketchImageGenDown()
+    {
+        /* FIXME : 디버그 모드 로직 추가 */
+        if (debugModeData.DebugMode == true)
+        {
+            Debug.Log("DoSketchImageGen : DebugMode");
+        }
+        
+        StartCoroutine(SketchImageGenDown());
+    }
+
+    private IEnumerator SketchImageGenDown()
+    {
+        /* FIXME : 디버그 모드 로직 추가 */
+        if (debugModeData.DebugMode == true)
+        {
+            Debug.Log("SketchImageGen : DebugMode");
+        }
+        ActiveModelCommLoading();
+        ImageSketchGen _sketchImageGen = new ImageSketchGen(webApiData);
+
+        yield return StartCoroutine(_sketchImageGen.RequestImageGen(prompt, GenImageNum, _userId));
+        modelId = _sketchImageGen.imageSketchGenRes.id;
+        webApiData.ModelId = modelId;
+        genImageNameList = _sketchImageGen.imageSketchGenRes.filenames;
+        
+        ImageDownload _imageDownload = new ImageDownload(webApiData);
+        for (int i = 0; i < GenImageNum; i++)
+        {
+            yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[i]));
+            Image genImage = genImageList[i].GetComponent<Image>();
+            ConvertSpriteFromPNG(genImage, genImageNameList[i]);
+            Color color = genImage.color;
+            color.a = 1f;
+            genImage.color = color;
+        }
+        
+        DeactiveModelCommLoading();
+
+
+    }
     // 초기 이미지 생성
     public void DoImageGenDown()
     {
@@ -75,7 +129,7 @@ public class WebCommManager : MonoBehaviour
     {
         if(debugModeData.DebugMode == false){
             //yield return null;
-            ActiveImageCommLoading();
+            ActiveModelCommLoading();
             ImageGen _imageGen = new ImageGen(webApiData);
 
             yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
@@ -93,18 +147,34 @@ public class WebCommManager : MonoBehaviour
                 color.a = 1f;
                 genImage.color = color;
             }
-            DeactiveImageCommLoading();
+            DeactiveModelCommLoading();
         }
     }
     
     // 이미지 재생성
-    public void DoImageRegen()
+    public void DoImageRegen0()
     {
-        StartCoroutine(RequestImageGen(selectedImageIndex));
+        selectedImageIndex = 0;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[0]);
+        StartCoroutine(RequestImageGen(0));
+    }
+    
+    public void DoImageRegen1()
+    {
+        selectedImageIndex = 1;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[1]);
+        StartCoroutine(RequestImageGen(1));
+    }
+    
+    public void DoImageRegen2()
+    {
+        selectedImageIndex = 2;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[2]);
+        StartCoroutine(RequestImageGen(2));
     }
     private IEnumerator RequestImageGen(int idx)
     {
-        ActiveImageCommLoading();
+        ActiveModelCommLoading();
         ImageRegen _imageRegen = new ImageRegen(webApiData);
 
         yield return StartCoroutine(_imageRegen.RequestImageRegen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId, webApiData.ModelId));
@@ -112,22 +182,25 @@ public class WebCommManager : MonoBehaviour
         ImageDownload _imageDownload = new ImageDownload(webApiData);
         yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[idx]));
         ConvertSpriteFromPNG(genImageList[idx].GetComponent<Image>(), genImageNameList[idx]);
-        DeactiveImageCommLoading();
+        DeactiveModelCommLoading();
     }
 
     public void SetIndex0()
     {
         selectedImageIndex = 0;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[0]);
         Debug.Log("index 0");
     }
     public void SetIndex1()
     {
         selectedImageIndex = 1;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[1]);
         Debug.Log("index 1");
     }
     public void SetIndex2()
     {
         selectedImageIndex = 2;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[2]);
         Debug.Log("index 2");
     }
     
@@ -210,12 +283,11 @@ public class WebCommManager : MonoBehaviour
 
     }
 
-    public void JoinWebComm(string filename)
+    public async UniTask JoinWebComm(string filename)
     {
         //StorageDatabase _storageDatabase = new StorageDatabase(webApiData, debugModeData);
         StorageDatabase.InitializStorageDatabase(webApiData, debugModeData);
-        StorageDatabase.DownModel(filename);
-
+        await StorageDatabase.DownModel(filename);
     }
 
     public void ActiveImageCommLoading()
@@ -258,5 +330,14 @@ public class WebCommManager : MonoBehaviour
         color = image.color;
         color.a = 1f;
         image.color = color;
+    }
+
+    public void GetSketchFileAndShow()
+    {
+        Stream stream = PngFileDialog.FileOpen();
+        byte[] buffer = PngFileDialog.ConvertPngStreamToByte(stream);
+        PngFileUploadBtn.GetComponent<RectTransform>().sizeDelta = new Vector2(420f, 467f);
+        PngFileUploadBtn.GetComponent<Image>().sprite = PngFileDialog.ConvertByteToSprite(buffer);
+        prompt = PngFileDialog.ConvertByteTOBase64(buffer);
     }
 }

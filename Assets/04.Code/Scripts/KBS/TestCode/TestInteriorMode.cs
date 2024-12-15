@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using TMPro;
-using Unity.VisualScripting;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -35,6 +34,7 @@ public class TestInteriorMode : MonoBehaviour
     private bool isHammer;
     [SerializeField] private LayerMask IPLayerMask;
     [SerializeField] private LayerMask IILayerMask;
+    [SerializeField] private LayerMask STLayerMask;
     
 
     void Start()
@@ -52,17 +52,17 @@ public class TestInteriorMode : MonoBehaviour
             
         }
 
+        if (Input.GetMouseButtonDown(1))
+        {
+            DestroyInstallation();
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnExit?.Invoke();
             Cursor.lockState = CursorLockMode.None;
         }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            OnPushed?.Invoke();
-        }
-
+        
         if (selectedObjectIndex < 0)
         {
             return;
@@ -91,8 +91,8 @@ public class TestInteriorMode : MonoBehaviour
 
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
-        OnExit += StopPlacement; // StopPlacement 메소드 구독
-       // OnPushed += DestroyStructure;
+        OnExit += StopPlacement; // StopPlacement
+        
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -103,7 +103,7 @@ public class TestInteriorMode : MonoBehaviour
         while (true)
         {
             Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
-            if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
+            if (Physics.Raycast(ray, out Hit, 5f, IPLayerMask))
             {
                 pos = Hit.point;
 
@@ -153,7 +153,7 @@ public class TestInteriorMode : MonoBehaviour
         selectedObjectIndex = -1;
         OnClicked -= PlaceStructure;
         OnExit -= StopPlacement;
-        //OnPushed -= DestroyStructure;
+        
 
         if (currentCoroutine != null)
         {
@@ -169,43 +169,47 @@ public class TestInteriorMode : MonoBehaviour
     public bool IsPointerOnUI()
         => EventSystem.current.IsPointerOverGameObject(); // EventSystem에서 현재 마우스위치가 UI위에 있는지 판별
 
-    private void PlaceStructure() // 카메라Ray의 위치에 선택한 가구 배치
+    private async void PlaceStructure()
     {
-        if (IsPointerOnUI()) // 판별값이 true일때 placeStructure 실행
+        if (IsPointerOnUI())
         {
             Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
+            return;
         }
         
+        Cursor.lockState = CursorLockMode.Locked;
         audioPlaceSound.Play();
         
         Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
-        if (Physics.Raycast(ray, out Hit, Mathf.Infinity, IPLayerMask))
+        if (Physics.Raycast(ray, out Hit, 5f, IPLayerMask))
         {
             pos = Hit.point;
-
             pos = new Vector3(
                 Mathf.Floor(pos.x),
                 Mathf.Floor(pos.y),
                 Mathf.Floor(pos.z));
-
             pos += (Vector3.right * 0.5f) + (Vector3.forward * 0.5f);
 
-            GameObject instantiateObject = Instantiate(objectDatabase.objectData[selectedObjectIndex].Prefab, pos,
-                newPreviewPrefabRatate);
+            GameObject instantiateObject = Instantiate(objectDatabase.objectData[selectedObjectIndex].Prefab, 
+                pos, newPreviewPrefabRatate);
 
             var landObject = LandObjectConverter.ConvertToLandObject(instantiateObject, selectedObjectIndex);
-            LandManager.PlacedObjects[landObject.key] = instantiateObject;
-            //RealtimeDatabase.AddObjectToUserLand("TestUser",landObject); // 테스트코드
-            RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId, landObject); //실제코드 
+            
+            LandObjectController.AddPlacedObject(landObject.key, instantiateObject);
+            await RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId, landObject);
 
             newPreviewPrefabRatate = originRotation;
             newPreviewPrefab.transform.rotation = originRotation;
-            // 추후 설치 방향 재 정립, 설치되는 위치 값을 pivot 기준으로 분류할것인지, 물건 위주로 분류할것인지 구상(후자일 가능성 높음)
+        }
+    }
 
+
+    private void DestroyInstallation()
+    {
+        Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
+        if (Physics.Raycast(ray, out Hit, 5f, STLayerMask))
+        {
+            Destroy(Hit.collider.gameObject);
         }
     }
     

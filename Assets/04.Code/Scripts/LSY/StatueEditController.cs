@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+
+using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GLTFast;
@@ -8,24 +11,34 @@ using UnityEngine.UI;
 
 public class StatueEditController : MonoBehaviour
 {
-    
+    [SerializeField] private LandObjectController objectController;
+
     private int selectedObjectIndex = -1;
     public event Action OnClicked, OnExit;
     private Coroutine currentCoroutine;
     private bool isInstantitate = false;
     private StatueInventoryController statueInventoryController;
     private StatueInventoryUIController statueInventoryUIController;
+    private InpaingtingWebCommManager inpaingtingWebCommManager;
     private RaycastHit Hit;
     private Vector3 pos;
     public float scaleFactor = 3f;
 
     public Material previewMat;
+
+    private Quaternion newPreviewStatueRotate;
+    private Quaternion originRotation;
     
     [SerializeField] private LayerMask BFLayerMask; 
     [SerializeField] private LayerMask IPLayerMask;
     [SerializeField] private TestInteriorMode _testInteriorMode;
     [SerializeField] private GameObject newPreviewPrefab;
-    
+
+    private StatueData targetStatueData;
+
+    public GameObject ToypicAreaPrefab;
+
+    public WebApiData webApiData;
     void Start()
     {
         StopPlacement();
@@ -40,6 +53,7 @@ public class StatueEditController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             OnClicked?.Invoke();
+            OnExit?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.X))
@@ -150,10 +164,10 @@ public class StatueEditController : MonoBehaviour
         }
         
         // 설치할 오브젝트 생성
-        StatueData statueData = statueInventoryController.statueDatas[selectedObjectIndex];
-        Debug.Log($"statueData Id : {statueData.modelId}");
-        GltfImport gltfImport = statueData.modelGltf;
-        Debug.Log($"statueData gltfImport : {statueData.modelGltf}");
+        targetStatueData = statueInventoryController.statueDatas[selectedObjectIndex];
+        Debug.Log($"statueData Id : {targetStatueData.modelId}");
+        GltfImport gltfImport = targetStatueData.modelGltf;
+        Debug.Log($"statueData gltfImport : {targetStatueData.modelGltf}");
         GameObject glbObject = new GameObject("GLBModel");
         
         // 설치할 오브젝트 위치 설정
@@ -172,15 +186,38 @@ public class StatueEditController : MonoBehaviour
 
             Debug.Log($"StatueInventoryDB : pos - {pos}");
             
+            // Toypick Area 설치
+            GameObject toypicArea = Instantiate(ToypicAreaPrefab, pos, newPreviewStatueRotate);
             // glbObject 하위에 gltf 오브젝트 설치
             await gltfImport.InstantiateMainSceneAsync(glbObject.transform);
-            glbObject.transform.position = pos;
+            //glbObject.transform.position = pos;
+            
+            glbObject.transform.rotation = newPreviewStatueRotate;
+            
+            // glbObject의 부모를 toypicArea로 설정
+            glbObject.transform.SetParent(toypicArea.transform);
+            // foreach (Transform child in glbObject.transform)
+            // {
+            //     child.SetParent(toypicArea.transform, worldPositionStays: false);
+            // }
+            
             glbObject.transform.localScale = new Vector3(3f, 3f, 3f);
-
-            // 설치한 모델 정보 DB에 저장
+            glbObject.transform.localPosition = Vector3.zero;
+            
+            // 설치된 statueData 설정
+            // FIXME : 왜 안되지
+            toypicArea.GetComponentInChildren<InpaingtingWebCommManager>().statueData.imageName = webApiData.ImageName;
+            toypicArea.GetComponentInChildren<InpaingtingWebCommManager>().statueData.creatorId = webApiData.UserId;
+            // Debug.Log($"StatueEditController : {toypicArea.GetComponentInChildren<InpaingtingWebCommManager>()}");
+            // toypicArea.GetComponentInChildren<InpaingtingWebCommManager>().statueData = targetStatueData;
+            // Debug.Log($"StatueEditController : {toypicArea.GetComponentInChildren<InpaingtingWebCommManager>().statueData.imageName}");
+            // 설치한 모델 정보 DB에 저장 
             var landObject = LandObjectConverter.ConvertToModelObject(glbObject);
-            LandManager.PlacedObjects[landObject.key] = glbObject;
-            RealtimeDatabase.AddObjectToUserLand(UserData.Instance.UserId,landObject); //실제코드 
+            LandObjectController.AddPlacedObject(landObject.key,glbObject);
+            RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId,landObject).Forget(); //실제코드 
+            
+            newPreviewStatueRotate = originRotation;
+            newPreviewPrefab.transform.rotation = originRotation;
         }
     }
 
@@ -194,15 +231,10 @@ public class StatueEditController : MonoBehaviour
     {
         
         Debug.Log("PreviewObjectMoveController");
-        if (!isInstantitate)
-        {
-            Debug.Log("isInsantiate = flase");
-            yield return CreatePreviewObjectAsync(); // 비동기 메서드를 호출
-            isInstantitate = true; // 생성 완료 플래그 설정
-        }
         
         while (true)
         {
+           
             Debug.Log("while");
             Ray ray = new Ray(_testInteriorMode.userCamera.transform.position,
                 _testInteriorMode.userCamera.transform.forward);
@@ -215,8 +247,31 @@ public class StatueEditController : MonoBehaviour
                     Mathf.Floor(pos.y),
                     Mathf.Floor(pos.z));
                 Debug.Log($"pos : {pos}");
-                newPreviewPrefab.transform.position = pos;
+                
+                if (!isInstantitate)
+                {
+                    Debug.Log("isInsantiate = flase");
+                    yield return CreatePreviewObjectAsync(); // 비동기 메서드를 호출
+                    isInstantitate = true; // 생성 완료 플래그 설정
+                }
+                
+                if (newPreviewPrefab != null)
+                {
+                    newPreviewPrefab.transform.position = pos;
+                    if (Input.GetKeyDown(KeyCode.Q))
+                    {
+                        newPreviewPrefab.transform.Rotate(Vector3.down, 90f, Space.World);
+                        newPreviewStatueRotate = newPreviewPrefab.transform.rotation;
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        newPreviewPrefab.transform.Rotate(Vector3.up, 90f, Space.World);
+                        newPreviewStatueRotate = newPreviewPrefab.transform.rotation;
+                    }
+                }
             }
+
             
             yield return null;
         }
@@ -230,6 +285,7 @@ public class StatueEditController : MonoBehaviour
         newPreviewPrefab.transform.localScale = scaleVec3;
         await gltfImport.InstantiateMainSceneAsync(newPreviewPrefab.transform); // 비동기 작업
         newPreviewPrefab.GetComponentInChildren<Renderer>().material = previewMat;
+        originRotation = Quaternion.identity;
         Debug.Log("CreatePreviewObjectAsync Finish");
     }
 }

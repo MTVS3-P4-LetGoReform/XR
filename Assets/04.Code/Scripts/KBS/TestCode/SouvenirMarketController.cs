@@ -40,7 +40,6 @@ public class SouvenirMarketController : MonoBehaviour
     public void PurchaseButtonOnClick()
     {
         imagePurchase.gameObject.SetActive(true);
-        //BuyToyPick();
     }
 
     public void ConfirmPurchaseButtonOnClick()
@@ -48,6 +47,7 @@ public class SouvenirMarketController : MonoBehaviour
         imageEndPurchase.gameObject.SetActive(true);
         Vector2 newVec = new Vector2(290, -200);
         imageEndPurchase.rectTransform.anchoredPosition = newVec;
+        BuyToyPick();
     }
 
     public void FinishPurchaseButtonOnClick()
@@ -67,7 +67,7 @@ public class SouvenirMarketController : MonoBehaviour
     {
         hamoGltfImport = new GltfImport();
         hamoGltfImport = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath, "Models", "Souvenior", "hamo.glb"));
-        _statueInventoryController.AddStatueToInven("id_m_0000", hamoSprite, hamoGltfImport);
+        _statueInventoryController.AddStatueToInven("id_m_0000", "tempImage0", "tempModel0", hamoSprite, hamoGltfImport, "tempcreatorId");
     }
 
     IEnumerator FindStatueInventoryController()

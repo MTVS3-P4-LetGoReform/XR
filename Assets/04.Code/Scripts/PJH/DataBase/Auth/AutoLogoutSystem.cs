@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class AutoLogoutSystem : MonoBehaviour
 {
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         Logout();
     }
 
-    void Logout()
+    private async void Logout()
     {
         Debug.Log("Logging out...");
-        FirebaseAuthManager.Instance.LogOut();
+        await FirebaseAuthManager.Instance.LogOutAsync();
     }
 }

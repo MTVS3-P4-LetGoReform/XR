@@ -16,10 +16,10 @@ public class SessionUIManager : MonoBehaviour
     //public StorageDatabase _storageDatabase;
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPromptInput;
+    public Button[] maxPlayerCountButton;
     
     public Transform sessionListParent;
     public GameObject sessionPrefab;
-    
     
     public WebApiData webApiData;
     public WebCommManager _webCommManager;
@@ -27,7 +27,9 @@ public class SessionUIManager : MonoBehaviour
 
     public GameObject SessionPopUpPrefab;
     public Transform popUpParent;
-
+    
+    private int currentPlayerCount;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -42,26 +44,25 @@ public class SessionUIManager : MonoBehaviour
     
     private void Start()
     {
-        /*create.onClick.AddListener(ActiveCreateRoom);
-        join.onClick.AddListener(ActiveRoomList);
-        
-        roomListBack.onClick.AddListener(OffRoomList);
-        
-        createRoomBack.onClick.AddListener(OffCreateRoom);*/
-        //createRoomRecreate.onClick.AddListener(ImageCraft);
-        //createRoomStart.onClick.AddListener(CreatePlaySession);
         // TESTME : storagedatabase static 변경
+        
         StorageDatabase.InitializStorageDatabase(webApiData, _debugModeData);
+        
+        for (int i = 0; i < maxPlayerCountButton.Length; i++)
+        {
+            int playerCount = i + 1; 
+            maxPlayerCountButton[i].onClick.AddListener(() => CheckPlayerCounts(playerCount));
+        }
     }
 
-    // private void ImageCraft()
-    // {
-    //     test.SetActive(true);
-    // }
-    //
+    private void CheckPlayerCounts(int count)
+    {
+        Debug.Log(count);
+        currentPlayerCount = count;
+    }
 
     // 세션 목록 UI 업데이트
-    public async void UpdateSessionList(List<SessionInfo> sessionList)
+    public async UniTask UpdateSessionList(List<SessionInfo> sessionList)
     {
         // 기존 목록 삭제 같은 목록이 겹치는걸 방지함.
         foreach (Transform child in sessionListParent)
@@ -77,12 +78,19 @@ public class SessionUIManager : MonoBehaviour
                 return;
             }
 
+            
+            /*
             string check = CheckSession(session);
-            if (check != null)
+            if (string.IsNullOrEmpty(check))
             {
+                Debug.LogWarning("유효하지 않은 세션입니다.");
                 return;
             }
+            */
 
+
+            // 현재 세션의 로컬 복사본 생성
+            var currentSession = session;
             string url = GetImageUrl(session);
             
             // 목록 생성
@@ -105,17 +113,17 @@ public class SessionUIManager : MonoBehaviour
             await UniTask.Yield();
             
             //info 할당
-            popUpInfo.roomName.text = session.Name;
-            popUpInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+            popUpInfo.roomName.text = currentSession.Name;
+            popUpInfo.count.text = $"{currentSession.PlayerCount}/{currentSession.MaxPlayers}";
             
-            roomInfo.roomName.text = session.Name;
-            roomInfo.count.text = $"{session.PlayerCount}/{session.MaxPlayers}";
+            roomInfo.roomName.text = currentSession.Name;
+            roomInfo.count.text = $"{currentSession.PlayerCount}/{currentSession.MaxPlayers}";
 
             Button roomInfoButton = roomInfo.button;
             roomInfoButton.onClick.AddListener(() => popUpObject.SetActive(true));
             
             Button popUpInfoButton = popUpInfo.button;
-            popUpInfoButton.onClick.AddListener(() => JoinPlaySession(session));
+            popUpInfoButton.onClick.AddListener(() => JoinPlaySession(currentSession));
             
         }
     }
@@ -123,18 +131,17 @@ public class SessionUIManager : MonoBehaviour
 
     private string CheckSession(SessionInfo session)
     {
-        var userId = "";
         if (session.Properties.TryGetValue("UserId", out var id))
         {
-            userId = id;
+            Debug.Log("UserId 찾음: " + id);
+            return id;
         }
-        else
-        {
-            userId = null;
-        }
-        Debug.Log("결괏값: " + userId);
-        return userId;
+    
+        Debug.Log("UserId를 찾을 수 없음");
+        return null;
     }
+
+    
     private string GetImageUrl(SessionInfo session)
     {
         string imageName = "";
@@ -190,19 +197,27 @@ public class SessionUIManager : MonoBehaviour
     
     public async void CreatePlaySession()
     {
-        Debug.Log("SeissionUIManager : CreatePlaySession()");
+        Debug.Log("SessionUIManager : CreatePlaySession()");
         string sessionName = sessionNameInput.text;
-        Debug.Log("SeissionUIManager : flag1");
+        Debug.Log("SessionUIManager : flag1");
+        
         if (string.IsNullOrEmpty(sessionName))
         {
             Debug.LogWarning("세션 이름이 비어있습니다.");
             return;
         }
+
+        if (currentPlayerCount == 0)
+        {
+            Debug.LogWarning("인원수가 선택되지 않았습니다.");
+            return;
+        }
+        
         var startArgs = new StartGameArgs
         {
             GameMode = GameMode.Shared,
             SessionName = sessionName,
-            PlayerCount = 4,
+            PlayerCount = currentPlayerCount,
             //Scene = sceneInfo,
             SessionProperties = new Dictionary<string, SessionProperty>
             {
@@ -222,12 +237,10 @@ public class SessionUIManager : MonoBehaviour
     
     private async void JoinPlaySession(SessionInfo session)
     {
-        string ModelName = "";
         if (session.Properties.TryGetValue("ModelName", out var sessionDescription))
         {
-            ModelName = sessionDescription;
             webApiData.ModelName = sessionDescription;
-            _webCommManager.JoinWebComm(ModelName);
+            await _webCommManager.JoinWebComm(sessionDescription);
         }
         else
         {
@@ -244,10 +257,5 @@ public class SessionUIManager : MonoBehaviour
 
         await RunnerManager.Instance.ShutdownRunner();
         await RunnerManager.Instance.RunnerStart(startArgs,2);
-    }
-
-    private void PopUp()
-    {
-        
     }
 }
