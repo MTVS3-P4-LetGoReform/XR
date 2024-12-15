@@ -30,8 +30,8 @@ public class SceneLoadManager : MonoBehaviourSingleton<SceneLoadManager>
 
    private async UniTask LoadProcess(string sceneName)
    {
-      if (Current == sceneName)
-         return;
+      /*if (Current == sceneName)
+         return;*/
       Debug.Log($"LoadScene {sceneName}");
 
       await _fader.Show();

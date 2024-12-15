@@ -6,17 +6,27 @@ using UnityEngine;
 
 public class LandManager : MonoBehaviour
 {
+    public static Action OnLandChanged;
+    
     [SerializeField] private LandUIController uiController;
     [SerializeField] private LandObjectController objectController;
-    private string _userId;
+    private static string _userId;
     private string _userName;
 
-    private async void Start()
+    private void Start()
     {
+        RunnerManager.Instance.IsSpawned += InitializeLand;
+    }
+
+    private async void InitializeLand()
+    {
+        await StopListening();
+        
         await InitializeLandAsync();
         await InitializeLandInfoAsync(_userId, _userName);
         StartListening();
     }
+    
 
     private async UniTask InitializeLandAsync()
     {
@@ -83,8 +93,15 @@ public class LandManager : MonoBehaviour
     
     private void OnDestroy()
     {
+        StopListening().Forget();
+    }
+
+    private static async UniTask StopListening()  
+    {
         // 씬 전환 시 리스너 정리
+        Debug.Log("리스너 정리");
         RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}/landInfo");
         RealtimeDatabase.StopListeningForDataChanges($"user_land/{_userId}/objects");
+        await UniTask.Yield();
     }
 }
