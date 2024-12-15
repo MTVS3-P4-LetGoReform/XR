@@ -59,9 +59,9 @@ public class WebCommManager : MonoBehaviour
         PngFileUploadBtn.onClick.AddListener(GetSketchFileAndShow);
         //ImageRengenBtn.onClick.AddListener(DoImageRegen);
         // FIX
-        // genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
-        // genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
-        // genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
+        genImageList[0].GetComponent<Button>().onClick.AddListener(SetIndex0);
+        genImageList[1].GetComponent<Button>().onClick.AddListener(SetIndex1);
+        genImageList[2].GetComponent<Button>().onClick.AddListener(SetIndex2);
         Regenbtns[0].onClick.AddListener(DoImageRegen0);
         Regenbtns[1].onClick.AddListener(DoImageRegen1);
         Regenbtns[2].onClick.AddListener(DoImageRegen2);
