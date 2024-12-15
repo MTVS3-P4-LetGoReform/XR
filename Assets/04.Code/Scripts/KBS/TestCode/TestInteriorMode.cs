@@ -54,7 +54,7 @@ public class TestInteriorMode : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            OnPushed?.Invoke();
+            DestroyInstallation();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -92,7 +92,7 @@ public class TestInteriorMode : MonoBehaviour
 
         OnClicked += PlaceStructure; // PlaceStructure 메소드 구독
         OnExit += StopPlacement; // StopPlacement
-        OnPushed += DestroyInstallation;
+        
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -153,7 +153,7 @@ public class TestInteriorMode : MonoBehaviour
         selectedObjectIndex = -1;
         OnClicked -= PlaceStructure;
         OnExit -= StopPlacement;
-        OnPushed -= DestroyInstallation;
+        
 
         if (currentCoroutine != null)
         {
@@ -209,7 +209,7 @@ public class TestInteriorMode : MonoBehaviour
         Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
         if (Physics.Raycast(ray, out Hit, 5f, STLayerMask))
         {
-            
+            Destroy(Hit.collider.gameObject);
         }
     }
     
