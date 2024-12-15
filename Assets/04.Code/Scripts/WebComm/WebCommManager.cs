@@ -153,18 +153,21 @@ public class WebCommManager : MonoBehaviour
     public void DoImageRegen0()
     {
         selectedImageIndex = 0;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[0]);
         StartCoroutine(RequestImageGen(0));
     }
     
     public void DoImageRegen1()
     {
         selectedImageIndex = 1;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[1]);
         StartCoroutine(RequestImageGen(1));
     }
     
     public void DoImageRegen2()
     {
         selectedImageIndex = 2;
+        ConvertSpriteFromPNG(selectedImage, genImageNameList[2]);
         StartCoroutine(RequestImageGen(2));
     }
     private IEnumerator RequestImageGen(int idx)
