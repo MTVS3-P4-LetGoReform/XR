@@ -88,6 +88,13 @@ public class WebApiData : ScriptableObject
     {
         get { return imageSketchGenPoint; }
     }
+
+    [SerializeField] private string inpaintGenPoint;
+
+    public string InpaintGenPoint
+    {
+        get { return inpaintGenPoint; }
+    }
     [SerializeField] private string storageBaseUrl;
 
     public string StorageBaseUrl

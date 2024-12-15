@@ -67,7 +67,7 @@ public class SouvenirMarketController : MonoBehaviour
     {
         hamoGltfImport = new GltfImport();
         hamoGltfImport = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath, "Models", "Souvenior", "hamo.glb"));
-        _statueInventoryController.AddStatueToInven("id_m_0000", hamoSprite, hamoGltfImport);
+        _statueInventoryController.AddStatueToInven("id_m_0000", "tempImage0", "tempModel0", hamoSprite, hamoGltfImport, "tempcreatorId");
     }
 
     IEnumerator FindStatueInventoryController()
