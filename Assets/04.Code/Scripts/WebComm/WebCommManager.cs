@@ -89,7 +89,7 @@ public class WebCommManager : MonoBehaviour
         {
             Debug.Log("SketchImageGen : DebugMode");
         }
-        ActiveImageCommLoading();
+        ActiveModelCommLoading();
         ImageSketchGen _sketchImageGen = new ImageSketchGen(webApiData);
 
         yield return StartCoroutine(_sketchImageGen.RequestImageGen(prompt, GenImageNum, _userId));
@@ -108,7 +108,7 @@ public class WebCommManager : MonoBehaviour
             genImage.color = color;
         }
         
-        DeactiveImageCommLoading();
+        DeactiveModelCommLoading();
 
 
     }
@@ -129,7 +129,7 @@ public class WebCommManager : MonoBehaviour
     {
         if(debugModeData.DebugMode == false){
             //yield return null;
-            ActiveImageCommLoading();
+            ActiveModelCommLoading();
             ImageGen _imageGen = new ImageGen(webApiData);
 
             yield return StartCoroutine(_imageGen.RequestImageGen(prompt, GenImageNum,_userId ));
@@ -147,7 +147,7 @@ public class WebCommManager : MonoBehaviour
                 color.a = 1f;
                 genImage.color = color;
             }
-            DeactiveImageCommLoading();
+            DeactiveModelCommLoading();
         }
     }
     
@@ -174,7 +174,7 @@ public class WebCommManager : MonoBehaviour
     }
     private IEnumerator RequestImageGen(int idx)
     {
-        ActiveImageCommLoading();
+        ActiveModelCommLoading();
         ImageRegen _imageRegen = new ImageRegen(webApiData);
 
         yield return StartCoroutine(_imageRegen.RequestImageRegen(prompt, RegenImageNum, FirebaseAuthManager.Instance.UserId, webApiData.ModelId));
@@ -182,7 +182,7 @@ public class WebCommManager : MonoBehaviour
         ImageDownload _imageDownload = new ImageDownload(webApiData);
         yield return StartCoroutine(_imageDownload.DownloadImage(genImageNameList[idx]));
         ConvertSpriteFromPNG(genImageList[idx].GetComponent<Image>(), genImageNameList[idx]);
-        DeactiveImageCommLoading();
+        DeactiveModelCommLoading();
     }
 
     public void SetIndex0()
