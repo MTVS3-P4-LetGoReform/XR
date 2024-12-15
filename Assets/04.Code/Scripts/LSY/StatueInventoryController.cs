@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using GLTFast;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using GltfImport = GLTFast.GltfImport;
 
 public class StatueInventoryController : MonoBehaviour
 {
@@ -33,8 +35,8 @@ public class StatueInventoryController : MonoBehaviour
         statueDatas = new List<StatueData>();
         GltfImport gltfImport1 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath,"Models", "inven0.glb"));
         GltfImport gltfImport2 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath,"Models", "inven1.glb"));
-        AddStatueToInven("m_id_0001", mockDataSprite1, gltfImport1);
-        AddStatueToInven("m_id_0002", mockDataSprite2, gltfImport2);
+        AddStatueToInven("m_id_0001", "tempImage1", "tempModel1", mockDataSprite1, gltfImport1, "tempcreatorId");
+        AddStatueToInven("m_id_0002", "tempImage2","tempModel2", mockDataSprite2, gltfImport2, "tempcreatorId");
         gltfImport3 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath, "Models", "MainMockDataModel.glb"));
         gltfImport4 = await GltfLoader.LoadGLTF(Path.Combine(Application.persistentDataPath, "Models", "hamo.glb"));
     }
@@ -43,12 +45,12 @@ public class StatueInventoryController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Minus))
         {
-            AddStatueToInven("m_id_0003", mockDataSprite3, gltfImport3);
+            AddStatueToInven("m_id_0003", "tempImage3", "tempModel3", mockDataSprite3, gltfImport3, "tempcreatorId");
         }
 
         if (Input.GetKeyDown(KeyCode.Equals))
         {
-            AddStatueToInven("m_id_0004", mockDataSprite4, gltfImport4);
+            AddStatueToInven("m_id_0004", "tempImage4", "tempModel4", mockDataSprite4, gltfImport4, "tempcreatorId");
         }
     }
     // /* FIXME : 인벤토리 아이템 수에 맞게 아이템 생성하도록 메서드 */
@@ -64,13 +66,13 @@ public class StatueInventoryController : MonoBehaviour
     /* FIXME : DB랑 연결 */
     
     // 인벤토리에 StatueData 추가 후 UI 보여주기
-   public void AddStatueToInven(string modelId, Sprite sprite, GltfImport gltfImport)
+   public void AddStatueToInven(string modelId, string imageName, string modelName, Sprite sprite, GltfImport gltfImport, string creatorId)
     {
         
         Debug.Log("AddStatueToInven");
         // 새로운 StatueData 선언
-        StatueData newStatueData = new StatueData(modelId, sprite, gltfImport);
-        Debug.Log($"modelId - {modelId} / sprite - {sprite.name}");
+        StatueData newStatueData = new StatueData(modelId, imageName, modelName, sprite, gltfImport, creatorId);
+        Debug.Log($"modelId - {newStatueData.modelId} ");
         // 리스트에 새로운 StatueData 추가
         statueDatas.Add(newStatueData);
         // 
@@ -97,7 +99,7 @@ public class StatueInventoryController : MonoBehaviour
         Debug.Log($"{imageSprite}");
         GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath("MainMockDataModel.glb"));
         Debug.Log("flag2");
-        AddStatueToInven("m_0000", imageSprite, gltfImport);
+        AddStatueToInven("m_0000", "tempImage0", "tempModel0", imageSprite, gltfImport, "teampUserId");
         Debug.Log("flag3");
     }
     

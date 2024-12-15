@@ -19,10 +19,13 @@ public class InpaintingGen
 
     public IEnumerator RequestInpaintingGen(string orgImageName, string hair_prompt, string inpainting_prompt, string creatorId)
     {
-        _inpaintingReq.creator_id = creatorId;
-        // reqest 데이터 입력
-        _inpaintingReq.image_filename = orgImageName;
+        // _inpaintingReq.creator_id = creatorId;
+        // // reqest 데이터 입력
+        // _inpaintingReq.image_filename = orgImageName;
         
+        //FIXME :왜 안되지
+        _inpaintingReq.creator_id = webApiData.UserId;
+        _inpaintingReq.image_filename = webApiData.ImageName;
         // 헤어 프롬프트 여부 및 입력
         if (hair_prompt.IsNullOrEmpty())
         {

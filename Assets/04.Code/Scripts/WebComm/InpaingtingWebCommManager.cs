@@ -12,7 +12,8 @@ public class InpaingtingWebCommManager : MonoBehaviour
     public DebugModeData debugModeData;
     public WebApiData webApiData;
     private StatueInventoryController statueInventoryController;
-    public PlacedToypickData placedToypickData;
+    public StatueData statueData;
+    //public PlacedToypickData placedToypickData;
 
     //public PlacementToypick _placementToypick;
 
@@ -23,7 +24,8 @@ public class InpaingtingWebCommManager : MonoBehaviour
     private ImageDownload _imageDownload;
     private ModelGen _modelGen;
     private ModelDown _modelDown;
-    
+
+    public Image orgImage;
     public Image previewImage;
     public Button transferBtn;
     public Button addBtn;
@@ -32,9 +34,8 @@ public class InpaingtingWebCommManager : MonoBehaviour
 
     public void Start()
     {
-        placedToypickData = new PlacedToypickData("241214_211734_8f9526e3f0dbe383b718634b2455ced8_0.glb",
-            "241214_211734_8f9526e3f0dbe383b718634b2455ced8_0.png", null, null);
         statueInventoryController = GameObject.FindObjectOfType<StatueInventoryController>();
+        statueData = new StatueData(null, null, null, null, null, null);
         if (statueInventoryController == null)
         {
             Debug.LogWarning("Statue Inventory Controller not found");
@@ -42,6 +43,8 @@ public class InpaingtingWebCommManager : MonoBehaviour
         
         transferBtn.onClick.AddListener(async () => await DoInpainting());
         addBtn.onClick.AddListener(async () => await DoTransferring());
+
+        orgImage.sprite = SpriteConverter.ConvertFromPNG(webApiData.ImageName);
     }
     public async UniTask DoInpainting()
     {
@@ -57,9 +60,12 @@ public class InpaingtingWebCommManager : MonoBehaviour
     {
         // 인페인팅 생성
         _inpaintingGen = new InpaintingGen(webApiData);
-        await _inpaintingGen.RequestInpaintingGen(placedToypickData.imageName, hairPrompt.text,
-            clothesPrompt.text, "cRShguIcsSX1ctiiruERJpFVwQD2");
-
+        
+        //FIXME : 왜 안됟지
+        await _inpaintingGen.RequestInpaintingGen(statueData.imageName, hairPrompt.text,
+            clothesPrompt.text, statueData.creatorId);
+        // await _inpaintingGen.RequestInpaintingGen(webApiData.ImageName, hairPrompt.text,
+        //        clothesPrompt.text, webApiData.UserId);
         _imageDownload = new ImageDownload(webApiData);
         await _imageDownload.DownloadImage(_inpaintingGen._inpaintingRes.filenames);
         
@@ -98,7 +104,7 @@ public class InpaingtingWebCommManager : MonoBehaviour
         string modelPath = Path.Combine(Application.persistentDataPath, "Models", modelName);
         GltfImport gltfImport = await GltfLoader.LoadGLTF(modelPath);
         
-        statueInventoryController.AddStatueToInven(_inpaintingGen._inpaintingRes.id, sprite, gltfImport);
+        statueInventoryController.AddStatueToInven(_inpaintingGen._inpaintingRes.id, _inpaintingGen._inpaintingRes.filenames, modelName, sprite, gltfImport, statueData.creatorId);
     }
 
 }

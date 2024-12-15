@@ -146,20 +146,20 @@ public class RewordCanvas : MonoBehaviour
                 }
                 _statueInventoryController.StatueInvenTestBtn();
             }
-            // else
-            // {
-            //     try
-            //     {
-            //         Sprite sprite = SpriteConverter.ConvertFromPNG(webApiData.ImageName);
-            //         GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath(webApiData.ModelName));
-            //         _statueInventoryController.AddStatueToInven(modelId, sprite, gltfImport);
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         Debug.LogError($"스태츄 인벤토리 추가 실패: {ex.Message}");
-            //         return;
-            //     }
-            // }
+            else
+            {
+                try
+                {
+                    Sprite sprite = SpriteConverter.ConvertFromPNG(webApiData.ImageName);
+                    GltfImport gltfImport = await GltfLoader.LoadGLTF(PathConverter.GetModelPath(webApiData.ModelName));
+                    _statueInventoryController.AddStatueToInven(modelId, webApiData.ImageName, webApiData.ModelName, sprite, gltfImport, webApiData.UserId);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"스태츄 인벤토리 추가 실패: {ex.Message}");
+                    return;
+                }
+            }
 
             await RunnerManager.Instance.JoinPublicSession();
         }
