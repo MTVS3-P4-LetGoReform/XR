@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,14 @@ public class TempDecoMarket : MonoBehaviour
    public Image imagePurchaseBG;
    public Image imageCompPurchaseBG;
 
+
+   private void Update()
+   {
+      if (Input.GetKeyDown(KeyCode.M))
+      {
+         bpShopCanvas.gameObject.SetActive(true);
+      }
+   }
 
    public void tempTreeButtonTrueOnClick()
    {
