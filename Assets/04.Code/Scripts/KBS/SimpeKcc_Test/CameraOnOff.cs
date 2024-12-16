@@ -28,9 +28,28 @@ public class CameraOnOff : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             toggleFaceCam = !toggleFaceCam;
+            SelfToPlayerCamera();
             
         }
 
+        if (toggleFaceCam)
+        {
+            FaceCamera.gameObject.SetActive(true);
+            PlayerCamera.gameObject.SetActive(false);
+            CaptureCanvas.gameObject.SetActive(true);
+        }
+        else
+        {
+            FaceCamera.gameObject.SetActive(false);
+            PlayerCamera.gameObject.SetActive(true);
+            CaptureCanvas.gameObject.SetActive(false);
+        }
+    }
+
+    public void SelfToPlayerCamera()
+    {
+        toggleFaceCam = !toggleFaceCam;
+        
         if (toggleFaceCam)
         {
             FaceCamera.gameObject.SetActive(true);

@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class DelayedLoad : MonoBehaviour
 {
-    private float delayTime = 2f;
+    public float delayTime = 1f;
 
-    private async void Awake()
+    private async void Start()
     {
         Debug.Log("로딩 대기중");
 

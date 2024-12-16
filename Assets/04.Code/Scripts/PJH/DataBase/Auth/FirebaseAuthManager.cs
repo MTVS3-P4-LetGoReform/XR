@@ -74,7 +74,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"회원가입 실패: {e.Message}");
+            Debug.LogError($"회원가입 실패: {e.Message}");
             OnSignUpResult?.Invoke($"회원가입에 실패했습니다: {e.Message}");
         }
     }
@@ -112,7 +112,7 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"로그인 실패: {e.Message}");
+            Debug.LogError($"로그인 실패: {e.Message}");
             OnLoginResult?.Invoke("로그인에 실패했습니다.");
         }
     }

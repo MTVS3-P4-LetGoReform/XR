@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
 using ExitGames.Client.Photon.StructWrapping;
-using Firebase.Database;
 using UnityEngine;
 
 public class LandObjectController : MonoBehaviour
@@ -36,7 +33,7 @@ public class LandObjectController : MonoBehaviour
     /// 선택한 오브젝트를 삭제합니다.
     /// </summary>
     /// <param name="key">삭제할 오브젝트의 키</param>
-    public static async UniTask DeleteSelectedObject(string key)
+    public static async void DeleteSelectedObject(string key)
     {
         if (!PlacedObjects.TryGetValue(key, out GameObject obj))
         {
@@ -50,26 +47,11 @@ public class LandObjectController : MonoBehaviour
             Destroy(obj);
             PlacedObjects.Remove(key);
 
+            // Firebase DB에서 오브젝트 삭제
             var userId = UserData.Instance.UserId;
-        
-            // objects 노드의 데이터를 가져옴
-            var objectsRef = FirebaseDatabase.DefaultInstance
-                .GetReference($"user_land/{userId}/objects");
-            var snapshot = await objectsRef.GetValueAsync();
-
+            await RealtimeDatabase.DeleteDataAsync($"user_land/{userId}/objects/{key}");
             
-            // objects 아래의 각 인덱스를 순회하며 검사
-            foreach (var child in snapshot.Children)
-            {
-                var objectData = child.Value as Dictionary<string, object>;
-                if (objectData != null && objectData.ContainsKey("key") && objectData["key"].ToString() == key)
-                {
-                    // 찾은 인덱스의 데이터를 삭제
-                    await objectsRef.Child(child.Key).RemoveValueAsync();
-                    Debug.Log($"오브젝트 삭제 완료: index {child.Key}, key {key}");
-                    break;
-                }
-            }
+            Debug.Log($"오브젝트 삭제 완료: {key}");
         }
         catch (Exception e)
         {
@@ -78,40 +60,22 @@ public class LandObjectController : MonoBehaviour
     }
 
 
-
-
     private void UpdateExistingObjects(List<LandObject> objects)
     {
-        if (objects == null) return;
-    
         foreach (var landObject in objects)
         {
-            // landObject 자체가 null인지 먼저 확인
-            if (landObject == null) continue;
-        
-            // key 속성에 접근하기 전에 null 체크
-            try 
-            {
-                string objectKey = landObject.key;
-                if (string.IsNullOrEmpty(objectKey)) continue;
+            if (string.IsNullOrEmpty(landObject.key)) continue;
 
-                if (PlacedObjects.TryGetValue(objectKey, out GameObject existingObject))
-                {
-                    UpdateObjectTransform(existingObject, landObject);
-                }
-                else
-                {
-                    CreateNewObject(landObject);
-                }
-            }
-            catch (NullReferenceException)
+            if (PlacedObjects.TryGetValue(landObject.key, out GameObject existingObject))
             {
-                Debug.LogWarning($"Invalid land object data encountered");
-                continue;
+                UpdateObjectTransform(existingObject, landObject);
+            }
+            else
+            {
+                CreateNewObject(landObject);
             }
         }
     }
-
 
     private void UpdateObjectTransform(GameObject obj, LandObject landObject)
     {
@@ -145,13 +109,10 @@ public class LandObjectController : MonoBehaviour
 
     private void RemoveDeletedObjects(List<LandObject> currentObjects)
     {
-        if (currentObjects == null) return;
-
         var keysToRemove = new List<string>(PlacedObjects.Keys);
         foreach (var key in keysToRemove)
         {
-            bool exists = currentObjects.Any(obj => obj != null && obj.key == key);
-            if (!exists)
+            if (!currentObjects.Exists(obj => obj.key == key))
             {
                 if (PlacedObjects.TryGetValue(key, out GameObject obj))
                 {
@@ -161,7 +122,6 @@ public class LandObjectController : MonoBehaviour
             }
         }
     }
-
 
     private bool ValidateObjectIndex(int index)
     {

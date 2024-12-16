@@ -63,7 +63,7 @@ public class SharedGameData : NetworkBehaviour
    public void BlockCountRpc(RpcInfo info = default)
    {
       BlockCount++;
-      Debug.Log($"BlockCount Changed : {BlockCount}");
+      Debug.Log($"ReadyCount Changed : {BlockCount}");
    }
 
    
