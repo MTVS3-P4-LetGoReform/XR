@@ -21,6 +21,8 @@ public class TestInteriorMode : MonoBehaviour
 
     private float rotateSpeed = 200f;
 
+    
+
     [SerializeField] public Camera userCamera;
     [SerializeField] private GameObject newUserCamera;
 
@@ -209,7 +211,10 @@ public class TestInteriorMode : MonoBehaviour
         Ray ray = new Ray(userCamera.transform.position, userCamera.transform.forward);
         if (Physics.Raycast(ray, out Hit, 5f, STLayerMask))
         {
-            Destroy(Hit.collider.gameObject);
+            ObjectIdentifier ObI = Hit.collider.GetComponent<ObjectIdentifier>();
+            string keyIndex = ObI.Key;
+            Debug.Log($"{keyIndex}");
+            LandObjectController.DeleteSelectedObject(keyIndex);
         }
     }
     
