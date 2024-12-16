@@ -114,49 +114,63 @@ public static partial class RealtimeDatabase
     /// <summary>
     /// AI 모델을 추가합니다.
     /// </summary>
-    public static async UniTask AddAiModelAsync(string userId, Model model)
+    public static async UniTask AddAiModelAsync(string userId, string modelId)
     {
-        var modelList = await GetModelListAsync(userId);
-        
-        if (modelList == null) 
-            modelList = new ModelList();
-
-        bool added = modelList.AddModel(model);
-        if (!added)
-        {
-            Debug.LogWarning($"사용자 {userId}에게 이미 존재하는 모델 ID: {model.id}");
-            throw new Exception("이미 존재하는 모델입니다.");
-        }
-
-        await CreateDataAsync($"users/{userId}/models", modelList);
+        // 사용자의 모델 목록에 모델 ID 추가
+        await CreateDataAsync($"user_models/{userId}/{modelId}", true);
     }
 
     /// <summary>
-    /// 모델 목록을 가져옵니다.
+    /// 특정 유저가 소유하고 있는 모델 목록을 불러옵니다.
     /// </summary>
-    public static async UniTask<ModelList> GetModelListAsync(string userId)
+    public static async UniTask<Dictionary<string, bool>> GetUserModelIdsAsync(string userId)
     {
-        return await ReadDataAsync<ModelList>($"users/{userId}/models");
+        return await ReadDataAsync<Dictionary<string, bool>>($"user_models/{userId}");
     }
-
+    
     /// <summary>
-    /// 특정 ModelId에 해당하는 Model 데이터를 가져와 UserId 아래에 저장합니다.
+    /// 특정 ModelId에 해당하는 Model 데이터를 검색해 확인 후 user_models/userId 아래에 저장합니다.
     /// </summary>
-    public static async UniTask CopyModelToUserAsync(string userId, string modelId)
+    public static async UniTask SearchAndAddModelAsync(string userId, string modelId)
     {
         var model = await ReadDataAsync<Model>($"models/{modelId}");
-        
+    
         if (model == null)
         {
             Debug.LogError($"Model ID '{modelId}'에 해당하는 모델을 찾을 수 없습니다.");
             throw new Exception("모델을 찾을 수 없습니다.");
         }
 
-        await CreateDataAsync($"users/{userId}/models/{modelId}", model);
+        // 사용자의 모델 목록에 모델 ID 추가
+        await CreateDataAsync($"user_models/{userId}/{modelId}", true);
     }
-
+   
+    /// <summary>
+    /// 유저가 소유하고 있는 모든 Model의 정보를 불러옵니다.
+    /// </summary>
+    public static async UniTask<List<Model>> GetAllUserModelsAsync(string userId)
+    {
+        var modelIds = await GetUserModelIdsAsync(userId);
     
+        if (modelIds == null || modelIds.Count == 0)
+        {
+            Debug.Log($"사용자 {userId}의 모델이 없습니다.");
+            return new List<Model>();
+        }
 
+        var models = new List<Model>();
+        foreach (var modelId in modelIds.Keys)
+        {
+            var model = await ReadDataAsync<Model>($"models/{modelId}");
+            if (model != null)
+            {
+                models.Add(model);
+            }
+        }
+
+        return models;
+    }
+    
     #endregion
 
     #region Search
