@@ -26,6 +26,8 @@ public class LayerController : MonoBehaviour
     public Slider progressSlider;
     public GameObject pedestal;
     public List<GameObject> GarBagePileList;
+    public GameObject curFloorBlocks;
+    public GameObject completeFloorBlocks;
     
     public void Awake()
     {
@@ -157,6 +159,7 @@ public class LayerController : MonoBehaviour
                 voxel.transform.position, Quaternion.identity);
             var nt = obj.GetComponent<NetworkTransform>();
             nt.enabled = true;
+            obj.transform.SetParent(curFloorBlocks.transform);
         }
         
     }
@@ -172,5 +175,10 @@ public class LayerController : MonoBehaviour
     public void MoveToTarget(GameObject target, Vector3 targetPos, float duration)
     {
         target.transform.DOMove(targetPos, duration).SetEase(Ease.InOutSine);
+    }
+
+    public int GetRemainingFloors()
+    {
+        return keys.Count - curIndex;
     }
 }
