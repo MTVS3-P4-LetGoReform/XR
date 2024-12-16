@@ -169,7 +169,11 @@ public class RunnerManager : MonoBehaviour
       var id = UserData.Instance.UserId;
       var selectIndex = PlayerPrefs.GetInt($"select_{id}", -1);
       
-      var playerOp = runner.SpawnAsync(characterDatabase.objectData[selectIndex].Prefab,_currentSpawnPoint.position,quaternion.identity,runner.LocalPlayer);
+      var playerOp = runner.SpawnAsync(characterDatabase.objectData[selectIndex].Prefab,
+         _currentSpawnPoint.position,
+         quaternion.identity,
+         runner.LocalPlayer);
+      
       await UniTask.WaitUntil(() => playerOp.Status == NetworkSpawnStatus.Spawned);
       _spawnedPlayer = playerOp.Object;
       _spawnedPlayer.name = $"Player: {_spawnedPlayer.Id}";
