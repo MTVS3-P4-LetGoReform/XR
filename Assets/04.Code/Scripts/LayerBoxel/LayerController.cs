@@ -15,8 +15,8 @@ public class LayerController : MonoBehaviour
     private ModelFloorChecker _modelFloorChecker;
 
     public Material guideMat;
-    private List<float> keys;
-    private int curIndex = -1;
+    public List<float> keys;
+    public int curIndex = -1;
     private int progressPercent = 0;
     public LayerData curLayerdata;
     private List<GameObject> curGuideObjects;
@@ -148,6 +148,7 @@ public class LayerController : MonoBehaviour
     //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void AdvanceFloorMasterKey()
     {
+        _modelFloorChecker.cnt = 0;
         foreach (GameObject voxel in curLayerdata.voxels)
         {
             if (voxel == null)
@@ -155,12 +156,24 @@ public class LayerController : MonoBehaviour
                 continue;
             }
             Debug.Log("LayerController : AdvanceFloorMasterKey()");
+
+            foreach (Transform block in curFloorBlocks.transform)
+            {
+                Destroy(block.gameObject);
+            }
+            
             var obj = RunnerManager.Instance.runner.Spawn(blockData.BasicBlockPrefab,
                 voxel.transform.position, Quaternion.identity);
+            Debug.Log("LayerController : "+_modelFloorChecker.cnt);
             var nt = obj.GetComponent<NetworkTransform>();
             nt.enabled = true;
-            obj.transform.SetParent(curFloorBlocks.transform);
+            obj.transform.SetParent(completeFloorBlocks.transform, false);
+            //_modelFloorChecker.cnt = _modelFloorChecker.maxCnt;
+            
+            _modelFloorChecker.OnPlace(obj.gameObject);
+            
         }
+        //AdvanceFloor();
         
     }
     public void DrawGuide(GameObject voxel, GameObject guideObject)

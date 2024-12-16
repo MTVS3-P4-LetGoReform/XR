@@ -9,23 +9,24 @@ public class ModelCompleteChecker : MonoBehaviour
     {
         if (GameStateManager.Instance.IsComplete())
         {
+            
             //Debug.Log("ModelCompleteChecker : Game Completed");
             GameStateManager.Instance.DoCompleteCoroutine();
-            Destroy(gameObject);
+            Destroy(gameObject, 0.5f);
         }
     }
     
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Block"))
-        {
-            foreach (Transform childTrans in curFloorBlocks.transform)
-            {
-                childTrans.SetParent(completeFloorBlocks.transform);
-            }
-            //Debug.Log("ModelCompleteChecker : Block Place Trigger");
-            
-            GameStateManager.Instance.AddCnt(1);
-        }
-    }
+    // public void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Block"))
+    //     {
+    //         foreach (Transform childTrans in curFloorBlocks.transform)
+    //         {
+    //             childTrans.SetParent(completeFloorBlocks.transform);
+    //         }
+    //         //Debug.Log("ModelCompleteChecker : Block Place Trigger");
+    //         
+    //         
+    //     }
+    // }
 }

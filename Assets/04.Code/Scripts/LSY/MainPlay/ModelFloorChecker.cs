@@ -10,8 +10,11 @@ public class ModelFloorChecker : MonoBehaviour
     public GameObject[,] voxels;
     public int maxCnt = 1;
     public int cnt = 0;
-    private bool isComplete = true;
+    //private bool isComplete = false;
     private LayerController _layerController;
+
+    public GameObject curFloorBlocks;
+    public GameObject completeFloorBlocks;
     public void Awake()
     {
         voxelPos = new List<Vector3>();
@@ -19,38 +22,9 @@ public class ModelFloorChecker : MonoBehaviour
         _layerController = FindObjectOfType<LayerController>();
     }
 
-    public void ResetVoxelPos()
+    public void Update()
     {
-        voxelPos.Clear();
-        voxels = new GameObject[MainPlayConstants.maxLayeredVoxelNum, MainPlayConstants.maxLayeredVoxelNum];
-        maxCnt = 0;
-    }
-    public void AddVoxelPos(Vector3 pos)
-    {
-        voxelPos.Add(pos);
-        //maxCnt++;
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("ModelFloorChecker : maxCnt - "+maxCnt);
-        if (other == null)
-        {   
-            return;
-        }
-        //Debug.Log("TriggerEnter");
-        if (other.CompareTag("Block"))
-        {
-            Debug.Log("ModelFloorChecker : Block Place Trigger");
-            float x = other.transform.position.x + 15f;
-            float z = other.transform.position.z + 15f;
-            x = Mathf.Floor(x);
-            z = Mathf.Floor(z);
-            voxels[(int)x, (int)z] = other.gameObject;
-            cnt++;
-        }
-    
-        if (cnt == maxCnt)
+        if (cnt == maxCnt && _layerController.curIndex < _layerController.keys.Count)
         {
             Debug.Log("ModelFloorChecker : Floor is full!");
             //Vector3 scaleFactor = new Vector3(10.0f, 10.0f, 10.0f);
@@ -62,17 +36,24 @@ public class ModelFloorChecker : MonoBehaviour
                     {
                         continue;
                     }
+
                     Debug.Log($"ModelFloorChecker : voxel[{i}][{j}] - {voxels[i, j]}");
                     MeshFilter targetFilter = voxels[i, j].GetComponent<MeshFilter>();
                     Debug.Log($"ModelFloorChecker : targetFilter - {targetFilter}");
-                    MeshRenderer sourceRenderer = _layerController.curLayerdata.voxels[i, j].GetComponent<MeshRenderer>();
+                    MeshRenderer sourceRenderer =
+                        _layerController.curLayerdata.voxels[i, j].GetComponent<MeshRenderer>();
                     Debug.Log($"ModelFloorChecker : sourceRenderer - {sourceRenderer}");
                     MeshRenderer targetRenderer = voxels[i, j].GetComponent<MeshRenderer>();
 
                     targetRenderer.material = _layerController._layeredBoxelSystem.orgMat;
                     //    = sourceRenderer.materials; // material 전체 배열 복사
-                    targetFilter.sharedMesh = _layerController.curLayerdata.voxels[i, j].GetComponent<MeshFilter>().sharedMesh;
+                    targetFilter.sharedMesh =
+                        _layerController.curLayerdata.voxels[i, j].GetComponent<MeshFilter>().sharedMesh;
 
+                    foreach (Transform block in curFloorBlocks.transform)
+                    {
+                        block.SetParent(completeFloorBlocks.transform);
+                    }
                     // Mesh mesh = Instantiate(targetFilter.mesh);
                     // Vector3[] vertices = mesh.vertices;
                     //
@@ -100,12 +81,57 @@ public class ModelFloorChecker : MonoBehaviour
             _layerController.AdvanceFloor();
             //ResetVoxelPos();
             //cnt = 0;
-    
+
             // foreach (GameObject obj in _layerController.curFloorObjects)
             // {
             //     AddVoxelPos(obj.transform.position);
             // }
             // maxCnt = voxelPos.Count;
         }
+    }
+
+    public void ResetVoxelPos()
+    {
+        voxelPos.Clear();
+        voxels = new GameObject[MainPlayConstants.maxLayeredVoxelNum, MainPlayConstants.maxLayeredVoxelNum];
+        maxCnt = 0;
+    }
+    public void AddVoxelPos(Vector3 pos)
+    {
+        voxelPos.Add(pos);
+        //maxCnt++;
+    }
+
+    // public void OnTriggerEnter(Collider other)
+    // {
+    //     Debug.Log("ModelFloorChecker : maxCnt - "+maxCnt);
+    //     if (other == null)
+    //     {   
+    //         return;
+    //     }
+    //     //Debug.Log("TriggerEnter");
+    //     // if (other.CompareTag("Block"))
+    //     // {
+    //     //     Debug.Log("ModelFloorChecker : Block Place Trigger");
+    //     //     float x = other.transform.position.x + 15f;
+    //     //     float z = other.transform.position.z + 15f;
+    //     //     x = Mathf.Floor(x);
+    //     //     z = Mathf.Floor(z);
+    //     //     voxels[(int)x, (int)z] = other.gameObject;
+    //     //     cnt++;
+    //     // }
+    //     
+    // }
+
+    public void OnPlace(GameObject block)
+    {
+        Debug.Log("ModelFloorChecker : Block Place Trigger");
+        float x = block.transform.position.x + 15f;
+        float z = block.transform.position.z + 15f;
+        x = Mathf.Floor(x);
+        z = Mathf.Floor(z);
+        voxels[(int)x, (int)z] = block.gameObject;
+        GameStateManager.Instance.AddCnt(1);
+        cnt++;
     }
 }

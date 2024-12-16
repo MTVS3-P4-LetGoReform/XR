@@ -29,6 +29,9 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
     private ModelPlacementChecker _modelPlacementChecker;
 
+    public GameObject curFloorBlocks;
+    public GameObject completeFloorBlocks;
+    public ModelFloorChecker _ModelFloorChecker;
     public override void Spawned()
     {
         if (!HasStateAuthority)
@@ -38,9 +41,16 @@ public class BlockCreateRaycastController : NetworkBehaviour
         _modelPlacementChecker = FindObjectOfType<ModelPlacementChecker>();
         
         NewBlockOutLine = Instantiate(BlockOutline, new Vector3(0, -20, 0),Quaternion.identity);
-        _basicBlockParent = Instantiate(new GameObject());
-        _basicBlockParent.name = "BasicBlockParent";
+        
+        
+        // _basicBlockParent = Instantiate(new GameObject());
+        // _basicBlockParent.name = "BasicBlockParent";
+            
+        curFloorBlocks = GameObject.FindGameObjectWithTag("CurFloorBlocks");
+        completeFloorBlocks = GameObject.FindGameObjectWithTag("CompleteFloorBlocks");
+        _ModelFloorChecker = FindObjectOfType<ModelFloorChecker>();
     }
+
 
     private void Awake()
     {
@@ -204,14 +214,15 @@ public class BlockCreateRaycastController : NetworkBehaviour
             spawnObject.name = $"BasicBlock : {SharedGameData.BlockCount}";
             
             // 부모 설정
-            if (spawnObject != null && _basicBlockParent != null)
+            if (spawnObject != null && curFloorBlocks != null)
             {
-                spawnObject.transform.SetParent(_basicBlockParent.transform,true);
+                spawnObject.transform.SetParent(curFloorBlocks.transform,true);
             }
             else
             {
                 Debug.Log($"SpawnObject : {spawnObject.name} or _basicBlockParent : {_basicBlockParent.name}= null");
             }
+            _ModelFloorChecker.OnPlace(spawnObject.gameObject);
             
         }
         else
