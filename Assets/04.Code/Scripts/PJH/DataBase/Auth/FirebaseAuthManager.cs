@@ -129,7 +129,11 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
                 { "onlineStatus", false },
                 { "lastLogin", DateTimeOffset.UtcNow.ToUnixTimeSeconds() }
             };
-            await RealtimeDatabase.UpdateDataAsync($"users/{UserData.Instance.UserId}", updates);
+
+            if (UserData.Instance.UserId != null)
+            {
+                await RealtimeDatabase.UpdateDataAsync($"users/{UserData.Instance.UserId}", updates);
+            }
             
             _auth.SignOut();
             Debug.Log("로그아웃 완료");

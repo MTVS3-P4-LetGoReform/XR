@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 
 public class LandObjectController : MonoBehaviour
@@ -94,12 +95,13 @@ public class LandObjectController : MonoBehaviour
     {
         if (!ValidateObjectIndex(landObject.objectIndex)) return;
 
+        Debug.Log(landObject.key);
         GameObject newObject = Instantiate(prefabDatabase.objectData[landObject.objectIndex].Prefab);
     
         // ObjectIdentifier 컴포넌트 추가 및 키 설정
-        var identifier = newObject.AddComponent<ObjectIdentifier>();
+        var identifier = newObject.GetComponent<ObjectIdentifier>();
         identifier.SetKey(landObject.key);
-    
+        
         UpdateObjectTransform(newObject, landObject);
         PlacedObjects[landObject.key] = newObject;
     }
