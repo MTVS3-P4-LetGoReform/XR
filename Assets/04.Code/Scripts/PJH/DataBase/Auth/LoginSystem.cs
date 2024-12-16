@@ -4,17 +4,20 @@ using Firebase.Database;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoginSystem : MonoBehaviour
 {
     [Header("Login UI Components")]
     public TMP_InputField loginEmail;
     public TMP_InputField loginPassword;
+    public TMP_Text loginResult;
 
     [Header("Signup UI Components")]
     public TMP_InputField signupEmail;
     public TMP_InputField signupPassword;
     public TMP_InputField nickname;
+    public TMP_Text signResult;
 
     [Header("UI References")]
     public TMP_Text outputText;          // 로그인 상태를 표시할 텍스트
@@ -30,6 +33,7 @@ public class LoginSystem : MonoBehaviour
     
     private async void Awake()
     {
+        Init();
         // 오프라인 데이터 캐시 비활성화 및 재연결
         FirebaseDatabase.DefaultInstance.SetPersistenceEnabled(false);
         FirebaseDatabase.DefaultInstance.GoOffline();
@@ -41,8 +45,25 @@ public class LoginSystem : MonoBehaviour
         SetupEventListeners();
         await InitializeSystemAsync();
         FadeInAsync().Forget();
+        FirebaseAuthManager.Instance.OnLoginResult += OnChangedLoginResult;
+        FirebaseAuthManager.Instance.OnLoginResult += OnChangedSignResult;
     }
 
+    private void Init()
+    {
+        loginResult.text = "";
+        signResult.text = "";
+    }
+    private void OnChangedLoginResult(string text)
+    {
+        loginResult.text = text;
+    }
+
+    private void OnChangedSignResult(string text)
+    {
+        signResult.text = text;
+    }
+    
     /// <summary>
     /// Firebase 및 인증 시스템 초기화
     /// </summary>
