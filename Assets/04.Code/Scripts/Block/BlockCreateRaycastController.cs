@@ -231,12 +231,12 @@ public class BlockCreateRaycastController : NetworkBehaviour
             return false;
         }
 
-        // NetworkObject가 유효한지 확인
+        /*// NetworkObject가 유효한지 확인
         if (!networkObject.IsValid)
         {
             Debug.LogWarning("NetworkObject is not valid. Skipping despawn.");
             return false;
-        }
+        }*/
 
         // Runner가 null이 아닌지 확인
         if (RunnerManager.Instance.runner == null)
@@ -246,8 +246,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
 
         // 실제 Despawn 호출
-        OnBlockDeletionCompletedRpc(networkObject);
         RunnerManager.Instance.runner.Despawn(networkObject);
+        OnBlockDeletionCompletedRpc(networkObject);
         
         return true;
     }
