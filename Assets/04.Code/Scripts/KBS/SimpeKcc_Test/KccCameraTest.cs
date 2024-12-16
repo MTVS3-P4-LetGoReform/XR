@@ -103,8 +103,6 @@ public class KccCameraTest : NetworkBehaviour
             
             float adjustedHeight = Mathf.Lerp(3f, 0f, (-mouseY + 45f) / 75f); // 회전 각도에 따라 카메라 높이 조정
             targetPosition.y -= adjustedHeight;
-            
-
         }
         
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * positionLerpSpeed);

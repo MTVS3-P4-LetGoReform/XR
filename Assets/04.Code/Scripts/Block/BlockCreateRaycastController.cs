@@ -50,7 +50,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
 
     private void Start()
     {
-        
+        blockCountText.gameObject.SetActive(false);
        
     }
 
