@@ -1,14 +1,12 @@
-using Firebase;
-using Firebase.Database;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 
 public static partial class RealtimeDatabase 
 {
+    #region UserData
+
     /// <summary>
     /// 닉네임 중복을 확인하고 사용자를 생성합니다.
     /// </summary>
@@ -50,27 +48,6 @@ public static partial class RealtimeDatabase
     }
 
     /// <summary>
-    /// 닉네임을 사용하여 사용자 ID를 검색합니다.
-    /// </summary>
-    public static async UniTask<string> FindUserIdByUsernameAsync(string username)
-    {
-        if (string.IsNullOrEmpty(username))
-        {
-            throw new ArgumentException("닉네임은 비어 있을 수 없습니다.");
-        }
-
-        try
-        {
-            return await ReadDataAsync<string>($"usernames/{username}");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"닉네임으로 사용자 검색 실패: {e.Message}");
-            throw;
-        }
-    }
-
-    /// <summary>
     /// 유저 데이터를 업데이트합니다.
     /// </summary>
     public static async UniTask UpdateUserAsync(string userId, Dictionary<string, object> updates)
@@ -86,29 +63,9 @@ public static partial class RealtimeDatabase
         await DeleteDataAsync($"users/{userId}");
     }
 
-    /// <summary>
-    /// 이름을 사용해 사용자 ID를 검색합니다.
-    /// </summary>
-    public static async UniTask<Dictionary<string, User>> FindUserIdsByNameAsync(string name)
-    {
-        var users = await ReadDataAsync<Dictionary<string, User>>("users");
-        var matchedUsers = new Dictionary<string, User>();
+    #endregion
 
-        foreach (var userEntry in users)
-        {
-            if (userEntry.Value.name.Equals(name, StringComparison.OrdinalIgnoreCase))
-            {
-                matchedUsers[userEntry.Key] = userEntry.Value;
-            }
-        }
-
-        if (matchedUsers.Count == 0)
-        {
-            throw new Exception("해당 이름을 가진 사용자를 찾을 수 없습니다.");
-        }
-
-        return matchedUsers;
-    }
+    #region UserLand
 
     /// <summary>
     /// 특정 유저의 영지 데이터를 생성하거나 업데이트합니다.
@@ -151,6 +108,9 @@ public static partial class RealtimeDatabase
         await SetUserLandAsync(userId, userLand);
     }
 
+    #endregion
+
+    #region AIModel
     /// <summary>
     /// AI 모델을 추가합니다.
     /// </summary>
@@ -194,6 +154,12 @@ public static partial class RealtimeDatabase
 
         await CreateDataAsync($"users/{userId}/models/{modelId}", model);
     }
+
+    
+
+    #endregion
+
+    #region Search
     
     /// <summary>
     /// 사용자 ID를 사용해 닉네임을 검색합니다.
@@ -213,4 +179,50 @@ public static partial class RealtimeDatabase
         }
     }
 
+    /// <summary>
+    /// 이름을 사용해 사용자 ID를 검색합니다.
+    /// </summary>
+    public static async UniTask<Dictionary<string, User>> FindUserIdsByNameAsync(string name)
+    {
+        var users = await ReadDataAsync<Dictionary<string, User>>("users");
+        var matchedUsers = new Dictionary<string, User>();
+
+        foreach (var userEntry in users)
+        {
+            if (userEntry.Value.name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                matchedUsers[userEntry.Key] = userEntry.Value;
+            }
+        }
+
+        if (matchedUsers.Count == 0)
+        {
+            throw new Exception("해당 이름을 가진 사용자를 찾을 수 없습니다.");
+        }
+
+        return matchedUsers;
+    }
+
+    /// <summary>
+    /// 닉네임을 사용하여 사용자 ID를 검색합니다.
+    /// </summary>
+    public static async UniTask<string> FindUserIdByUsernameAsync(string username)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            throw new ArgumentException("닉네임은 비어 있을 수 없습니다.");
+        }
+
+        try
+        {
+            return await ReadDataAsync<string>($"usernames/{username}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"닉네임으로 사용자 검색 실패: {e.Message}");
+            throw;
+        }
+    }
+    #endregion
+    
 }
