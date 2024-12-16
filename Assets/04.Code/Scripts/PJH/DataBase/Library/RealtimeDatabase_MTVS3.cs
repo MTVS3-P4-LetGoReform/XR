@@ -107,6 +107,23 @@ public static partial class RealtimeDatabase
         userLand.AddObject(landObject);
         await SetUserLandAsync(userId, userLand);
     }
+    
+    /// <summary>
+    /// 특정 유저의 영지에 오브젝트를 삭제합니다.
+    /// </summary>
+    public static async UniTask RemoveObjectToUserLandAsync(string userId, LandObject landObject)
+    {
+        var userLand = await GetUserLandAsync(userId);
+        
+        if (userLand == null)
+        {
+            string userName = await FindNameByIdAsync(userId);
+            userLand = new UserLand(userName);
+        }
+
+        userLand.RemoveObject(landObject);
+        await SetUserLandAsync(userId, userLand);
+    }
 
     #endregion
 

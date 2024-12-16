@@ -197,6 +197,8 @@ public class TestInteriorMode : MonoBehaviour
 
             var landObject = LandObjectConverter.ConvertToLandObject(instantiateObject, selectedObjectIndex);
             
+            var identifier = instantiateObject.GetComponent<ObjectIdentifier>();
+            identifier.SetKey(landObject.key);
             LandObjectController.AddPlacedObject(landObject.key, instantiateObject);
             await RealtimeDatabase.AddObjectToUserLandAsync(UserData.Instance.UserId, landObject);
 
@@ -214,7 +216,7 @@ public class TestInteriorMode : MonoBehaviour
             ObjectIdentifier ObI = Hit.collider.GetComponent<ObjectIdentifier>();
             string keyIndex = ObI.Key;
             Debug.Log($"{keyIndex}");
-            LandObjectController.DeleteSelectedObject(keyIndex);
+            LandObjectController.DeleteSelectedObject(keyIndex).Forget();
         }
     }
     

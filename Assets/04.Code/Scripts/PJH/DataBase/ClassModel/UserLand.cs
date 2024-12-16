@@ -17,4 +17,9 @@ public class UserLand
     {
         objects.Add(landObject);
     }
+
+    public void RemoveObject(LandObject landObject)
+    {
+        objects.Remove(landObject);
+    }
 }
