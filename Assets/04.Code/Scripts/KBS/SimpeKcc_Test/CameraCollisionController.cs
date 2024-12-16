@@ -17,18 +17,7 @@ public class CameraCollisionController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        foreach (string layerName in exceptionLayerNames)
-        {
-            int layer = LayerMask.NameToLayer(layerName);
-            if (layer != -1) // 유효한 레이어만 추가
-            {
-                exceptionLayers.Add(layer);
-            }
-            else
-            {
-                Debug.LogWarning($"Layer '{layerName}' is not a valid layer.");
-            }
-        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
