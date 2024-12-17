@@ -219,18 +219,34 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RequestDeleteBlockRpc(NetworkObject networkObject)
     {
+        // 오브젝트가 유효한지 확인
         if (networkObject == null || !networkObject.IsValid)
         {
             Debug.LogWarning("NetworkObject is invalid.");
             return;
         }
 
+        // 오브젝트의 소유자에게 삭제 요청
         if (networkObject.HasStateAuthority)
         {
-            // State Authority가 있는 경우에만 삭제 진행
             DeleteBlock(networkObject);
         }
+        else
+        {
+            // 소유자가 아닌 경우, 소유자에게 권한 요청
+            networkObject.RequestStateAuthority();
+            // 권한을 받은 후에 삭제 시도
+            if (networkObject.HasStateAuthority)
+            {
+                DeleteBlock(networkObject);
+            }
+            else
+            {
+                Debug.LogWarning("Cannot delete block - No authority granted");
+            }
+        }
     }
+
 
     private void DeleteBlock(NetworkObject networkObject)
     {
