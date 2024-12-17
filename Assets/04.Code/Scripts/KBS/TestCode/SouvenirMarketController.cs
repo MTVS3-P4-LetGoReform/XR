@@ -45,8 +45,8 @@ public class SouvenirMarketController : MonoBehaviour
     public void ConfirmPurchaseButtonOnClick()
     {
         imageEndPurchase.gameObject.SetActive(true);
-        Vector2 newVec = new Vector2(290, -200);
-        imageEndPurchase.rectTransform.anchoredPosition = newVec;
+        //Vector2 newVec = new Vector2(290, -200);
+        //imageEndPurchase.rectTransform.anchoredPosition = newVec;
         BuyToyPick();
     }
 
