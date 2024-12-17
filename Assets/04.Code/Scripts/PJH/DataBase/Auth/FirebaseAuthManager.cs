@@ -16,9 +16,10 @@ public class FirebaseAuthManager : Singleton<FirebaseAuthManager>
     private FirebaseAuth _auth;
     private FirebaseUser _user;
 
-    public void Init()
+    public async void Init()
     {
         _auth = FirebaseAuth.DefaultInstance;
+        await LogOutAsync();
         _auth.StateChanged += OnChanged;
     }
 
