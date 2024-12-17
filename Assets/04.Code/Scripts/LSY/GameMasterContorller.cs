@@ -34,7 +34,7 @@ public class GameMasterContorller : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            AdvanceFloorMasterRpc();
+            AdvanceRemainingFloorsMasterRpc();
         }
     }
 
@@ -60,7 +60,11 @@ public class GameMasterContorller : NetworkBehaviour
     }
     IEnumerator AdvanceRemainingFloors()
     {
-        _layerController.AdvanceFloorMasterKey();
-        yield return new WaitForSeconds(0.1f);
+        int remaining = _layerController.keys.Count - _layerController.curIndex;
+        for (int i = 0; i < remaining; i++)
+        {
+            _layerController.AdvanceFloorMasterKey();
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }//
