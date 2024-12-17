@@ -15,8 +15,8 @@ public class LayerController : MonoBehaviour
     private ModelFloorChecker _modelFloorChecker;
 
     public Material guideMat;
-    private List<float> keys;
-    private int curIndex = -1;
+    public List<float> keys;
+    public int curIndex = -1;
     private int progressPercent = 0;
     public LayerData curLayerdata;
     private List<GameObject> curGuideObjects;
