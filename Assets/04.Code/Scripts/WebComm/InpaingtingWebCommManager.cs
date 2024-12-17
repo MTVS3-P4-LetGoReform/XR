@@ -29,6 +29,7 @@ public class InpaingtingWebCommManager : MonoBehaviour
     public Image previewImage;
     public Button transferBtn;
     public Button addBtn;
+    public GameObject LoadingUI;
 
     public string modelName;
 
@@ -58,6 +59,7 @@ public class InpaingtingWebCommManager : MonoBehaviour
     }
     public async UniTask InpaintingGenImageDown()
     {
+        LoadingUI.SetActive(true);
         // 인페인팅 생성
         _inpaintingGen = new InpaintingGen(webApiData);
         
@@ -68,7 +70,7 @@ public class InpaingtingWebCommManager : MonoBehaviour
         //        clothesPrompt.text, webApiData.UserId);
         _imageDownload = new ImageDownload(webApiData);
         await _imageDownload.DownloadImage(_inpaintingGen._inpaintingRes.filenames);
-        
+        LoadingUI.SetActive(false);
 
     }
 

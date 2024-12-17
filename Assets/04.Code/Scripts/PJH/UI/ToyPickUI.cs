@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Fusion;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -10,7 +11,6 @@ public class ToyPickUI : MonoBehaviour
     public GameObject statue;
     public GameObject emote;
     public Button[] closeButton;
-    
     private bool _canInteract = true;
     private bool _isTrigger = false;
     private NetworkObject _playerNetworkObject;
@@ -101,4 +101,5 @@ public class ToyPickUI : MonoBehaviour
     {
         CloseNpcCanvas();
     }
+
 }
