@@ -219,34 +219,16 @@ public class BlockCreateRaycastController : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     private void RequestDeleteBlockRpc(NetworkObject networkObject)
     {
-        // 오브젝트가 유효한지 확인
         if (networkObject == null || !networkObject.IsValid)
         {
             Debug.LogWarning("NetworkObject is invalid.");
             return;
         }
-
-        // 오브젝트의 소유자에게 삭제 요청
-        if (networkObject.HasStateAuthority)
-        {
-            DeleteBlock(networkObject);
-        }
-        else
-        {
-            // 소유자가 아닌 경우, 소유자에게 권한 요청
-            networkObject.RequestStateAuthority();
-            // 권한을 받은 후에 삭제 시도
-            if (networkObject.HasStateAuthority)
-            {
-                DeleteBlock(networkObject);
-            }
-            else
-            {
-                Debug.LogWarning("Cannot delete block - No authority granted");
-            }
-        }
+        
+        // State Authority가 있는 경우에만 삭제 진행
+        DeleteBlock(networkObject);
+        
     }
-
 
     private void DeleteBlock(NetworkObject networkObject)
     {
@@ -260,10 +242,19 @@ public class BlockCreateRaycastController : NetworkBehaviour
         OnBlockDeletionAddRpc(networkObject);
     
         // Despawn 실행
-        RunnerManager.Instance.runner.Despawn(networkObject);
+        DespawnBlockRpc(networkObject);
+        
+    }
     
-        // 삭제 완료를 알림
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void DespawnBlockRpc(NetworkObject networkObject)
+    {
+        if (networkObject == null || !networkObject.IsValid) return;
+    
+        Runner.Despawn(networkObject);
+        
         OnBlockDeletionCompletedRpc(networkObject);
+
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -280,7 +271,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     {
         if (block != null && _pendingDeletionBlocks.Contains(block))
         {
-            _pendingDeletionBlocks.Remove(block);
+            // _pendingDeletionBlocks.Remove(block);
 
             if (HasStateAuthority)
             {
@@ -298,6 +289,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
         // 블록 번호 증가
         blockData.BlockNumber += 1;
         blockCountText.text = $"{blockData.BlockNumber}";
+        
     }
     
     IEnumerator NoBlockTextSet()
