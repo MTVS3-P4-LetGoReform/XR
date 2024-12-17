@@ -224,12 +224,10 @@ public class BlockCreateRaycastController : NetworkBehaviour
             Debug.LogWarning("NetworkObject is invalid.");
             return;
         }
-
-        if (networkObject.HasStateAuthority)
-        {
-            // State Authority가 있는 경우에만 삭제 진행
-            DeleteBlock(networkObject);
-        }
+        
+        // State Authority가 있는 경우에만 삭제 진행
+        DeleteBlock(networkObject);
+        
     }
 
     private void DeleteBlock(NetworkObject networkObject)
@@ -244,10 +242,19 @@ public class BlockCreateRaycastController : NetworkBehaviour
         OnBlockDeletionAddRpc(networkObject);
     
         // Despawn 실행
-        RunnerManager.Instance.runner.Despawn(networkObject);
+        DespawnBlockRpc(networkObject);
+        
+    }
     
-        // 삭제 완료를 알림
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void DespawnBlockRpc(NetworkObject networkObject)
+    {
+        if (networkObject == null || !networkObject.IsValid) return;
+    
+        Runner.Despawn(networkObject);
+        
         OnBlockDeletionCompletedRpc(networkObject);
+
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -264,7 +271,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
     {
         if (block != null && _pendingDeletionBlocks.Contains(block))
         {
-            _pendingDeletionBlocks.Remove(block);
+            // _pendingDeletionBlocks.Remove(block);
 
             if (HasStateAuthority)
             {
@@ -282,6 +289,7 @@ public class BlockCreateRaycastController : NetworkBehaviour
         // 블록 번호 증가
         blockData.BlockNumber += 1;
         blockCountText.text = $"{blockData.BlockNumber}";
+        
     }
     
     IEnumerator NoBlockTextSet()
