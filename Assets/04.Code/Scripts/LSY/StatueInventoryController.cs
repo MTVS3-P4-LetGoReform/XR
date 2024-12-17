@@ -78,9 +78,9 @@ public class StatueInventoryController : MonoBehaviour
         // 
         //GameObject childObject = inventoryTargetList[curIndex].transform.GetChild(0).gameObject;
         //Debug.Log($"childObject : {childObject.name}");
-        if (inventoryTargetList[curIndex] == null)
+        if (inventoryTargetList[curIndex] != null)
         {
-            Debug.LogError("inventoryTargetList[curIndex] is null!");
+            Debug.LogError($"inventoryTargetList[{curIndex}] is not empty!");
         }
         Debug.Log($"curIndex : {curIndex}");
         inventoryTargetList[curIndex].SetActive(true);
