@@ -129,8 +129,8 @@ public class BlockCreateRaycastController : NetworkBehaviour
                     {
                         // 삭제 요청 중인 블록으로 추가
                         _pendingDeletionBlocks.Add(block);
-                        
-                        DeleteBlockRpc(block);
+
+                        RequestDeleteBlockRpc(block);
                         
                         blockData.BlockNumber += 1;
                         blockCountText.text = $"{blockData.BlockNumber}";
@@ -166,16 +166,10 @@ public class BlockCreateRaycastController : NetworkBehaviour
                     if (block != null && !_pendingDeletionBlocks.Contains(block))
                     {
                         // 삭제 요청 중인 블록으로 추가
-                        _pendingDeletionBlocks.Add(block);
+                        OnBlockDeletionAddRpc(block);
 
                         // 블록 삭제 RPC 호출
-                        
-                        if (!DeleteBlockRpc(block))
-                            return;
-
-                        // 블록 번호 증가
-                        blockData.BlockNumber += 1;
-                        blockCountText.text = $"{blockData.BlockNumber}";
+                        RequestDeleteBlockRpc(block);
                     }
                     else
                     {
@@ -222,46 +216,73 @@ public class BlockCreateRaycastController : NetworkBehaviour
         }
     }
     
-    private bool DeleteBlockRpc(NetworkObject networkObject)
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RequestDeleteBlockRpc(NetworkObject networkObject)
     {
-        // networkObject가 null인지 확인
-        if (networkObject == null)
+        if (networkObject == null || !networkObject.IsValid)
         {
-            Debug.LogWarning("NetworkObject is null. Skipping despawn.");
-            return false;
+            Debug.LogWarning("NetworkObject is invalid.");
+            return;
         }
 
-        /*// NetworkObject가 유효한지 확인
-        if (!networkObject.IsValid)
+        if (networkObject.HasStateAuthority)
         {
-            Debug.LogWarning("NetworkObject is not valid. Skipping despawn.");
-            return false;
-        }*/
+            // State Authority가 있는 경우에만 삭제 진행
+            DeleteBlock(networkObject);
+        }
+    }
 
-        // Runner가 null이 아닌지 확인
+    private void DeleteBlock(NetworkObject networkObject)
+    {
         if (RunnerManager.Instance.runner == null)
         {
             Debug.LogError("Runner is null. Cannot despawn block.");
-            return false;
+            return;
         }
 
-        // 실제 Despawn 호출
+        // 삭제 시작을 알림
+        OnBlockDeletionAddRpc(networkObject);
+    
+        // Despawn 실행
         RunnerManager.Instance.runner.Despawn(networkObject);
+    
+        // 삭제 완료를 알림
         OnBlockDeletionCompletedRpc(networkObject);
-        
-        return true;
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void OnBlockDeletionAddRpc(NetworkObject block)
+    {
+        if (block != null)
+        {
+            _pendingDeletionBlocks.Add(block);
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void OnBlockDeletionCompletedRpc(NetworkObject block)
     {
-        // 삭제된 블록을 추적 목록에서 제거
         if (block != null && _pendingDeletionBlocks.Contains(block))
         {
             _pendingDeletionBlocks.Remove(block);
+
+            if (HasStateAuthority)
+            {
+                AddBlockCount();
+            }
+            else
+            {
+                Debug.Log("BlockCreateRaycastController - OnBlockDeletionCompletedRpc : 권한이 없습니다.");
+            }
         }
     }
 
+    private void AddBlockCount()
+    {
+        // 블록 번호 증가
+        blockData.BlockNumber += 1;
+        blockCountText.text = $"{blockData.BlockNumber}";
+    }
     
     IEnumerator NoBlockTextSet()
     {
@@ -269,6 +290,4 @@ public class BlockCreateRaycastController : NetworkBehaviour
         yield return new WaitForSeconds(2f);
         noBlockText.gameObject.SetActive(false);
     }
-    
-    
 }
