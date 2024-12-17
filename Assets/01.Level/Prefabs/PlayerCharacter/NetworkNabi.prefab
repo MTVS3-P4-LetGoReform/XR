@@ -226,6 +226,8 @@ MonoBehaviour:
   - Block
   - Structure
   - InteBlock
+  - PhysicsBlock
+  - Block
 --- !u!135 &4982222742561596412
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -560,7 +562,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 22a03ca01c8293e4d957f08e84fedcb6, type: 3}
   m_Resource: {fileID: 8300000, guid: 22a03ca01c8293e4d957f08e84fedcb6, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1.2
   Loop: 0
   Mute: 0
@@ -879,6 +881,10 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2236026551163574479, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2236026551163574479, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: 778c127a90ce7c245967e0fd499b8403, type: 3}
@@ -929,6 +935,10 @@ PrefabInstance:
     - target: {fileID: 4482338144733798116, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
       propertyPath: m_Name
       value: CraftSystem_Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5557521598536482089, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
+      propertyPath: m_Volume
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 5557521598536482089, guid: 6b764bb0e96db3e4ca0449c369d45a2a, type: 3}
       propertyPath: m_Resource

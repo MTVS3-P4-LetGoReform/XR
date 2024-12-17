@@ -433,9 +433,11 @@ MonoBehaviour:
   playerCamera: {fileID: 6702178581967847908}
   invisibleLayerName: Invisible
   exceptionLayerNames:
-  - PhysicsBlock
   - Block
   - Structure
+  - InteBlock
+  - PhysicsBlock
+  - Block
   - InteBlock
 --- !u!135 &895016155130883327
 SphereCollider:
@@ -771,7 +773,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 22a03ca01c8293e4d957f08e84fedcb6, type: 3}
   m_Resource: {fileID: 8300000, guid: 22a03ca01c8293e4d957f08e84fedcb6, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1.2
   Loop: 0
   Mute: 0
@@ -1228,7 +1230,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 778c127a90ce7c245967e0fd499b8403, type: 3}
   m_Resource: {fileID: 8300000, guid: 778c127a90ce7c245967e0fd499b8403, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1.5
   Loop: 0
   Mute: 0
@@ -1325,7 +1327,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 612107c43e2cf2f46ba129de976b6f89, type: 3}
   m_Resource: {fileID: 8300000, guid: 612107c43e2cf2f46ba129de976b6f89, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
   Mute: 0
