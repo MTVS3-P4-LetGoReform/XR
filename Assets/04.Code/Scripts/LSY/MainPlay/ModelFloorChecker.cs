@@ -33,7 +33,7 @@ public class ModelFloorChecker : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("ModelFloorChecker : maxCnt - "+maxCnt);
+        //Debug.Log("ModelFloorChecker : maxCnt - "+maxCnt);
         if (other == null)
         {   
             return;
