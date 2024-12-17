@@ -95,6 +95,7 @@ public class SessionUIManager : MonoBehaviour
             
             // 목록 생성
             GameObject sessionButton = Instantiate(sessionPrefab, sessionListParent);
+            sessionButton.SetActive(false);
             RoomInfo roomInfo = sessionButton.GetComponent<RoomInfo>();
             Image targetImage = roomInfo.image;
 
@@ -124,7 +125,10 @@ public class SessionUIManager : MonoBehaviour
             
             Button popUpInfoButton = popUpInfo.button;
             popUpInfoButton.onClick.AddListener(() => JoinPlaySession(currentSession));
-            
+            if (sessionButton != null)
+            {
+                sessionButton.SetActive(true);
+            }
         }
     }
 

@@ -50,7 +50,7 @@ public class ReadyCheck : MonoBehaviour
             //var totalCount = RunnerManager.Instance.runner.SessionInfo.PlayerCount;
             var totalCount = RunnerManager.Instance.runner.SessionInfo.MaxPlayers;
             var currentCount = SharedGameData.ReadyCount;
-            readyText.text = $"현재 인원\n{currentCount}/{totalCount}";
+            readyText.text = $"준비 확인\n{currentCount}/{totalCount}";
 
             await UniTask.WaitForSeconds(wfs);
 
