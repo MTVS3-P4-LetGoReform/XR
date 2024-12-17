@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Windows.Forms;
 using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,9 +32,9 @@ public class GameMasterContorller : NetworkBehaviour
             AdvanceFloorMasterRpc();
         }
 
-        if (Input.GetKeyDown(KeyCode.Equals))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            
+            AdvanceRemainingFloorsMasterRpc();
         }
     }
 
@@ -50,5 +52,19 @@ public class GameMasterContorller : NetworkBehaviour
     private void AdvanceFloorMasterRpc()
     {
         _layerController.AdvanceFloorMasterKey();
+    }
+
+    private void AdvanceRemainingFloorsMasterRpc()
+    {
+        StartCoroutine(AdvanceRemainingFloors());
+    }
+    IEnumerator AdvanceRemainingFloors()
+    {
+        int remaining = _layerController.keys.Count - _layerController.curIndex;
+        for (int i = 0; i < remaining; i++)
+        {
+            _layerController.AdvanceFloorMasterKey();
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }//
