@@ -5,12 +5,20 @@ public class CreditDatabase : ScriptableObject
 {
     [SerializeField] 
     private int creditCount;
-
+    
     public int CreditCount
-    {
-        get;
+    { 
+        set { creditCount = value;}
+        get { return creditCount; }
+    }
+    
+    [SerializeField]
+    private int dreamTicketCount;
 
-        set;
+    public int DreamTicketCount
+    {
+        set { dreamTicketCount = value;}
+        get { return dreamTicketCount; }
     }
     
 }
