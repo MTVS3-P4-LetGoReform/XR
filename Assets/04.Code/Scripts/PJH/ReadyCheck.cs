@@ -13,7 +13,7 @@ public class ReadyCheck : MonoBehaviour
 
     public GameObject readyButton;
     public GameObject unReadyButton;
-    
+    public GameObject progressText;
     private void Start()
     {
         Check().Forget();
@@ -39,6 +39,7 @@ public class ReadyCheck : MonoBehaviour
 
     public void StartGame(bool status)
     {
+        
         SharedGameData.Instance.GameStartRpc();
     }
     
@@ -60,6 +61,7 @@ public class ReadyCheck : MonoBehaviour
         
         await UniTask.WaitForSeconds(wfs);
         readyCanvas.enabled = false;
+        progressText.SetActive(true);
         GameStateManager.Instance.StartGameProcess();
     }
 }

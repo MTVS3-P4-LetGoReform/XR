@@ -63,7 +63,7 @@ public class GameStateManager : MonoBehaviour
 
     private IEnumerator CompleteCoroutine()
     {
-        progressText.SetActive(true);
+        //progressText.SetActive(true);
         // 소리 및 효과 재생
         yield return new WaitUntil(() => isComplete);
         guideObjects.SetActive(false);
