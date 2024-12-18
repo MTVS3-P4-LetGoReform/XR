@@ -59,12 +59,19 @@ public class LandObjectController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// 영지정보를 업데이트 합니다.
+    /// </summary>
+    /// <param name="objects">DB에서 받아온 영지 정보</param>
     private void UpdateExistingObjects(List<LandObject> objects)
     {
         foreach (var landObject in objects)
         {
-            if (string.IsNullOrEmpty(landObject.key)) continue;
+            if (landObject == null)
+                return;
+            
+            if (string.IsNullOrEmpty(landObject.key)) 
+                continue;
 
             if (PlacedObjects.TryGetValue(landObject.key, out GameObject existingObject))
             {
