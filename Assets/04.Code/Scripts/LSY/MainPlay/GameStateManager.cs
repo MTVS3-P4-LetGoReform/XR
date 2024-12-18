@@ -19,6 +19,7 @@ public class GameStateManager : MonoBehaviour
     public bool isComplete = false;
     public int maxCnt = int.MaxValue;
     public int allCnt = 0;
+    public GameObject progressText;
     
     public static GameStateManager Instance
     {
@@ -62,6 +63,7 @@ public class GameStateManager : MonoBehaviour
 
     private IEnumerator CompleteCoroutine()
     {
+        progressText.SetActive(true);
         // 소리 및 효과 재생
         yield return new WaitUntil(() => isComplete);
         guideObjects.SetActive(false);
