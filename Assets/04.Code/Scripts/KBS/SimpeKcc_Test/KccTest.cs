@@ -59,6 +59,12 @@ public class KccTest : NetworkBehaviour
 
     private void Update()
     {
+        if (_isStop)
+        {
+            animator.SetBool("IsWalking", false);
+            audioWalking.Stop();
+            return;
+        }
         if (Input.GetButtonDown("Jump") && networkCC.Grounded)
         {
             _jump = true;

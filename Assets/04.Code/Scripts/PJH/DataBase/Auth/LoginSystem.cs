@@ -28,7 +28,7 @@ public class LoginSystem : MonoBehaviour
     [SerializeField] private ObjectDatabase characterDatabase; // 캐릭터 데이터베이스
     [SerializeField] private int selectedObjectIndex = -1;     // 선택된 캐릭터 인덱스
     
-    private async void Awake()
+    private void Awake()
     {
         // 오프라인 데이터 캐시 비활성화 및 재연결
         FirebaseDatabase.DefaultInstance.SetPersistenceEnabled(false);
@@ -129,11 +129,11 @@ public class LoginSystem : MonoBehaviour
     /// <summary>
     /// 캐릭터 선택 처리 및 저장
     /// </summary>
-    public void CharacterChoiceOnClick(int ID)
+    public void CharacterChoiceOnClick(int id)
     {
-        if (ID < 0)
+        if (id < 0)
         {
-            Debug.LogError($"잘못된 캐릭터 ID: {ID}");
+            Debug.LogError($"잘못된 캐릭터 ID: {id}");
             return;
         }
 
@@ -141,7 +141,7 @@ public class LoginSystem : MonoBehaviour
         if (string.IsNullOrEmpty(userId))
             return;
         
-        selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == ID);
+        selectedObjectIndex = characterDatabase.objectData.FindIndex(data => data.ID == id);
         PlayerPrefs.SetInt($"select_{userId}", selectedObjectIndex);
         Debug.Log($"캐릭터 선택 완료 - UserId: {userId}, 선택된 캐릭터 인덱스: {selectedObjectIndex}");
     }

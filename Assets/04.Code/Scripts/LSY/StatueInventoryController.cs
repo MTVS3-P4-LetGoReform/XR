@@ -80,7 +80,12 @@ public class StatueInventoryController : MonoBehaviour
         //Debug.Log($"childObject : {childObject.name}");
         if (inventoryTargetList[curIndex] != null)
         {
-            Debug.LogError($"inventoryTargetList[{curIndex}] is not empty!");
+            Debug.Log($"inventoryTargetList[{curIndex}] is not empty!");
+        }
+        else
+        {
+            Debug.LogError($"StatueInventoryController - AddStatueToInven : 인벤토리 타켓 [{curIndex}]번이 비어있습니다.");
+            return;
         }
         Debug.Log($"curIndex : {curIndex}");
         inventoryTargetList[curIndex].SetActive(true);
